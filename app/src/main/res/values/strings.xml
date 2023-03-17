@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">IoT Teacher Review</string>
+    <string name="email_id">Email ID</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="login">LOGIN</string>
+    <string name="create_an_account">Create an Account</string>
 </resources>
