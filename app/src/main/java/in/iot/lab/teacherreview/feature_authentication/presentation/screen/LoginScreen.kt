@@ -24,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.eterncare.sweetandroid.core.theme.custom_icons.Visibility
+import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.core.theme.buttonShape
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.components.GradientButton
@@ -31,7 +32,6 @@ import `in`.iot.lab.teacherreview.feature_authentication.presentation.components
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.components.TextButtonUI
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.components.UserInputUI
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.navigation.AuthenticationRoutes
-import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.stateholder.LoginViewModel
 import `in`.iot.lab.teacherreview.feature_authentication.util.LoginState
 
@@ -69,9 +69,14 @@ fun LoginScreen(
         Toast.makeText(context , " Login Successful" , Toast.LENGTH_SHORT).show()
 
     }
-
-    if(myViewModel.loginState is LoginState.Loading){
+    else if(myViewModel.loginState is LoginState.Loading){
         // TODO comes Here
+    }
+    else if(myViewModel.loginState is LoginState.Failure){
+        Toast.makeText(
+            context ,
+            (myViewModel.loginState as LoginState.Failure).errorMessage ,
+            Toast.LENGTH_SHORT).show()
     }
 
     // Surface Covers the Whole screen and keeps the background color for Better App UI colors
@@ -124,7 +129,7 @@ fun LoginScreen(
                 // It is the Clear Icon to be Showed as a Trailing Icon
                 trailingIcon = {
                     if (myViewModel.userInputEmail != "") {
-                        IconButton(onClick = { myViewModel.clearUserInputPhoneNumber() }) {
+                        IconButton(onClick = { myViewModel.clearUserInputEmail() }) {
                             Icon(imageVector = Icons.Default.Clear, contentDescription = null)
                         }
                     }
@@ -203,5 +208,4 @@ fun LoginScreen(
             }
         }
     }
-
 }
