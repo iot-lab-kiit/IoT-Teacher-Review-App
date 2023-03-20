@@ -86,6 +86,7 @@ class LoginViewModel : ViewModel() {
         userInputEmail = ""
         userInputPassword = ""
         showPassword = false
+        loginState = LoginState.Initialized
     }
 
     // This Function is Executed to send the Login Request to the Backend Server

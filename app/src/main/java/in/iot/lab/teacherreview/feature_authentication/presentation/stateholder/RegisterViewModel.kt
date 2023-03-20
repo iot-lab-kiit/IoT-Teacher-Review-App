@@ -152,11 +152,13 @@ class RegisterViewModel : ViewModel() {
     fun resetToDefaults() {
         userInputName = ""
         userInputPhoneNumber = ""
+        userInputEmail = ""
         userInputEnterPassword = ""
         userInputReEnterPassword = ""
 
         showEnterPassword = false
         showReEnterPassword = false
+        registrationState = RegistrationState.Initialized
     }
 
     // This Function sends the Register Request to the Backend Server

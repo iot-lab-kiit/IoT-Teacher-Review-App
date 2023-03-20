@@ -2,11 +2,13 @@ package `in`.iot.lab.teacherreview.feature_authentication.presentation.component
 
 import android.content.res.Configuration
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -40,16 +42,20 @@ fun TextButtonUI(
     @StringRes textToShow: Int,
     onClickEvent: () -> Unit
 ) {
-    TextButton(
+    Box(
         modifier = modifier
             .fillMaxWidth(),
-        onClick = onClickEvent
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = stringResource(id = textToShow),
-            letterSpacing = 1.sp,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.labelLarge
-        )
+        TextButton(
+            onClick = onClickEvent
+        ) {
+            Text(
+                text = stringResource(id = textToShow),
+                letterSpacing = 1.sp,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.labelLarge
+            )
+        }
     }
 }
