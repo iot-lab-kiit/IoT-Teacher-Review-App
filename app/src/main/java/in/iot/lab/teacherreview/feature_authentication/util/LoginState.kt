@@ -1,6 +1,7 @@
 package `in`.iot.lab.teacherreview.feature_authentication.util
 
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.UserAuthentication
+import `in`.iot.lab.teacherreview.feature_authentication.data.models.AuthenticationResponse
+import `in`.iot.lab.teacherreview.feature_authentication.util.LoginState.*
 
 /**
  * This sealed Class contains all the States of the Login Request in a API
@@ -13,6 +14,6 @@ import `in`.iot.lab.teacherreview.feature_authentication.data.models.UserAuthent
 sealed class LoginState{
     object Initialized : LoginState()
     object Loading : LoginState()
-    class Success(val data : UserAuthentication) : LoginState()
+    class Success(val data : AuthenticationResponse) : LoginState()
     class Failure(val errorMessage : String) : LoginState()
 }

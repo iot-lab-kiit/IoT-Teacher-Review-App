@@ -4,4 +4,9 @@
     <string name="enter_password">Enter Password</string>
     <string name="login">LOGIN</string>
     <string name="create_an_account">Create an Account</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="enter_phone_number">Enter Phone Number</string>
+    <string name="re_enter_password">Re-Enter Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="already_have_an_account">Already Have an Account</string>
 </resources>

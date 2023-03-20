@@ -48,36 +48,48 @@ private fun DefaultPreview() {
     }
 }
 
+/**
+ * The Main Register Screen of this File which calls all the Other Composable functions and places them
+ *
+ * @param navController This is the NavController Object which is used to navigate Screens
+ * @param modifier  Modifiers is passed to prevent Hardcoding and can be used in multiple occasions
+ */
 @Composable
 fun LoginScreen(
-    modifier: Modifier = Modifier ,
+    modifier: Modifier = Modifier,
     navController: NavController
-){
+) {
     // Focus Manager for Input Text Fields
     val focusManager = LocalFocusManager.current
     // ViewModel Class Variable for Storing Data and User UI events
     val myViewModel = viewModel<LoginViewModel>()
     // Context of the Activity
     val context = LocalContext.current
+    // Boolean which stores if there is already a Login Request being processed at the time
+    var loginRequestEmpty = true
 
+    // Checking what to do according to the different States of UI
+    when (myViewModel.loginState) {
+        is LoginState.Success -> {
 
-    // Dummy Implementation
-    if(myViewModel.loginState is LoginState.Success){
 //        context.startActivity(Intent(context , HomeActivity::class.java))
 //        (context as Activity).finish()
 
-        Toast.makeText(context , " Login Successful" , Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, " Login Successful", Toast.LENGTH_SHORT).show()
+        }
+        is LoginState.Loading -> {
+            loginRequestEmpty = false
+        }
+        is LoginState.Failure -> {
+            Toast.makeText(
+                context,
+                (myViewModel.loginState as LoginState.Failure).errorMessage,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        else -> {}
+    }
 
-    }
-    else if(myViewModel.loginState is LoginState.Loading){
-        // TODO comes Here
-    }
-    else if(myViewModel.loginState is LoginState.Failure){
-        Toast.makeText(
-            context ,
-            (myViewModel.loginState as LoginState.Failure).errorMessage ,
-            Toast.LENGTH_SHORT).show()
-    }
 
     // Surface Covers the Whole screen and keeps the background color for Better App UI colors
     Surface(
@@ -189,7 +201,12 @@ fun LoginScreen(
                 buttonShape = buttonShape,
                 buttonText = R.string.login
             ) {
-                myViewModel.sendLoginRequest()
+
+                // Checking if already a login Request is getting processed
+                if (loginRequestEmpty)
+                    myViewModel.sendLoginRequest()
+                else
+                    Toast.makeText(context, "Wait", Toast.LENGTH_SHORT).show()
             }
 
             // Spacing of 24 dp

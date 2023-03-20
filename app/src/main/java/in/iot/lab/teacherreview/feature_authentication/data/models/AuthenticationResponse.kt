@@ -8,7 +8,7 @@ package `in`.iot.lab.teacherreview.feature_authentication.data.models
  * all the Other Calls inside the APP
  * @property user This is the UserData which contains the Details about the User and all
  */
-data class UserAuthentication(
-    val accessToken : String ,
-    val user : UserData
+data class AuthenticationResponse(
+    val accessToken: String,
+    val user: UserData
 )

@@ -18,16 +18,19 @@ import java.net.ConnectException
  * This is the Login Screen [LoginScreen]'s State holder or viewModel Class which feeds Data
  * and state to the [LoginScreen] UI layer
  *
+ * @property myRepository Repository Variable
  * @property userInputEmail maintains the value of the Phone Number of the User
  * @property userInputPassword maintains the value of the Password of the User
  * @property showPassword maintains whether the App shows the Password Typed or not
  * @property loginState keeps a track of the Current State of the Login API Request
+ *
  * @property changeUserInputEmail updates the email inputted by the User
  * @property changeUserInputPassword updates the password inputted by the User
+ * @property passwordShowState This Function returns whether the password will be shown to the User or not
  * @property changePasswordHideStatus updates whether to hide the password or show it
  * @property clearUserInputEmail clears the User Input email
- * @property sendLoginRequest sends the Login Request to be handled by the Repository Layer
  * @property resetToDefault Resets all the variable values to default
+ * @property sendLoginRequest sends the Login Request to be handled by the Repository Layer
  */
 
 class LoginViewModel : ViewModel() {
@@ -78,6 +81,13 @@ class LoginViewModel : ViewModel() {
         userInputEmail = ""
     }
 
+    // This Function resets all the Data to their default values
+    fun resetToDefault() {
+        userInputEmail = ""
+        userInputPassword = ""
+        showPassword = false
+    }
+
     // This Function is Executed to send the Login Request to the Backend Server
     fun sendLoginRequest() {
 
@@ -115,12 +125,5 @@ class LoginViewModel : ViewModel() {
                 LoginState.Failure("Internet Not Available !!")
             }
         }
-    }
-
-    // This Function resets all the Data to their default values
-    fun resetToDefault() {
-        userInputEmail = ""
-        userInputPassword = ""
-        showPassword = false
     }
 }
