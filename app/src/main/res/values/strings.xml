@@ -16,4 +16,5 @@
     <string name="back">Back</string>
     <string name="star">star</string>
     <string name="show_more_details">show more Details</string>
+    <string name="failed_to_load_tap_to_retry">Failed To Load !! Tap to Retry</string>
 </resources>

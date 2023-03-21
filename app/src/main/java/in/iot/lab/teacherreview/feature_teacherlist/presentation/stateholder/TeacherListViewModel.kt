@@ -5,32 +5,35 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.FacultiesData
+import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HomeScreen
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HomeScreenControl
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 
 /**
- * This is the ViewModel Class for the [HomeScreen]
+ * This is the ViewModel Class for the [HomeScreenControl]
  *
  * @property myRepository This is the Repository Variable
  * @property teacherListApiCallState This is the State of the API Call
- * @property teacherList This is the list of teachers fetched from the Server
+ * @property selectedTeacher This is the Selected teacher by the User
+ *
+ *
  * @property getTeacherList This function gets the Teacher List from the Server
+ * @property addTeacherForNextScreen This function initialises the Teacher variable for
+ * the next Screen
  */
 class TeacherListViewModel : ViewModel() {
 
     // Repository Variable
     private val myRepository = Repository()
 
-    // Api Call state variable
+    // Api Call state variable which also contains the data fetched from the API Call
     var teacherListApiCallState: TeacherListApiCallState by mutableStateOf(TeacherListApiCallState.Initialized)
         private set
 
-    // Teacher List Variable Which contains the List of Teacher to be shown to the User
-    var teacherList: FacultiesData? by mutableStateOf(null)
+    var selectedTeacher: IndividualFacultyData? = null
         private set
 
     init {
@@ -52,17 +55,16 @@ class TeacherListViewModel : ViewModel() {
             teacherListApiCallState = try {
 
                 // Response from the Server
-                val response = myRepository.getTeacherList(limitValue = 10)
+                myRepository.getTeacherList(limitValue = 10)
 
-                // If the Response is Success then Storing the Data of the Teachers to the variable
-                if (response is TeacherListApiCallState.Success)
-                    teacherList = response.facultyData
-
-                // The Api State is given from the above function so we need to just assign it to api Call Variable
-                response
             } catch (_: ConnectException) {
                 TeacherListApiCallState.Failure("No Internet Connection")
             }
         }
+    }
+
+    // This function initialises the Teacher variable for the next Screen
+    fun addTeacherForNextScreen(teacher: IndividualFacultyData) {
+        selectedTeacher = teacher
     }
 }
