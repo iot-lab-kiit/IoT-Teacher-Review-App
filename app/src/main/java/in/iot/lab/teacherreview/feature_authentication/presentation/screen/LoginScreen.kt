@@ -1,5 +1,7 @@
 package `in`.iot.lab.teacherreview.feature_authentication.presentation.screen
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -34,6 +36,7 @@ import `in`.iot.lab.teacherreview.feature_authentication.presentation.components
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.navigation.AuthenticationRoutes
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.stateholder.LoginViewModel
 import `in`.iot.lab.teacherreview.feature_authentication.util.LoginState
+import `in`.iot.lab.teacherreview.feature_bottom_navigation.HomeActivity
 
 // This is the Preview function of the Login Screen
 @Preview("Light")
@@ -72,10 +75,10 @@ fun LoginScreen(
     when (myViewModel.loginState) {
         is LoginState.Success -> {
 
-//        context.startActivity(Intent(context , HomeActivity::class.java))
-//        (context as Activity).finish()
+            // Starting the New Activity
+            context.startActivity(Intent(context, HomeActivity::class.java))
+            (context as Activity).finish()
 
-            Toast.makeText(context, " Login Successful", Toast.LENGTH_SHORT).show()
         }
         is LoginState.Loading -> {
             loginRequestEmpty = false

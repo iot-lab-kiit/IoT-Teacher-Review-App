@@ -7,12 +7,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.PostLoginData
+import `in`.iot.lab.teacherreview.feature_authentication.data.models.AuthenticationResponse
+import `in`.iot.lab.teacherreview.feature_authentication.data.models.UserData
 import `in`.iot.lab.teacherreview.feature_authentication.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.screen.LoginScreen
 import `in`.iot.lab.teacherreview.feature_authentication.util.LoginState
 import kotlinx.coroutines.launch
-import java.net.ConnectException
 
 /**
  * This is the Login Screen [LoginScreen]'s State holder or viewModel Class which feeds Data
@@ -101,30 +101,46 @@ class LoginViewModel : ViewModel() {
             return
         }
 
-        // Body for the Login API Request
-        val postLoginData = PostLoginData(
-            email = userInputEmail,
-            password = userInputPassword
-        )
-
         // Requesting the Server to Check the user login Credentials
         viewModelScope.launch {
 
-            // Try is used to catch Exception which will occur when the Internet is unavailable
-            loginState = try {
+            // Fake Implementation for Testing
+            loginState = LoginState.Success(
+                AuthenticationResponse(
+                    accessToken = "",
+                    user = UserData(
+                        _id = "",
+                        email = "",
+                        name = "",
+                        role = 0,
+                        status = 0
+                    )
+                )
+            )
 
-                // Response from the Repository Layer
-                val response = myRepository.postLoginRequest(postLoginData)
-
-                // Updating the Login State accordingly
-                if (response is LoginState.Success)
-                    LoginState.Success(response.data)
-                else
-                    LoginState.Failure("Login Failed !!")
-
-            } catch (_: ConnectException) {
-                LoginState.Failure("Internet Not Available !!")
-            }
+            // TODO :- ---- Real Implementation which is commented out for the Moment
+//            // Body for the Login API Request
+//            val postLoginData = PostLoginData(
+//                email = userInputEmail,
+//                password = userInputPassword
+//            )
+//
+//
+//            // Try is used to catch Exception which will occur when the Internet is unavailable
+//            loginState = try {
+//
+//                // Response from the Repository Layer
+//                val response = myRepository.postLoginRequest(postLoginData)
+//
+//                // Updating the Login State accordingly
+//                if (response is LoginState.Success)
+//                    LoginState.Success(response.data)
+//                else
+//                    LoginState.Failure("Login Failed !!")
+//
+//            } catch (_: ConnectException) {
+//                LoginState.Failure("Internet Not Available !!")
+//            }
         }
     }
 }
