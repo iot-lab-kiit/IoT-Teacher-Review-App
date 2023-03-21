@@ -2,6 +2,8 @@ package `in`.iot.lab.teacherreview.feature_bottom_navigation.components
 
 import android.content.res.Configuration
 import androidx.annotation.StringRes
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,7 +24,7 @@ private fun DefaultPreview() {
     CustomAppTheme {
         AppBar(
             topBarTitle = R.string.app_name,
-//            icon = Icons.Default.ArrowBack
+            icon = Icons.Default.ArrowBack
         )
     }
 }
