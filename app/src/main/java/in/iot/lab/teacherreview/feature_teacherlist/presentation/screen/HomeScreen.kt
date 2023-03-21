@@ -6,10 +6,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.TeacherListCardItem
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.TeacherListViewModel
 
 // This is the Preview function of the Login Screen
 @Preview("Light")
@@ -35,19 +37,33 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    
+
+    // ViewModel Variable
+    val myViewModel: TeacherListViewModel = viewModel()
+
+
     Column(
         modifier = modifier
     ) {
 
-        LazyColumn {
-            items(5) {
-                TeacherListCardItem(
-                    navController = navController,
-                    teacherName = "Anirban Basak",
-                    subjectTaught = "Operating System"
-                ) {
-                    // TODO ------------
+        // Checking if there is any data inside the Teacher List yet or not
+        if (myViewModel.teacherList?.individualFacultyData?.size != null) {
+            LazyColumn {
+                items(myViewModel.teacherList!!.individualFacultyData!!.size) {
+
+                    // Current Teacher Detail
+                    val teacher = myViewModel.teacherList!!.individualFacultyData?.get(it)
+
+                    // This function draws each Teacher Card
+                    TeacherListCardItem(
+                        navController = navController,
+                        teacherName = teacher!!.name,
+
+                        // TODO :-- Need to Add the Subject here but first at the Server
+                        subjectTaught = teacher._id
+                    ) {
+                        // TODO ------------
+                    }
                 }
             }
         }
