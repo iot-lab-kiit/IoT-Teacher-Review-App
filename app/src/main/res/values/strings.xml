@@ -17,4 +17,8 @@
     <string name="star">star</string>
     <string name="show_more_details">show more Details</string>
     <string name="failed_to_load_tap_to_retry">Failed To Load !! Tap to Retry</string>
+    <string name="reviews">Reviews</string>
+    <string name="teaching_rating">Teaching Rating</string>
+    <string name="marking_rating">Marking Rating</string>
+    <string name="attendance_rating">Attendance Rating</string>
 </resources>

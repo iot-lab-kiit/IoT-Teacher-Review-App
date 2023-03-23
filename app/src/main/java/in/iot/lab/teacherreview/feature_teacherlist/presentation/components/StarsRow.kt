@@ -1,12 +1,13 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -46,15 +47,18 @@ fun StarsRow(
 
     // This Function draws the Stars accordingly
     LazyRow(
-        modifier = modifier
+        modifier = Modifier
             .padding(2.dp)
     ) {
         items(stars) {
-            Image(
+
+            // This draws the Star Icons
+            Icon(
                 imageVector = Icons.Default.Star,
                 contentDescription = stringResource(R.string.star),
-                modifier = Modifier
-                    .size(12.dp)
+                modifier = modifier
+                    .size(12.dp),
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
     }
