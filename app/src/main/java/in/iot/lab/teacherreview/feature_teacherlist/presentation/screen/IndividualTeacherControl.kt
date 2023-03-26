@@ -18,9 +18,11 @@ import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
+import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.ReviewCardItem
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.TeacherDetailsHeaderCard
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.TeacherListViewModel
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherReviewApiCall
 
 // This is the Preview function of the Teacher Review Control Screen
 @Preview("Light")
@@ -64,7 +66,10 @@ private fun DefaultPreviewSuccess() {
     CustomAppTheme {
         IndividualTeacherSuccess(
             navController = rememberNavController(),
-            myViewModel = TeacherListViewModel()
+            reviewData = ReviewData(),
+            selectedTeacher = IndividualFacultyData(
+                _id = ""
+            )
         )
     }
 }
@@ -79,7 +84,9 @@ private fun DefaultPreviewSuccess() {
 private fun DefaultPreviewFailure() {
     CustomAppTheme {
         IndividualTeacherFailure(
-            myViewModel = TeacherListViewModel()
+            selectedTeacher = TeacherListViewModel().selectedTeacher!!,
+            onClickRetry = {},
+            textToShow = stringResource(R.string.failed_to_load_tap_to_retry)
         )
     }
 }
@@ -96,8 +103,55 @@ fun IndividualTeacherControl(
     myViewModel: TeacherListViewModel
 ) {
 
-    IndividualTeacherSuccess(navController = navController, myViewModel = myViewModel)
+    // Checking which state my app is in Currently
+    when (myViewModel.individualTeacherReviewApiCall) {
+        is IndividualTeacherReviewApiCall.Initialized -> {}
+        is IndividualTeacherReviewApiCall.Loading -> {
 
+            // Showing the Loading Screen
+            IndividualTeacherLoading(
+                selectedTeacher = myViewModel.selectedTeacher!!
+            )
+        }
+        is IndividualTeacherReviewApiCall.Success -> {
+
+            // Taking all the review Data
+            val reviewData = (myViewModel.individualTeacherReviewApiCall as
+                    IndividualTeacherReviewApiCall.Success).reviewData
+
+            //Checking if the review Data is Empty or Not
+            if (reviewData.individualReviewData.isNullOrEmpty()) {
+
+                // Calling the Failed Screen
+                IndividualTeacherFailure(
+                    selectedTeacher = myViewModel.selectedTeacher!!,
+                    onClickRetry = { myViewModel.getIndividualTeacherReviews() },
+                    textToShow = stringResource(id = R.string.dont_have_anything_to_show)
+                )
+
+
+            } else {
+                IndividualTeacherSuccess(
+                    navController = navController,
+                    reviewData = reviewData,
+                    selectedTeacher = myViewModel.selectedTeacher!!
+                )
+            }
+        }
+        else -> {
+
+            // Showing the Failure Data
+            IndividualTeacherFailure(
+                selectedTeacher = myViewModel.selectedTeacher!!,
+                onClickRetry = {
+                    myViewModel.getIndividualTeacherReviews(
+                        myViewModel.selectedTeacher!!._id,
+                    )
+                },
+                textToShow = stringResource(R.string.failed_to_load_tap_to_retry)
+            )
+        }
+    }
 }
 
 /**
@@ -141,12 +195,14 @@ fun IndividualTeacherLoading(
  * This function is Used when the Screen is Success
  *
  * @param navController This is the controller used to navigate to different screens
- * @param myViewModel This is the [TeacherListViewModel] variable
+ * @param reviewData This is the review data of the particular review
+ * @param selectedTeacher This is the selected Teacher
  */
 @Composable
 fun IndividualTeacherSuccess(
     navController: NavController,
-    myViewModel: TeacherListViewModel
+    reviewData: ReviewData,
+    selectedTeacher: IndividualFacultyData
 ) {
 
     // Lazy Column to Show the List of Reviews
@@ -154,17 +210,23 @@ fun IndividualTeacherSuccess(
         modifier = Modifier
             .padding(16.dp),
     ) {
-        items(150) {
+        items(reviewData.individualReviewData!!.size) {
             val itemCount = it - 1
 
             // Drawing the Header of the Teacher with his overall stats
             if (itemCount == -1) {
-                TeacherDetailsHeaderCard(selectedTeacher = myViewModel.selectedTeacher!!)
+                TeacherDetailsHeaderCard(
+                    selectedTeacher = selectedTeacher
+                )
 
                 // Spacer of Height 16 dp
                 Spacer(modifier = Modifier.height(16.dp))
             } else {
-                ReviewCardItem(myViewModel = myViewModel)
+                val reviewItem = reviewData.individualReviewData[itemCount]
+                ReviewCardItem(
+                    topTitle = reviewItem.createdBy.name,
+                    review = reviewItem.review!!
+                )
 
                 // Spacer of Height 16 dp
                 Spacer(modifier = Modifier.height(16.dp))
@@ -176,13 +238,17 @@ fun IndividualTeacherSuccess(
 /**
  *  This Screen is used when the Request is a Failure
  *
- *  @param modifier Default modifier to pass modifications from the Parent
- *  @param myViewModel [TeacherListViewModel] ViewModel variable
+ * @param modifier Default modifier to pass modifications from the Parent
+ * @param selectedTeacher This is the selected Teacher
+ * @param onClickRetry This is the function which is run when the teacher clicks retry
+ * @param textToShow This text is shown on the Screen
  */
 @Composable
 fun IndividualTeacherFailure(
     modifier: Modifier = Modifier,
-    myViewModel: TeacherListViewModel
+    selectedTeacher: IndividualFacultyData,
+    onClickRetry: () -> Unit,
+    textToShow: String
 ) {
     Column(
         modifier = modifier
@@ -193,17 +259,17 @@ fun IndividualTeacherFailure(
     ) {
 
         // Drawing the Header of the Teacher with his overall stats
-        TeacherDetailsHeaderCard(selectedTeacher = myViewModel.selectedTeacher!!)
+        TeacherDetailsHeaderCard(selectedTeacher = selectedTeacher)
 
         // Spacer of Height 16 dp
         Spacer(modifier = Modifier.height(16.dp))
 
         // This is a text Button which says to Try Again
         TextButton(
-            onClick = { /*TODO*/ }
+            onClick = { onClickRetry() }
         ) {
             Text(
-                text = stringResource(R.string.failed_to_load_tap_to_retry),
+                text = textToShow,
                 style = MaterialTheme.typography.titleMedium
             )
         }

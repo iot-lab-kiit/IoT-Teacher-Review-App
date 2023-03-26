@@ -141,6 +141,9 @@ fun HomeScreenSuccess(
                         // Setting the Current Selected Teacher in the shared ViewModel
                         myViewModel.addTeacherForNextScreen(teacher)
 
+                        // Fetching the Teacher Reviews
+                        myViewModel.getIndividualTeacherReviews()
+
                         // Navigating to the next Screen
                         navController.navigate(TeacherListRoutes.IndividualTeacherRoute.route)
                     }

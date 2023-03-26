@@ -1,6 +1,7 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.data.repository
 
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.data_source.remote.RetrofitInstance
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherReviewApiCall
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState
 
 /**
@@ -9,11 +10,17 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallSt
  *
  * @property getTeacherList This Function calls the Server and fetches the Teacher List to
  * be shown to the user
+ * @property getIndividualTeacherReviews This Function calls the Server and fetches
+ * the Teacher List to be shown to the user
+ *
  */
 class Repository {
 
     // This Function calls the Server and fetches the Teacher List to be shown to the user
-    suspend fun getTeacherList(limitValue: Int, facultyName: String? = null): TeacherListApiCallState {
+    suspend fun getTeacherList(
+        limitValue: Int,
+        facultyName: String? = null
+    ): TeacherListApiCallState {
 
         // This is the Response from the Server
         val response = RetrofitInstance.apiInstance.getTeacherList(
@@ -26,5 +33,23 @@ class Repository {
             TeacherListApiCallState.Success(response.body()!!)
         else
             TeacherListApiCallState.Failure(errorMessage = "Error Connecting to the Server")
+    }
+
+    // This calls the API and fetches detailed Reviews of a particular Teachers
+    suspend fun getIndividualTeacherReviews(
+        facultyId: String,
+        limitValue: Int
+    ): IndividualTeacherReviewApiCall {
+
+        // This is the Response from the Server
+        val response = RetrofitInstance.apiInstance.getIndividualTeacherReviews(
+            limitValue = limitValue,
+            facultyId = facultyId
+        )
+
+        return if (response.isSuccessful)
+            IndividualTeacherReviewApiCall.Success(reviewData = response.body()!!)
+        else
+            IndividualTeacherReviewApiCall.Failure(errorMessage = "Error Connecting to the Server")
     }
 }

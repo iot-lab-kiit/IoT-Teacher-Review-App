@@ -16,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.TeacherListViewModel
 
 // This is the Preview function of the Teacher Review Control Screen
 @Preview("Light")
@@ -27,7 +26,15 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.T
 @Composable
 private fun DefaultPreviewControl() {
     CustomAppTheme {
-        ReviewCardItem(myViewModel = TeacherListViewModel())
+        ReviewCardItem(
+            topTitle = "Anirban Basak",
+            review = "If you know how to deal with few " +
+                    "seniors who have ego issues, you will " +
+                    "ace at your work. Just learn how to take" +
+                    " command over few egoistic coordinators " +
+                    "or HODs, DPS will be the best place for " +
+                    "work and to build your career."
+        )
     }
 }
 
@@ -35,16 +42,19 @@ private fun DefaultPreviewControl() {
  * This is the UI for Each Card Item of the Review Section
  *
  * @param modifier Default so that the parent can pass modifications to the Child
- * @param myViewModel ViewModel of [TeacherListViewModel] class
+ * @param topTitle This contains the title that comes first
+ * @param review This is the Review
  */
 @Composable
 fun ReviewCardItem(
     modifier: Modifier = Modifier,
-    myViewModel: TeacherListViewModel
+    topTitle: String,
+    review: String
 ) {
 
     // This is the Card View
     Card(
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp)
     ) {
 
@@ -72,8 +82,9 @@ fun ReviewCardItem(
 
                 // Reviewer Name
                 Text(
-                    text = "Anirban Basak",
+                    text = topTitle,
                     style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.primary,
                 )
 
                 // Stars given by the Reviewer
@@ -84,10 +95,7 @@ fun ReviewCardItem(
 
                 // This is the review Given by the User
                 Text(
-                    text = "If you know how to deal with few seniors who have ego " +
-                            "issues, you will ace at your work. Just learn how to take" +
-                            " command over few egoistic coordinators or HODs, DPS will" +
-                            " be the best place for work and to build your career.",
+                    text = review,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

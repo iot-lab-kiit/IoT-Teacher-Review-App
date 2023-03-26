@@ -13,6 +13,7 @@
     <string name="home">Home</string>
     <string name="history">History</string>
     <string name="profile">Profile</string>
+    <string name="dont_have_anything_to_show">Database is Empty!! Enter a Data yourself or Try Again Later</string>
     <string name="back">Back</string>
     <string name="star">star</string>
     <string name="show_more_details">show more Details</string>

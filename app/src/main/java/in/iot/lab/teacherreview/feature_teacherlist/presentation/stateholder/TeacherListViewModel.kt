@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HomeScreenControl
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherReviewApiCall
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState
 import kotlinx.coroutines.launch
 import java.net.ConnectException
@@ -34,6 +35,11 @@ class TeacherListViewModel : ViewModel() {
         private set
 
     var selectedTeacher: IndividualFacultyData? = null
+        private set
+
+    var individualTeacherReviewApiCall: IndividualTeacherReviewApiCall by mutableStateOf(
+        IndividualTeacherReviewApiCall.Initialized
+    )
         private set
 
     init {
@@ -66,5 +72,29 @@ class TeacherListViewModel : ViewModel() {
     // This function initialises the Teacher variable for the next Screen
     fun addTeacherForNextScreen(teacher: IndividualFacultyData) {
         selectedTeacher = teacher
+    }
+
+    // This function fetches the List of Teachers
+    fun getIndividualTeacherReviews(facultyId: String = selectedTeacher!!._id) {
+
+        // Setting the Current State to Loading Before Starting to Fetch Data
+        individualTeacherReviewApiCall = IndividualTeacherReviewApiCall.Loading
+
+        // Fetching the Data from the Server
+        viewModelScope.launch {
+
+            // Checking the State of the API call and storing it to reflect to the UI Layer
+            individualTeacherReviewApiCall = try {
+
+                // Response from the Server
+                myRepository.getIndividualTeacherReviews(
+                    limitValue = 10,
+                    facultyId = facultyId
+                )
+
+            } catch (_: ConnectException) {
+                IndividualTeacherReviewApiCall.Failure("No Internet Connection")
+            }
+        }
     }
 }
