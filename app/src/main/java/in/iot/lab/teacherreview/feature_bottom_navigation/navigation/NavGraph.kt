@@ -6,10 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation.TeacherListRoutes
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HistoryScreen
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HomeScreenControl
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.IndividualTeacherControl
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.ProfileScreen
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.*
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.TeacherListViewModel
 
 /**
@@ -38,7 +35,7 @@ fun HomeNavGraph(navController: NavHostController) {
             )
             composable(
                 BottomNavRoutes.HistoryRoute.route,
-                content = { HistoryScreen(navController = navController) }
+                content = { HistoryScreenControl() }
             )
             composable(
                 BottomNavRoutes.ProfileRoute.route,

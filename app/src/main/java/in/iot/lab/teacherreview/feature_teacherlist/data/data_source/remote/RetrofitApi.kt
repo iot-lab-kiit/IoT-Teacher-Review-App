@@ -13,6 +13,8 @@ import retrofit2.http.Query
  * @property getTeacherList This calls the API and fetches all the Teachers there in the Database
  * @property getIndividualTeacherReviews This calls the API and fetches detailed Reviews of
  * a Teacher and all about him in the database
+ * @property getStudentReviewHistory This calls the API and fetches the particular Student
+ * Review History
  *
  */
 interface RetrofitApi {
@@ -30,6 +32,14 @@ interface RetrofitApi {
     suspend fun getIndividualTeacherReviews(
         @Header("Authorization") token: String = Constants.ACCESS_TOKEN,
         @Query("faculty") facultyId: String,
+        @Query("${"$"}limit") limitValue: Int
+    ): retrofit2.Response<ReviewData>
+
+    // This calls the API and fetches the particular Student Review History
+    @GET("reviews?${"$"}populate=faculty&${"$"}populate=subject&${"$"}populate=createdBy")
+    suspend fun getStudentReviewHistory(
+        @Header("Authorization") token: String = Constants.ACCESS_TOKEN,
+        @Query("createdBy") studentId: String = Constants.STUDENT_ID,
         @Query("${"$"}limit") limitValue: Int
     ): retrofit2.Response<ReviewData>
 }

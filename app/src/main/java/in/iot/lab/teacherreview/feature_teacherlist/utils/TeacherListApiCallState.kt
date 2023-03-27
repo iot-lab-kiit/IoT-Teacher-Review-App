@@ -4,7 +4,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.FacultiesData
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState.*
 
 /**
- * This sealed Class contains all the States of the Login Request in a API
+ * This sealed Class contains all the States of the Teacher List Request of a API
  *
  * @property Initialized is used to define the Initial State
  * @property Loading is used to define the state of the API call when it is in fetching Phase

@@ -7,6 +7,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import `in`.iot.lab.teacherreview.core.utils.Constants
 import `in`.iot.lab.teacherreview.feature_authentication.data.models.PostLoginData
 import `in`.iot.lab.teacherreview.feature_authentication.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.screen.LoginScreen
@@ -133,9 +134,14 @@ class LoginViewModel : ViewModel() {
                 val response = myRepository.postLoginRequest(postLoginData)
 
                 // Updating the Login State accordingly
-                if (response is LoginState.Success)
+                if (response is LoginState.Success) {
+
+                    // Setting the Student ID in the Constants Folder
+                    Constants.setStudentId(response.data.user._id)
+
+                    // Setting the API Call state
                     LoginState.Success(response.data)
-                else
+                } else
                     LoginState.Failure("Login Failed !!")
 
             } catch (_: ConnectException) {
