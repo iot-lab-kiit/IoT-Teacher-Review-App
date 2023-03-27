@@ -210,7 +210,7 @@ fun IndividualTeacherSuccess(
         modifier = Modifier
             .padding(16.dp),
     ) {
-        items(reviewData.individualReviewData!!.size) {
+        items(reviewData.individualReviewData!!.size + 1) {
             val itemCount = it - 1
 
             // Drawing the Header of the Teacher with his overall stats
