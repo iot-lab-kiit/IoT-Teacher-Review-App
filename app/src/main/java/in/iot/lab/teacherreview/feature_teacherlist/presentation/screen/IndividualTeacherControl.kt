@@ -3,10 +3,10 @@ package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +21,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacul
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.ReviewCardItem
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.TeacherDetailsHeaderCard
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation.TeacherListRoutes
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.TeacherListViewModel
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherReviewApiCall
 
@@ -65,7 +66,6 @@ private fun DefaultPreviewLoading() {
 private fun DefaultPreviewSuccess() {
     CustomAppTheme {
         IndividualTeacherSuccess(
-            navController = rememberNavController(),
             reviewData = ReviewData(),
             selectedTeacher = IndividualFacultyData(
                 _id = ""
@@ -132,7 +132,6 @@ fun IndividualTeacherControl(
 
             } else {
                 IndividualTeacherSuccess(
-                    navController = navController,
                     reviewData = reviewData,
                     selectedTeacher = myViewModel.selectedTeacher!!
                 )
@@ -149,6 +148,28 @@ fun IndividualTeacherControl(
                     )
                 },
                 textToShow = stringResource(R.string.failed_to_load_tap_to_retry)
+            )
+        }
+    }
+
+    // Showing the Floating Action Button On the Screen clicking which will redirect to add review Screen
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(end = 24.dp, bottom = 16.dp),
+        contentAlignment = Alignment.BottomEnd
+    ) {
+        FloatingActionButton(
+            onClick = {
+                navController.navigate(TeacherListRoutes.AddRatingRoute.route)
+            },
+            shape = CircleShape,
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = stringResource(id = R.string.add),
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
     }
@@ -194,13 +215,11 @@ fun IndividualTeacherLoading(
 /**
  * This function is Used when the Screen is Success
  *
- * @param navController This is the controller used to navigate to different screens
  * @param reviewData This is the review data of the particular review
  * @param selectedTeacher This is the selected Teacher
  */
 @Composable
 fun IndividualTeacherSuccess(
-    navController: NavController,
     reviewData: ReviewData,
     selectedTeacher: IndividualFacultyData
 ) {
@@ -208,9 +227,9 @@ fun IndividualTeacherSuccess(
     // Lazy Column to Show the List of Reviews
     LazyColumn(
         modifier = Modifier
-            .padding(16.dp),
+            .padding(top = 16.dp, end = 16.dp, start = 16.dp, bottom = 44.dp),
     ) {
-        items(reviewData.individualReviewData!!.size+1) {
+        items(reviewData.individualReviewData!!.size + 1) {
             val itemCount = it - 1
 
             // Drawing the Header of the Teacher with his overall stats

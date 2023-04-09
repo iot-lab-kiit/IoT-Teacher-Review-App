@@ -22,4 +22,6 @@
     <string name="teaching_rating">Teaching Rating</string>
     <string name="marking_rating">Marking Rating</string>
     <string name="attendance_rating">Attendance Rating</string>
+
+    <string name="add">Add</string>
 </resources>

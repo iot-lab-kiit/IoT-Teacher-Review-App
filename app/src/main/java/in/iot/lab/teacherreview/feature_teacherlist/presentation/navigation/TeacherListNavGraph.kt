@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavRoutes
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HomeScreenControl
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.IndividualTeacherControl
@@ -44,6 +45,20 @@ fun TeacherListNavGraph(
                     IndividualTeacherControl(
                         navController = navController,
                         myViewModel = teacherListViewModel
+                    )
+                }
+            )
+
+            // Add Rating and Review Screen
+            composable(
+                TeacherListRoutes.AddReviewRoute.route,
+                content = {
+
+                    // Nav controller for Adding Review and Rating Screen
+                    val addRatingNavController = rememberNavController()
+
+                    AddRatingNavGraph(
+                        navController = addRatingNavController
                     )
                 }
             )
