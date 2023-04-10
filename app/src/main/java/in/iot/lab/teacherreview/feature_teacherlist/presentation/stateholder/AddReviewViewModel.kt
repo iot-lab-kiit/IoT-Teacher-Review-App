@@ -1,5 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder
 
+import android.util.Log.d
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -98,6 +99,10 @@ class AddReviewViewModel : ViewModel() {
 
     fun updateTeachingReview(newValue: String) {
         userInputTeachingReview = newValue
+    }
+
+    fun postReviewData() {
+        d("Add Review View Model", userInputTeachingReview)
     }
 
 }
