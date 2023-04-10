@@ -45,22 +45,32 @@ sealed class BottomNavOptions(
         )
     }
 
-    // Dashboard Option for Going
+    // Teacher List Option for Going
     object HomeOption : BottomNavOptions(
         route = BottomNavRoutes.HomeRoute.route,
         labelOfIcon = R.string.home,
         unselectedIcon = Icons.Outlined.Home,
         selectedIcon = Icons.Filled.Home,
-        onOptionClicked = { it.navigate(BottomNavRoutes.HomeRoute.route) }
+        onOptionClicked = {
+            it.navigate(BottomNavRoutes.HomeRoute.route) {
+                popUpTo(it.graph.startDestinationId)
+                launchSingleTop = true
+            }
+        }
     )
 
-    // Diary Option for Going
+    // Student Review History Option for Going
     object HistoryOption : BottomNavOptions(
         route = BottomNavRoutes.HistoryRoute.route,
         labelOfIcon = R.string.history,
         unselectedIcon = Icons.Outlined.Email,
         selectedIcon = Icons.Filled.Email,
-        onOptionClicked = { it.navigate(BottomNavRoutes.HistoryRoute.route) }
+        onOptionClicked = {
+            it.navigate(BottomNavRoutes.HistoryRoute.route) {
+                popUpTo(it.graph.startDestinationId)
+                launchSingleTop = true
+            }
+        }
     )
 
     // Profile Option to go For
@@ -69,6 +79,11 @@ sealed class BottomNavOptions(
         labelOfIcon = R.string.profile,
         unselectedIcon = Icons.Outlined.Person,
         selectedIcon = Icons.Filled.Person,
-        onOptionClicked = { it.navigate(BottomNavRoutes.ProfileRoute.route) }
+        onOptionClicked = {
+            it.navigate(BottomNavRoutes.ProfileRoute.route) {
+                popUpTo(it.graph.startDestinationId)
+                launchSingleTop = true
+            }
+        }
     )
 }
