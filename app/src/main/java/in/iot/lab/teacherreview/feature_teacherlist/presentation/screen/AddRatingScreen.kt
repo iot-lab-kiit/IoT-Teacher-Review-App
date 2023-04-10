@@ -113,13 +113,12 @@ fun AddRatingScreen(
                     // Spacing of 16 dp
                     Spacer(modifier = Modifier.height(32.dp))
 
-                    // TODO Need to bind all the Data to the View Model
                     // This is the Overall Rating Input Field
                     AddStarWithHeadingTitleUI(
                         headingTitle = R.string.overall_rating,
-                        starCount = 5.0,
-                        onAddClick = {},
-                        onSubtractClick = {}
+                        starCount = myViewModel.userInputOverallRating,
+                        onAddClick = { myViewModel.updateUserInputOverallRating(1) },
+                        onSubtractClick = { myViewModel.updateUserInputOverallRating(0) }
                     )
 
                     // Spacing of 16 dp
@@ -128,9 +127,9 @@ fun AddRatingScreen(
                     // This is the Marking Rating Input Field
                     AddStarWithHeadingTitleUI(
                         headingTitle = R.string.marking_rating,
-                        starCount = 2.0,
-                        onAddClick = {},
-                        onSubtractClick = {}
+                        starCount = myViewModel.userInputMarkingRating,
+                        onAddClick = { myViewModel.updateUserInputMarkingRating(1) },
+                        onSubtractClick = { myViewModel.updateUserInputMarkingRating(0) }
                     )
 
                     // Spacing of 16 dp
@@ -139,9 +138,9 @@ fun AddRatingScreen(
                     // This is the Attendance Rating Input Field
                     AddStarWithHeadingTitleUI(
                         headingTitle = R.string.attendance_rating,
-                        starCount = 1.0,
-                        onAddClick = {},
-                        onSubtractClick = {}
+                        starCount = myViewModel.userInputAttendanceRating,
+                        onAddClick = { myViewModel.updateUserInputAttendanceRating(1) },
+                        onSubtractClick = { myViewModel.updateUserInputAttendanceRating(0) }
                     )
 
                     // Spacing of 16 dp
@@ -150,9 +149,9 @@ fun AddRatingScreen(
                     // This is the Teaching Rating Input Field
                     AddStarWithHeadingTitleUI(
                         headingTitle = R.string.teaching_rating,
-                        starCount = 3.0,
-                        onAddClick = {},
-                        onSubtractClick = {}
+                        starCount = myViewModel.userInputTeachingRating,
+                        onAddClick = { myViewModel.updateUserInputTeachingRating(1) },
+                        onSubtractClick = { myViewModel.updateUserInputTeachingRating(0) }
                     )
 
                     // Spacing of 24 dp
