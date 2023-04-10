@@ -51,7 +51,7 @@ fun TeacherListNavGraph(
 
             // Add Rating and Review Screen
             composable(
-                TeacherListRoutes.AddReviewRoute.route,
+                TeacherListRoutes.AddRatingRoute.route,
                 content = {
 
                     // Nav controller for Adding Review and Rating Screen
