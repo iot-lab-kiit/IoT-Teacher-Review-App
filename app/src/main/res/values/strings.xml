@@ -37,4 +37,9 @@
     <string name="comment">Comment</string>
     <string name="add_review">Add Review</string>
     <string name="add_rating">Add Rating</string>
+
+    <string name="semester">Semester</string>
+
+    <string name="roll_number">Roll Number</string>
+
 </resources>
