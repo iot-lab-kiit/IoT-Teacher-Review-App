@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 
 class AddReviewViewModel : ViewModel() {
 
@@ -32,6 +33,8 @@ class AddReviewViewModel : ViewModel() {
     var userInputTeachingReview: String by mutableStateOf("")
         private set
 
+    lateinit var selectedTeacherId: IndividualFacultyData
+        private set
 
     /**
      * This function updates the user Input Overall Rating variable
@@ -101,8 +104,11 @@ class AddReviewViewModel : ViewModel() {
         userInputTeachingReview = newValue
     }
 
+    fun setTeacherId(teacherId: IndividualFacultyData) {
+        selectedTeacherId = teacherId
+    }
+
     fun postReviewData() {
         d("Add Review View Model", userInputTeachingReview)
     }
-
 }

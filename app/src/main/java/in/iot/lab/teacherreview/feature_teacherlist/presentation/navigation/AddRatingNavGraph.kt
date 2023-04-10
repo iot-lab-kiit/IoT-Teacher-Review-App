@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.AddRatingScreen
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.AddReviewScreen
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.AddReviewViewModel
@@ -17,11 +18,15 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.A
  */
 @Composable
 fun AddRatingNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    teacherId: IndividualFacultyData
 ) {
 
     // Shared View Model which is shared between the add review and add rating Screens
     val myViewModel: AddReviewViewModel = viewModel()
+
+    // Setting the Current Teacher Details in the View Model
+    myViewModel.setTeacherId(teacherId)
 
     NavHost(
         navController = navController,

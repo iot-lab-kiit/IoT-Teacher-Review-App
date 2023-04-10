@@ -109,7 +109,7 @@ fun AddRatingScreen(
                     // Teacher Name
                     // TODO Need to attach the Real Name of the Teacher
                     Text(
-                        text = "Anirban Basak",
+                        text = myViewModel.selectedTeacherId.name,
                         style = MaterialTheme.typography.headlineSmall,
                     )
 
