@@ -3,7 +3,9 @@ package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -69,7 +71,7 @@ fun AddRatingScreen(
 
             // Add Rating
             Text(
-                text = "Add Rating",
+                text = stringResource(R.string.add_rating),
                 style = MaterialTheme.typography.headlineSmall,
             )
 
@@ -86,7 +88,8 @@ fun AddRatingScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp),
+                        .padding(16.dp)
+                        .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {

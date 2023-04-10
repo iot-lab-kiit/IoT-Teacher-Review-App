@@ -24,8 +24,15 @@
     <string name="attendance_rating">Attendance Rating</string>
     <string name="overall_rating">Overall Rating</string>
 
+    <string name="overall_review">Overall Review</string>
+    <string name="marking_review">Marking Review</string>
+    <string name="teaching_review">Teaching Review</string>
+    <string name="attendance_review">Attendance Review</string>
+
     <string name="add">Add</string>
     <string name="minus">Minus</string>
     <string name="add_your_review">Add Your Review</string>
     <string name="comment">Comment</string>
+    <string name="add_review">Add Review</string>
+    <string name="add_rating">Add Rating</string>
 </resources>

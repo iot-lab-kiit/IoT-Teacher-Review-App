@@ -19,6 +19,19 @@ class AddReviewViewModel : ViewModel() {
     var userInputTeachingRating: Double by mutableStateOf(0.0)
         private set
 
+    var userInputOverallReview: String by mutableStateOf("")
+        private set
+
+    var userInputMarkingReview: String by mutableStateOf("")
+        private set
+
+    var userInputAttendanceReview: String by mutableStateOf("")
+        private set
+
+    var userInputTeachingReview: String by mutableStateOf("")
+        private set
+
+
     /**
      * This function updates the user Input Overall Rating variable
      *
@@ -69,6 +82,22 @@ class AddReviewViewModel : ViewModel() {
             userInputTeachingRating++
         if (flag == 0 && userInputTeachingRating > 0)
             userInputTeachingRating--
+    }
+
+    fun updateOverallReview(newValue: String) {
+        userInputOverallReview = newValue
+    }
+
+    fun updateMarkingReview(newValue: String) {
+        userInputMarkingReview = newValue
+    }
+
+    fun updateAttendanceReview(newValue: String) {
+        userInputAttendanceReview = newValue
+    }
+
+    fun updateTeachingReview(newValue: String) {
+        userInputTeachingReview = newValue
     }
 
 }

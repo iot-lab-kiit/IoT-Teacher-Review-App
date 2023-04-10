@@ -42,7 +42,11 @@ fun AddRatingNavGraph(
             // Add Review Screen
             composable(
                 route = TeacherListRoutes.AddReviewRoute.route,
-                content = { AddReviewScreen(myViewModel) }
+                content = {
+                    AddReviewScreen(
+                        myViewModel = myViewModel
+                    )
+                }
             )
         }
     )
