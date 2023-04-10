@@ -15,18 +15,22 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.A
  * It is wrapped in a different nav Graph because it is going to have a shared View Model so to limit
  * the scope of the View Model to this Nav Graph We did this
  *
+ * @param navController This is used for navigating through different Screens
+ * @param teacherData This is the data of the current Selected Teacher
+ * @param refreshTeacherReviews This function refreshes the Individual Teacher Screen
  */
 @Composable
 fun AddRatingNavGraph(
     navController: NavHostController,
-    teacherId: IndividualFacultyData
+    teacherData: IndividualFacultyData,
+    refreshTeacherReviews: () -> Unit
 ) {
 
     // Shared View Model which is shared between the add review and add rating Screens
     val myViewModel: AddReviewViewModel = viewModel()
 
     // Setting the Current Teacher Details in the View Model
-    myViewModel.setTeacherId(teacherId)
+    myViewModel.setTeacherId(teacherData)
 
     NavHost(
         navController = navController,
@@ -49,7 +53,8 @@ fun AddRatingNavGraph(
                 route = TeacherListRoutes.AddReviewRoute.route,
                 content = {
                     AddReviewScreen(
-                        myViewModel = myViewModel
+                        myViewModel = myViewModel,
+                        refreshTeacherReviews = refreshTeacherReviews
                     )
                 }
             )

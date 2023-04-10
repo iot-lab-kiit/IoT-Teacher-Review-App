@@ -1,6 +1,7 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +21,7 @@ import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.AddReviewWithHeadingTitleUI
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.AddReviewViewModel
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
 
 // This is the Preview function of the Screen
 @Preview("Light")
@@ -30,7 +33,9 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.A
 @Composable
 private fun DefaultPreviewLoading() {
     CustomAppTheme {
-        AddReviewScreen(myViewModel = AddReviewViewModel())
+        AddReviewScreen(
+            myViewModel = AddReviewViewModel()
+        ) { }
     }
 }
 
@@ -39,12 +44,60 @@ private fun DefaultPreviewLoading() {
  *
  * @param modifier Default to pass down modifications from the Parent
  * @param myViewModel This variable is the View Model for the Screen
+ * @param refreshTeacherReviews This function refreshes the Individual teacher List Screen
  */
 @Composable
 fun AddReviewScreen(
     modifier: Modifier = Modifier,
-    myViewModel: AddReviewViewModel
+    myViewModel: AddReviewViewModel,
+    refreshTeacherReviews: () -> Unit
 ) {
+
+    // Context Variable
+    val context = LocalContext.current
+
+    // Checking which api state it is and doing the things accordingly
+    when (myViewModel.addReviewApiState) {
+        is AddReviewApiState.Initialized -> {}
+        is AddReviewApiState.Loading -> {
+
+            // Circular Loading Progress Indicator
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        is AddReviewApiState.Success -> {
+
+            Toast.makeText(
+                context,
+                "Review Posted",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            // Refreshing the Reviews in the Individual Teacher Screen
+            refreshTeacherReviews()
+
+            //Resetting everything to Default
+            myViewModel.resetToDefault()
+        }
+        else -> {
+
+            // Failed Toast
+            Toast.makeText(
+                context,
+                (myViewModel.addReviewApiState as AddReviewApiState.Failure)
+                    .errorMessage,
+                Toast.LENGTH_SHORT
+            ).show()
+
+            //Resetting Api State to Default
+            myViewModel.resetApiToInitialize()
+
+        }
+    }
 
     // This is the Parent Composable which contains all the Components
     Surface(

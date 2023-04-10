@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,6 +62,9 @@ fun TeacherListCardItem(
         modifier = modifier
             .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp)
             .fillMaxWidth()
+            .clickable {
+                onTeacherClick()
+            },
     ) {
         Row(
             modifier = Modifier
@@ -113,10 +117,7 @@ fun TeacherListCardItem(
                 Image(
                     imageVector = Icons.Default.ArrowForward,
                     contentDescription = stringResource(R.string.show_more_details),
-                    modifier = Modifier
-                        .clickable {
-                            onTeacherClick()
-                        }
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
                 )
             }
         }

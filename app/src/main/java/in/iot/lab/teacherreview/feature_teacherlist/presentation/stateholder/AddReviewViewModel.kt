@@ -1,24 +1,30 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder
 
-import android.util.Log.d
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
+import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.RatingData
+import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.RatingParameterData
+import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewPostData
+import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
+import kotlinx.coroutines.launch
+import java.net.ConnectException
 
 class AddReviewViewModel : ViewModel() {
 
-    var userInputOverallRating: Double by mutableStateOf(0.0)
+    private val myRepository: Repository = Repository()
+
+    var userInputMarkingRating: Double by mutableStateOf(1.0)
         private set
 
-    var userInputMarkingRating: Double by mutableStateOf(0.0)
+    var userInputAttendanceRating: Double by mutableStateOf(1.0)
         private set
 
-    var userInputAttendanceRating: Double by mutableStateOf(0.0)
-        private set
-
-    var userInputTeachingRating: Double by mutableStateOf(0.0)
+    var userInputTeachingRating: Double by mutableStateOf(1.0)
         private set
 
     var userInputOverallReview: String by mutableStateOf("")
@@ -36,18 +42,8 @@ class AddReviewViewModel : ViewModel() {
     lateinit var selectedTeacherId: IndividualFacultyData
         private set
 
-    /**
-     * This function updates the user Input Overall Rating variable
-     *
-     * @param flag
-     * If the flag is 1 then it increases otherwise it decreases the variable
-     */
-    fun updateUserInputOverallRating(flag: Int) {
-        if (flag == 1 && userInputOverallRating < 5)
-            userInputOverallRating++
-        if (flag == 0 && userInputOverallRating > 0)
-            userInputOverallRating--
-    }
+    var addReviewApiState: AddReviewApiState by mutableStateOf(AddReviewApiState.Initialized)
+        private set
 
     /**
      * This function updates the user Input Marking Rating variable
@@ -108,7 +104,73 @@ class AddReviewViewModel : ViewModel() {
         selectedTeacherId = teacherId
     }
 
+    // Resets all the values to default
+    fun resetToDefault() {
+        userInputTeachingRating = 0.0
+        userInputMarkingRating = 0.0
+        userInputAttendanceRating = 0.0
+
+
+        userInputOverallReview = ""
+        userInputAttendanceReview = ""
+        userInputTeachingReview = ""
+        userInputMarkingReview = ""
+
+        addReviewApiState = AddReviewApiState.Initialized
+    }
+
+    // Reset only the Api State to default
+    fun resetApiToInitialize() {
+        addReviewApiState = AddReviewApiState.Initialized
+    }
+
+    // This function posts the Review Data to the database
     fun postReviewData() {
-        d("Add Review View Model", userInputTeachingReview)
+
+        // Setting the api state to loading
+        addReviewApiState = AddReviewApiState.Loading
+
+        // Checking if the Overall Review is given or not
+        if (userInputOverallReview.isEmpty()) {
+            addReviewApiState =
+                AddReviewApiState.Failure("Need to Fill the Overall Rating at least")
+            return
+        }
+
+        // posting the data to the Database
+        viewModelScope.launch {
+
+            // Creating the RatingData model object to be passed to the retrofit for posting
+            val ratingData = RatingData(
+                teachingRating = RatingParameterData(
+                    ratedPoints = userInputTeachingRating,
+                    description = userInputTeachingReview
+                ),
+                markingRating = RatingParameterData(
+                    ratedPoints = userInputMarkingRating,
+                    description = userInputMarkingReview
+                ),
+                attendanceRating = RatingParameterData(
+                    ratedPoints = userInputAttendanceRating,
+                    description = userInputAttendanceReview
+                )
+            )
+
+            // The Actual post data that will be sent to the Database
+            val postData = ReviewPostData(
+                review = userInputOverallReview,
+                rating = ratingData,
+                faculty = selectedTeacherId._id,
+                // TODO :- Real Subject needs to be implemented here
+                subject = "63b206d844b81bcd4940d1e6"
+            )
+
+            // CHanging the State of the Api Accordingly
+            addReviewApiState = try {
+                myRepository.postReviewData(postData)
+            } catch (_: ConnectException) {
+                AddReviewApiState.Failure("No Internet Connection")
+            }
+        }
     }
 }

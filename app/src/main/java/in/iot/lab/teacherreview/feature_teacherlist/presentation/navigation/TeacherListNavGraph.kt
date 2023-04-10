@@ -55,14 +55,17 @@ fun TeacherListNavGraph(
                 content = {
 
                     // Currently Selected Teacher Data variable
-                    val teacherId = teacherListViewModel.selectedTeacher!!
+                    val teacherData = teacherListViewModel.selectedTeacher!!
 
                     // Nav controller for Adding Review and Rating Screen
                     val addRatingNavController = rememberNavController()
 
                     AddRatingNavGraph(
                         navController = addRatingNavController,
-                        teacherId = teacherId
+                        teacherData = teacherData,
+                        refreshTeacherReviews = {
+                            teacherListViewModel.getIndividualTeacherReviews()
+                        }
                     )
                 }
             )

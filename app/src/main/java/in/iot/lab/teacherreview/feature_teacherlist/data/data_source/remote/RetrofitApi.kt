@@ -3,9 +3,8 @@ package `in`.iot.lab.teacherreview.feature_teacherlist.data.data_source.remote
 import `in`.iot.lab.teacherreview.core.utils.Constants
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.FacultiesData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewData
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
+import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewPostData
+import retrofit2.http.*
 
 /**
  * This Interface contains all the Functions and calls that can be done on the API call
@@ -15,6 +14,7 @@ import retrofit2.http.Query
  * a Teacher and all about him in the database
  * @property getStudentReviewHistory This calls the API and fetches the particular Student
  * Review History
+ * @property postTeacherReviews This calls the API and posts the Review Data to the Database
  *
  */
 interface RetrofitApi {
@@ -42,4 +42,11 @@ interface RetrofitApi {
         @Query("createdBy") studentId: String = Constants.STUDENT_ID,
         @Query("${"$"}limit") limitValue: Int
     ): retrofit2.Response<ReviewData>
+
+    // This calls the API and posts the Review Data to the Database
+    @POST(Constants.POST_TEACHER_REVIEW_ENDPOINT)
+    suspend fun postTeacherReviews(
+        @Header("Authorization") token: String = Constants.ACCESS_TOKEN,
+        @Body post: ReviewPostData
+    ): retrofit2.Response<ReviewPostData>
 }

@@ -116,17 +116,6 @@ fun AddRatingScreen(
                     // Spacing of 16 dp
                     Spacer(modifier = Modifier.height(32.dp))
 
-                    // This is the Overall Rating Input Field
-                    AddStarWithHeadingTitleUI(
-                        headingTitle = R.string.overall_rating,
-                        starCount = myViewModel.userInputOverallRating,
-                        onAddClick = { myViewModel.updateUserInputOverallRating(1) },
-                        onSubtractClick = { myViewModel.updateUserInputOverallRating(0) }
-                    )
-
-                    // Spacing of 16 dp
-                    Spacer(modifier = Modifier.height(16.dp))
-
                     // This is the Marking Rating Input Field
                     AddStarWithHeadingTitleUI(
                         headingTitle = R.string.marking_rating,
