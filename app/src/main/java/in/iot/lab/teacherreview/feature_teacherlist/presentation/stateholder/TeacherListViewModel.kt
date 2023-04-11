@@ -42,12 +42,6 @@ class TeacherListViewModel : ViewModel() {
     )
         private set
 
-    init {
-
-        // Fetching the Data once to get Started
-        getTeacherList()
-    }
-
     // This function fetches the List of Teachers
     fun getTeacherList() {
 

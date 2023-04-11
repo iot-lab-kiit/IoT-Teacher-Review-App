@@ -62,7 +62,7 @@ private fun DefaultPreviewSuccess() {
 private fun DefaultPreviewFailure() {
     CustomAppTheme {
         HomeScreenFailure(
-            myViewModel = TeacherListViewModel()
+            getTeacherList = {}
         )
     }
 }
@@ -82,7 +82,9 @@ fun HomeScreenControl(
 
     // Checking which State to Show
     when (myViewModel.teacherListApiCallState) {
-        is TeacherListApiCallState.Initialized -> {}
+        is TeacherListApiCallState.Initialized -> {
+            myViewModel.getTeacherList()
+        }
         is TeacherListApiCallState.Loading -> HomeScreenLoading()
         is TeacherListApiCallState.Success -> HomeScreenSuccess(
             navController = navController,
@@ -90,7 +92,7 @@ fun HomeScreenControl(
                 .facultyData,
             myViewModel = myViewModel
         )
-        else -> HomeScreenFailure(myViewModel = myViewModel)
+        else -> HomeScreenFailure(getTeacherList = { myViewModel.getTeacherList() })
     }
 }
 
@@ -157,7 +159,7 @@ fun HomeScreenSuccess(
 @Composable
 fun HomeScreenFailure(
     modifier: Modifier = Modifier,
-    myViewModel: TeacherListViewModel
+    getTeacherList: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -166,7 +168,7 @@ fun HomeScreenFailure(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextButton(
-            onClick = { myViewModel.getTeacherList() }
+            onClick = getTeacherList
         ) {
             Text(
                 text = stringResource(R.string.failed_to_load_tap_to_retry),
