@@ -2,7 +2,7 @@
     <string name="app_name">IoT Teacher Review</string>
     <string name="email_id">Email ID</string>
     <string name="enter_password">Enter Password</string>
-    <string name="login">LOGIN</string>
+    <string name="login">Login With Google</string>
     <string name="create_an_account">Create an Account</string>
     <string name="enter_name">Enter Name</string>
     <string name="enter_phone_number">Enter Phone Number</string>

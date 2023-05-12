@@ -13,11 +13,6 @@ of teaching and other parameters. The user can leave reviews and also see them.
 - Clean Architecture is used
 
 
-## Demo
-
-https://github.com/basakjeet08/IoT-Teacher-Review-App/assets/24616267/c5dbc834-91d4-432e-a2da-a7b6be25bc7d
-
-
 ## ScreenShots
 
 ![screenshot 01](https://github.com/basakjeet08/IoT-Teacher-Review-App/assets/24616267/9414d80e-fd9b-4613-a95a-898995b6f356)

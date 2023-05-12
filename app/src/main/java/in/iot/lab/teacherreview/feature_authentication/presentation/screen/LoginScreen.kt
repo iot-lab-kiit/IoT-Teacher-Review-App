@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -118,91 +120,16 @@ fun LoginScreen(
             // Spacing of 16 dp
             Spacer(modifier = Modifier.height(16.dp))
 
-            // This Function draws the First UserInput Box for input from User
-            // Passing all the Relevant Functions to Draw the UI
-            UserInputUI(
-
-                // Label in the OutlinedTextField
-                inputFieldLabel = R.string.email_id,
-
-                // Things the User Inputs
-                userInput = myViewModel.userInputEmail,
-
-                // Keyboard Enter Key Operation (changes focus to the next TextField)
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        focusManager.moveFocus(FocusDirection.Down)
-                    }
-                ),
-
-                // Keyboard Options to Type from (Currently Only Numbers)
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next
-                ),
-
-                // It is the Clear Icon to be Showed as a Trailing Icon
-                trailingIcon = {
-                    if (myViewModel.userInputEmail != "") {
-                        IconButton(onClick = { myViewModel.clearUserInputEmail() }) {
-                            Icon(imageVector = Icons.Default.Clear, contentDescription = null)
-                        }
-                    }
-                }
-            ) {
-                myViewModel.changeUserInputEmail(it)
-            }
-
-            // Spacing of 16 dp
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // This Function draws the Second UserInput Box for input from User
-            // Passing the Image and the Company Name to be Drawn in the UI
-            UserInputUI(
-
-                // Label in the OutlinedTextField
-                inputFieldLabel = R.string.enter_password,
-
-                // Things the User Inputs
-                userInput = myViewModel.userInputPassword,
-
-                // Keyboard Enter Key Operation (clears the focus)
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                    }
-                ),
-
-                // Keyboard Options to Type from (Currently Password)
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-
-                // If we show the User Input to the User or not
-                visualTransformation = myViewModel.passwordShowState(),
-
-                // It is the Eye Icon (show Password) to be Showed as a Trailing Icon
-                trailingIcon = {
-                    IconButton(onClick = { myViewModel.changePasswordHideStatus() }) {
-                        val visibilityIcon =
-                            if (myViewModel.showPassword) Visibility.VisibilityOn else Visibility.VisibilityOff
-                        val description =
-                            if (myViewModel.showPassword) "Show password" else "Hide password"
-                        Icon(imageVector = visibilityIcon, contentDescription = description)
-                    }
-                }
-            ) {
-                myViewModel.changeUserInputPassword(it)
-            }
-
-            // Spacing of 24 dp
-            Spacer(modifier = Modifier.height(24.dp))
-
             // This Function draws the Button taking the shape and the Text to be shown
             GradientButton(
                 buttonShape = buttonShape,
-                buttonText = R.string.login
+                buttonText = R.string.login,
+                icon = {
+                    Image(
+                        painter = painterResource(id = R.drawable.google),
+                        contentDescription = "Google",
+                    )
+                }
             ) {
 
                 // Checking if already a login Request is getting processed
@@ -210,21 +137,6 @@ fun LoginScreen(
                     myViewModel.sendLoginRequest()
                 else
                     Toast.makeText(context, "Wait", Toast.LENGTH_SHORT).show()
-            }
-
-            // Spacing of 24 dp
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // This draws a TextButton with the text we want to show as Argument
-            TextButtonUI(textToShow = R.string.create_an_account) {
-
-                myViewModel.resetToDefault()
-
-                // This Executes when we press the TextButton
-                navController.navigate(AuthenticationRoutes.Register.route) {
-                    popUpTo(navController.graph.startDestinationId)
-                    launchSingleTop = true
-                }
             }
         }
     }

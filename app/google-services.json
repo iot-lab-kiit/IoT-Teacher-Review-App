@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "926563265864",
+    "project_id": "iot-teacher-review-app",
+    "storage_bucket": "iot-teacher-review-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926563265864:android:e623e064799aad869bd77d",
+        "android_client_info": {
+          "package_name": "in.iot.lab.teacherreview"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "926563265864-8ag6r58ot2t11d4h5uai9h59vpnnosbu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.iot.lab.teacherreview",
+            "certificate_hash": "69c977407bfe013d32ee80db0a9188e30b49ea19"
+          }
+        },
+        {
+          "client_id": "926563265864-ub1ee0j8o9gqs6egssvcp92f332hecpb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqqAVyRdOUk-XWxFhZDvDNCYcjr5wvniw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "926563265864-ub1ee0j8o9gqs6egssvcp92f332hecpb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
