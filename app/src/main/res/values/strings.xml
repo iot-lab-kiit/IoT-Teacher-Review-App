@@ -2,7 +2,7 @@
     <string name="app_name">IoT Teacher Review</string>
     <string name="email_id">Email ID</string>
     <string name="enter_password">Enter Password</string>
-    <string name="login">LOGIN</string>
+    <string name="login">Login With Google</string>
     <string name="create_an_account">Create an Account</string>
     <string name="enter_name">Enter Name</string>
     <string name="enter_phone_number">Enter Phone Number</string>
@@ -41,5 +41,6 @@
     <string name="semester">Semester</string>
 
     <string name="roll_number">Roll Number</string>
+    <string name="web_client_id">926563265864-ub1ee0j8o9gqs6egssvcp92f332hecpb.apps.googleusercontent.com</string>
 
 </resources>

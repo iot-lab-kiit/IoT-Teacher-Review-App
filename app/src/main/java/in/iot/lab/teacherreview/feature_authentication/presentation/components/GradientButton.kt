@@ -3,13 +3,19 @@ package `in`.iot.lab.teacherreview.feature_authentication.presentation.component
 import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +41,15 @@ private fun DefaultPreview() {
     CustomAppTheme {
         GradientButton(
             buttonShape = MaterialTheme.shapes.medium,
-            buttonText = R.string.login
+            buttonText = R.string.login,
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Lock,
+                    contentDescription = "Lock",
+                    modifier = Modifier.size(24.dp)
+                )
+
+            }
         ) {}
     }
 }
@@ -52,7 +66,8 @@ fun GradientButton(
     modifier: Modifier = Modifier,
     buttonShape: CornerBasedShape,
     @StringRes buttonText: Int,
-    onClickEvent: () -> Unit
+    icon: @Composable (() -> Unit)? = null,
+    onClickEvent: () -> Unit,
 ) {
 
     // Gradient Color List for making the Gradient
@@ -88,10 +103,18 @@ fun GradientButton(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = stringResource(id = buttonText),
-                style = MaterialTheme.typography.headlineSmall
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(id = buttonText),
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                if (icon != null) {
+                    icon()
+                }
+            }
         }
     }
 }

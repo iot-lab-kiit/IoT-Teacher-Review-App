@@ -4,6 +4,7 @@ import `in`.iot.lab.teacherreview.core.utils.Constants
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.FacultiesData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewPostData
+import retrofit2.Response
 import retrofit2.http.*
 
 /**

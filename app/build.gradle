@@ -5,16 +5,19 @@ plugins {
     // Hilt Plugins
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+
+    // Firebase
+    id 'com.google.gms.google-services'
 }
 
 android {
     namespace 'in.iot.lab.teacherreview'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "in.iot.lab.teacherreview"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -41,7 +44,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0'
+        kotlinCompilerExtensionVersion '1.5.2'
     }
     packagingOptions {
         resources {
@@ -87,4 +90,13 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+
+    // Firebase Auth
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-auth")
+
+    // Credential Manager
+    implementation("androidx.credentials:credentials:1.3.0-alpha01")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0-alpha01")
+    implementation "com.google.android.libraries.identity.googleid:googleid:1.1.0"
 }

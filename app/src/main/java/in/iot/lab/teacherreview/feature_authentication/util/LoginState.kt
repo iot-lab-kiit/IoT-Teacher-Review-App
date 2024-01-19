@@ -1,6 +1,7 @@
 package `in`.iot.lab.teacherreview.feature_authentication.util
 
 import `in`.iot.lab.teacherreview.feature_authentication.data.models.AuthenticationResponse
+import `in`.iot.lab.teacherreview.feature_authentication.data.models.LoginResult
 import `in`.iot.lab.teacherreview.feature_authentication.util.LoginState.*
 
 /**
@@ -14,6 +15,6 @@ import `in`.iot.lab.teacherreview.feature_authentication.util.LoginState.*
 sealed class LoginState{
     object Initialized : LoginState()
     object Loading : LoginState()
-    class Success(val data : AuthenticationResponse) : LoginState()
+    class Success(val data : LoginResult) : LoginState()
     class Failure(val errorMessage : String) : LoginState()
 }
