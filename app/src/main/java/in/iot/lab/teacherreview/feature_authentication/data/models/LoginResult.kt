@@ -1,5 +1,7 @@
 package `in`.iot.lab.teacherreview.feature_authentication.data.models
 
+import com.google.firebase.auth.FirebaseUser
+
 
 data class LoginResult(
     val data: User?,
@@ -13,13 +15,13 @@ data class User(
     val photoUrl: String?,
 )
 
-//fun FirebaseUser?.toUser(): User? {
-//    return this?.run {
-//        User(
-//            uid = uid,
-//            email = email ?: "",
-//            photoUrl = photoUrl?.toString(),
-//            username = displayName
-//        )
-//    }
-//}
+fun FirebaseUser?.toUser(): User? {
+    return this?.run {
+        User(
+            uid = uid,
+            email = email ?: "",
+            photoUrl = photoUrl?.toString(),
+            username = displayName
+        )
+    }
+}
