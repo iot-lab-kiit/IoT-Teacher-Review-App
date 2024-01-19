@@ -12,12 +12,12 @@ plugins {
 
 android {
     namespace 'in.iot.lab.teacherreview'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "in.iot.lab.teacherreview"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -44,7 +44,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0'
+        kotlinCompilerExtensionVersion '1.5.2'
     }
     packagingOptions {
         resources {
