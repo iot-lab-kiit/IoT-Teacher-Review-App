@@ -5,37 +5,31 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.eterncare.sweetandroid.core.theme.custom_icons.Visibility
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.core.theme.buttonShape
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.components.GradientButton
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.components.ImageAndScreenHeading
-import `in`.iot.lab.teacherreview.feature_authentication.presentation.components.TextButtonUI
-import `in`.iot.lab.teacherreview.feature_authentication.presentation.components.UserInputUI
-import `in`.iot.lab.teacherreview.feature_authentication.presentation.navigation.AuthenticationRoutes
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.stateholder.LoginViewModel
 import `in`.iot.lab.teacherreview.feature_authentication.util.LoginState
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.HomeActivity
@@ -72,6 +66,14 @@ fun LoginScreen(
     val context = LocalContext.current
     // Boolean which stores if there is already a Login Request being processed at the time
     var loginRequestEmpty = true
+
+    // This Effect is called when the Screen is Launched
+    LaunchedEffect(Unit) {
+        if (myViewModel.checkIfUserIsLoggedIn()) {
+            context.startActivity(Intent(context, HomeActivity::class.java))
+            (context as Activity).finish()
+        }
+    }
 
     // Checking what to do according to the different States of UI
     when (myViewModel.loginState) {
@@ -128,13 +130,14 @@ fun LoginScreen(
                     Image(
                         painter = painterResource(id = R.drawable.google),
                         contentDescription = "Google",
+                        modifier = Modifier.size(36.dp)
                     )
                 }
             ) {
 
                 // Checking if already a login Request is getting processed
                 if (loginRequestEmpty)
-                    myViewModel.sendLoginRequest()
+                    myViewModel.sendLoginRequest(context)
                 else
                     Toast.makeText(context, "Wait", Toast.LENGTH_SHORT).show()
             }
