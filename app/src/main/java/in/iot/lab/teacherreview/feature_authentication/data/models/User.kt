@@ -13,11 +13,11 @@ package `in`.iot.lab.teacherreview.feature_authentication.data.models
  * @property status this contains whether the user is a verified User
  */
 data class User(
-    val _id: String? = "",
-    val name: String? = "",
-    val email: String? = "",
-    val uid: String? = "",
-    val pictureUrl: String? = "",
-    val role: Int? = 0,
-    val status: Int? =0
+    val _id: String = "",
+    val name: String = "",
+    val email: String = "",
+    val uid: String = "",
+    val pictureUrl: String = "",
+    val role: Int = 0,
+    val status: Int = 0
 )

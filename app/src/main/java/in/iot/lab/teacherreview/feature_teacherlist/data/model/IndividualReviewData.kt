@@ -1,6 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.data.model
 
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.UserData
+import `in`.iot.lab.teacherreview.feature_authentication.data.models.User
 
 /**
  * This is the Structure of the Each Review Data
@@ -19,6 +19,6 @@ data class IndividualReviewData(
     val rating: RatingData? = null,
     val faculty: IndividualFacultyData,
     val subject: SubjectsData,
-    val createdBy: UserData,
+    val createdBy: User,
     val createdAt : String
 )
