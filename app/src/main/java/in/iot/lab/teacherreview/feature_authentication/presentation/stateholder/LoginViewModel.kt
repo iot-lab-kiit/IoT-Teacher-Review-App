@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import `in`.iot.lab.teacherreview.feature_authentication.data.data_source.remote.RetrofitInstance
+import `in`.iot.lab.teacherreview.feature_authentication.data.models.PostLoginData
 import `in`.iot.lab.teacherreview.feature_authentication.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_authentication.presentation.screen.LoginScreen
 import `in`.iot.lab.teacherreview.feature_authentication.util.LoginState
@@ -22,6 +24,7 @@ import kotlinx.coroutines.launch
  */
 
 class LoginViewModel : ViewModel() {
+    private val api = RetrofitInstance.apiInstance
 
     // Making the Repository Variable
     private val myRepository = Repository()
@@ -42,8 +45,20 @@ class LoginViewModel : ViewModel() {
                 loginState = LoginState.Loading
                 val result = myRepository.startLoginWithGoogle(context)
                 loginState = if (result.data != null) {
-                    // Setting the LoginState to Success
-                    LoginState.Success(result)
+                    // Sending the Login Request to the Backend Server
+                    val request = api.postLoginRequest(
+                        postLoginData = PostLoginData(
+                            accessToken = myRepository.getCurrentUserIdToken() ?: ""
+                        )
+                    )
+                    //Log.i("LoginViewModel", "sendLoginRequest: ${myRepository.getCurrentUserIdToken()}")
+                    if (request.isSuccessful) {
+                        // Setting the LoginState to Success
+                        LoginState.Success(result)
+                    } else {
+                        // Setting the LoginState to Failure
+                        LoginState.Failure(request.message())
+                    }
                 } else {
                     // Setting the LoginState to Failure
                     LoginState.Failure(result.errorMessage ?: "Unknown Error Occurred")

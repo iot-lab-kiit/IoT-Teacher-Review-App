@@ -26,8 +26,13 @@ class Repository {
     private val auth = Firebase.auth
 
     fun checkIfUserIsLoggedIn(): Boolean {
-        return auth.currentUser != null
+        return getCurrentUser() != null
     }
+
+    private fun getCurrentUser() = auth.currentUser
+
+    fun getCurrentUserIdToken() =
+        if (checkIfUserIsLoggedIn()) getCurrentUser()!!.getIdToken(false).result.token else null
 
     suspend fun startLoginWithGoogle(context: Context): LoginResult {
         val request: GetCredentialRequest = GetCredentialRequest.Builder()
