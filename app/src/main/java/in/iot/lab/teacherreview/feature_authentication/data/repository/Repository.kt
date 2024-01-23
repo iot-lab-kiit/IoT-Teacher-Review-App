@@ -13,7 +13,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.feature_authentication.data.models.LoginResult
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.toUser
+import `in`.iot.lab.teacherreview.feature_authentication.data.models.toLocalUser
 import kotlinx.coroutines.tasks.await
 
 /**
@@ -88,7 +88,7 @@ class Repository {
         val googleCredentials = GoogleAuthProvider.getCredential(idToken, null)
         val firebaseUser = auth.signInWithCredential(googleCredentials).await().user
         return LoginResult(
-            data = firebaseUser.toUser(),
+            data = firebaseUser.toLocalUser(),
             errorMessage = null
         )
     }

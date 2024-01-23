@@ -4,20 +4,20 @@ import com.google.firebase.auth.FirebaseUser
 
 
 data class LoginResult(
-    val data: User?,
+    val data: LocalUser?,
     val errorMessage: String?
 )
 
-data class User(
+data class LocalUser(
     val username: String?,
     val uid: String,
     val email: String,
     val photoUrl: String?,
 )
 
-fun FirebaseUser?.toUser(): User? {
+fun FirebaseUser?.toLocalUser(): LocalUser? {
     return this?.run {
-        User(
+        LocalUser(
             uid = uid,
             email = email ?: "",
             photoUrl = photoUrl?.toString(),
