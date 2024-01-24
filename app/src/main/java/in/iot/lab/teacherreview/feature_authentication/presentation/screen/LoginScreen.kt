@@ -78,6 +78,7 @@ fun LoginScreen(
     // Checking what to do according to the different States of UI
     when (myViewModel.loginState) {
         is LoginState.Success -> {
+            loginRequestEmpty = true
 
             // Starting the New Activity
             context.startActivity(Intent(context, HomeActivity::class.java))

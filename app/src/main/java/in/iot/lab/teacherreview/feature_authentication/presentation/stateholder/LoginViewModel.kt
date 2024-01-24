@@ -51,7 +51,6 @@ class LoginViewModel : ViewModel() {
                             accessToken = myRepository.getCurrentUserIdToken() ?: ""
                         )
                     )
-                    //Log.i("LoginViewModel", "sendLoginRequest: ${myRepository.getCurrentUserIdToken()}")
                     if (request.isSuccessful) {
                         // Setting the LoginState to Success
                         LoginState.Success(result)
