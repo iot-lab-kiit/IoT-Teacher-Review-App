@@ -29,7 +29,7 @@ class Repository {
         return getCurrentUser() != null
     }
 
-    private fun getCurrentUser() = auth.currentUser
+    fun getCurrentUser() = auth.currentUser
 
     fun getCurrentUserIdToken() =
         if (checkIfUserIsLoggedIn()) getCurrentUser()!!.getIdToken(false).result.token else null
@@ -91,5 +91,9 @@ class Repository {
             data = firebaseUser.toLocalUser(),
             errorMessage = null
         )
+    }
+
+    fun logout() {
+        auth.signOut()
     }
 }

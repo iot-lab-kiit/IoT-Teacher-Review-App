@@ -19,6 +19,12 @@ class UserIdManager(private val context: Context) {
         }
     }
 
+    suspend fun deleteUserId() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(USER_ID_KEY)
+        }
+    }
+
     val userId: Flow<String?> = context.dataStore.data
         .map { preferences ->
             preferences[USER_ID_KEY]

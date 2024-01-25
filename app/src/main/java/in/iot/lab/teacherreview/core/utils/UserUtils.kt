@@ -17,4 +17,8 @@ object UserUtils {
         Log.d("UserUtils", "saveUserID: $userId")
         userIdManager.saveUserId(userId)
     }
+
+    suspend fun deleteUserID() {
+        userIdManager.deleteUserId()
+    }
 }
