@@ -243,7 +243,7 @@ fun IndividualTeacherSuccess(
             } else {
                 val reviewItem = reviewData.individualReviewData[itemCount]
                 ReviewCardItem(
-                    topTitle = reviewItem.createdBy.name,
+                    createdBy = reviewItem.createdBy,
                     review = reviewItem.review!!
                 )
 
