@@ -134,10 +134,7 @@ fun HomeScreenSuccess(
                     // This function draws each Teacher Card
                     TeacherListCardItem(
                         navController = navController,
-                        teacherName = teacher.name,
-
-                        // TODO :-- Need to Add the Subject here but first at the Server
-                        subjectTaught = teacher._id
+                        teacher = teacher
                     ) {
 
                         // Setting the Current Selected Teacher in the shared ViewModel

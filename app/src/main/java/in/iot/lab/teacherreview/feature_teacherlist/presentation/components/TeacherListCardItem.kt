@@ -22,8 +22,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
+import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 
 // This is the Preview function of the Login Screen
 @Preview("Light")
@@ -36,8 +38,12 @@ private fun DefaultPreview() {
     CustomAppTheme {
         TeacherListCardItem(
             navController = rememberNavController(),
-            teacherName = "Anirban Basak",
-            subjectTaught = "Operating System"
+            teacher = IndividualFacultyData(
+                _id = "82323dhub21dh181dbd1x",
+                name = "Anirban Basak",
+                code = "Operating System",
+                avatar = ""
+            ),
         ) {}
     }
 }
@@ -52,8 +58,7 @@ private fun DefaultPreview() {
 fun TeacherListCardItem(
     modifier: Modifier = Modifier,
     navController: NavController,
-    teacherName: String,
-    subjectTaught: String,
+    teacher: IndividualFacultyData,
     onTeacherClick: () -> Unit
 ) {
 
@@ -74,8 +79,9 @@ fun TeacherListCardItem(
         ) {
 
             // This is the profile photo of the Teacher
-            Image(
-                painter = painterResource(id = R.drawable.profile_photo),
+            AsyncImage(
+                model = teacher.avatar,
+                placeholder = painterResource(id = R.drawable.profile_photo),
                 contentDescription = stringResource(id = R.string.profile),
                 modifier = Modifier
                     .size(54.dp)
@@ -91,18 +97,18 @@ fun TeacherListCardItem(
 
                 // Name of the Teacher
                 Text(
-                    text = teacherName,
+                    text = teacher.name,
                     style = MaterialTheme.typography.titleMedium
                 )
 
                 // Subject Taught by the teacher
                 Text(
-                    text = subjectTaught,
+                    text = teacher.code ?: "",
                     style = MaterialTheme.typography.bodySmall
                 )
 
                 // This function draws the stars according to the rating
-                StarsRow(starCount = 3.9)
+                StarsRow(starCount = teacher.avgRating)
             }
 
             // This Box Contains the Show More Button to the end of every Card
