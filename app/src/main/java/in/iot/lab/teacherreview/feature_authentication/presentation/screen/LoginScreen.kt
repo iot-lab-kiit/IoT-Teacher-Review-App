@@ -23,8 +23,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.core.theme.buttonShape
@@ -43,20 +41,18 @@ import `in`.iot.lab.teacherreview.feature_bottom_navigation.HomeActivity
 @Composable
 private fun DefaultPreview() {
     CustomAppTheme {
-        LoginScreen(navController = rememberNavController())
+        LoginScreen()
     }
 }
 
 /**
  * The Main Register Screen of this File which calls all the Other Composable functions and places them
  *
- * @param navController This is the NavController Object which is used to navigate Screens
  * @param modifier  Modifiers is passed to prevent Hardcoding and can be used in multiple occasions
  */
 @Composable
 fun LoginScreen(
-    modifier: Modifier = Modifier,
-    navController: NavController
+    modifier: Modifier = Modifier
 ) {
     // Focus Manager for Input Text Fields
     val focusManager = LocalFocusManager.current

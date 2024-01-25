@@ -13,6 +13,6 @@ import `in`.iot.lab.teacherreview.feature_authentication.presentation.screen.Log
 fun AuthenticationNavGraph(navController: NavHostController){
 
     NavHost(navController = navController, startDestination = AuthenticationRoutes.Login.route, builder = {
-        composable(AuthenticationRoutes.Login.route, content = { LoginScreen(navController = navController) })
+        composable(AuthenticationRoutes.Login.route, content = { LoginScreen() })
     })
 }
