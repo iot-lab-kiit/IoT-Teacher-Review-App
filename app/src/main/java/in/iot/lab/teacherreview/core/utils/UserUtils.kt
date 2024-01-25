@@ -1,20 +1,20 @@
 package `in`.iot.lab.teacherreview.core.utils
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
+import kotlinx.coroutines.flow.Flow
 
 object UserUtils {
-    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var userIdManager: UserIdManager
     fun init(context: Context) {
-        sharedPreferences = context.getSharedPreferences("user", Context.MODE_PRIVATE)
+        userIdManager = UserIdManager(context)
     }
-    fun getUserID(): String {
-        Log.d("UserUtils", "getUserID: ${sharedPreferences.getString("userId", "")}")
-        return sharedPreferences.getString("userId", "") ?: ""
+    fun getUserID(): Flow<String?> {
+        Log.d("UserUtils", "getUserID: ${userIdManager.userId}")
+        return userIdManager.userId
     }
-    fun saveUserID(userId: String) {
+    suspend fun saveUserID(userId: String) {
         Log.d("UserUtils", "saveUserID: $userId")
-        return sharedPreferences.edit().putString("userId", userId).apply()
+        userIdManager.saveUserId(userId)
     }
 }
