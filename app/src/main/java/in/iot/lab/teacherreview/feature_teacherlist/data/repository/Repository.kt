@@ -1,5 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.data.repository
 
+import `in`.iot.lab.teacherreview.core.utils.UserUtils
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.data_source.remote.RetrofitInstance
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewPostData
@@ -84,6 +85,7 @@ class Repository {
 
         // This is the Response from the Server
         val response = RetrofitInstance.apiInstance.getStudentReviewHistory(
+            studentId = UserUtils.getUserID(),
             limitValue = limitValue
         )
 
