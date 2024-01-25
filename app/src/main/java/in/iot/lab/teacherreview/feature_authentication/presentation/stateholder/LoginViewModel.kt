@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import `in`.iot.lab.teacherreview.core.utils.UserUtils
 import `in`.iot.lab.teacherreview.feature_authentication.data.data_source.remote.RetrofitInstance
 import `in`.iot.lab.teacherreview.feature_authentication.data.models.PostLoginData
 import `in`.iot.lab.teacherreview.feature_authentication.data.repository.Repository
@@ -52,6 +53,9 @@ class LoginViewModel : ViewModel() {
                         )
                     )
                     if (request.isSuccessful) {
+                        // Side Effect to Save the User ID in the Shared Preferences
+                        // TODO: Replace this with a data store
+                        request.body()?.authentication?.payload?.user?._id?.let { UserUtils.saveUserID(it) }
                         // Setting the LoginState to Success
                         LoginState.Success(result)
                     } else {
