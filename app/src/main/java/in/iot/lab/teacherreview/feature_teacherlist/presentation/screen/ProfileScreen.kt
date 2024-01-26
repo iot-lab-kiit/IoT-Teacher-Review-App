@@ -3,6 +3,8 @@ package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -40,6 +42,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.P
 import java.time.LocalDate
 
 // This is the Preview function of the Screen
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview("Light")
 @Preview(
     name = "Dark",
@@ -59,6 +62,7 @@ private fun DefaultPreviewLoading() {
  * @param modifier Default Modifier to pass modifications from the parent function
  * @param navController This is the navigation Controller which helps in navigation
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
