@@ -31,8 +31,13 @@ class Repository {
 
     fun getCurrentUser() = auth.currentUser
 
-    fun getCurrentUserIdToken() =
-        if (checkIfUserIsLoggedIn()) getCurrentUser()!!.getIdToken(false).result.token else null
+    suspend fun getCurrentUserIdToken(): String? {
+        if (!checkIfUserIsLoggedIn()) return null
+
+        val tokenTask = getCurrentUser()!!.getIdToken(false)
+        tokenTask.await()
+        return tokenTask.result?.token
+    }
 
     suspend fun startLoginWithGoogle(context: Context): LoginResult {
         val request: GetCredentialRequest = GetCredentialRequest.Builder()
