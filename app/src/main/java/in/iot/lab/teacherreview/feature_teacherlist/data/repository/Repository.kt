@@ -1,5 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.data.repository
 
+import `in`.iot.lab.teacherreview.feature_authentication.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.data_source.remote.RetrofitInstance
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewPostData
@@ -21,6 +22,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallSt
  * @property postReviewData This function posts the Review Data to the database
  */
 class Repository {
+    private suspend fun getToken() = Repository().getCurrentUserIdToken() ?: ""
 
     // This Function calls the Server and fetches the Teacher List to be shown to the user
     suspend fun getTeacherList(
@@ -31,7 +33,8 @@ class Repository {
         // This is the Response from the Server
         val response = RetrofitInstance.apiInstance.getTeacherList(
             limitValue = limitValue,
-            facultyName = facultyName
+            facultyName = facultyName,
+            token = getToken()
         )
 
         // Checking if the Response is successful or a Failure
@@ -50,7 +53,8 @@ class Repository {
         // This is the Response from the Server
         val response = RetrofitInstance.apiInstance.getIndividualTeacherReviews(
             limitValue = limitValue,
-            facultyId = facultyId
+            facultyId = facultyId,
+            token = getToken()
         )
 
         // Checking if the Response is successful or a Failure
@@ -86,7 +90,8 @@ class Repository {
         // This is the Response from the Server
         val response = RetrofitInstance.apiInstance.getStudentReviewHistory(
             studentId = studentId,
-            limitValue = limitValue
+            limitValue = limitValue,
+            token = getToken()
         )
 
         // Checking if the Response is successful or a Failure
@@ -100,7 +105,11 @@ class Repository {
     suspend fun postReviewData(postData: ReviewPostData): AddReviewApiState {
 
         // This is the Response from the Server
-        val response = RetrofitInstance.apiInstance.postTeacherReviews(post = postData)
+        val response =
+            RetrofitInstance.apiInstance.postTeacherReviews(
+                post = postData,
+                token = getToken()
+            )
 
         // Checking if the Response is successful or a Failure
         return if (response.isSuccessful)
