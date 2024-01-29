@@ -1,14 +1,9 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.data.data_source.remote
 
-import android.util.Log
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import `in`.iot.lab.teacherreview.core.utils.Constants.BASE_URL
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.data_source.remote.RetrofitInstance.apiInstance
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.data_source.remote.RetrofitInstance.retrofit
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -25,7 +20,6 @@ object RetrofitInstance {
 
     private val client by lazy {
         OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor)
             .readTimeout(45, TimeUnit.SECONDS)
             .writeTimeout(45, TimeUnit.SECONDS)
             .build()
@@ -45,7 +39,8 @@ object RetrofitInstance {
         retrofit.create(RetrofitApi::class.java)
     }
 
-    private val AuthInterceptor = object: Interceptor {
+    // TODO: Use This again when DI is implemented
+    /*private val AuthInterceptor = object: Interceptor {
 
         private var token = Firebase.auth.currentUser?.getIdToken(false)?.result?.token
             ?: throw Exception("Token is null");
@@ -59,6 +54,5 @@ object RetrofitInstance {
                 .build()
             return chain.proceed(request)
         }
-
-    }
+    }*/
 }
