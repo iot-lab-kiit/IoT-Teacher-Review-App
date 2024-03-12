@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import `in`.iot.lab.teacherreview.core.utils.UserUtils
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HistoryScreenControl
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState
@@ -19,6 +20,8 @@ import java.net.ConnectException
  * @property getStudentReviewHistory This function fetches the Student's History Reviews
  */
 class HistoryScreenViewModel : ViewModel() {
+    private val userIdFlow = UserUtils.getUserID()
+    private var userId = ""
 
     // Repository Variable
     private val myRepository: Repository = Repository()
@@ -28,6 +31,16 @@ class HistoryScreenViewModel : ViewModel() {
         GetHistoryApiCallState.Initialized
     )
         private set
+
+    init {
+        viewModelScope.launch {
+            userIdFlow.collect {
+                if (it != null) {
+                    userId = it
+                }
+            }
+        }
+    }
 
     // This function fetches the Student's History Reviews
     fun getStudentReviewHistory() {
@@ -44,6 +57,7 @@ class HistoryScreenViewModel : ViewModel() {
                 // Response from the Server
                 myRepository.getStudentReviewHistory(
                     limitValue = 10,
+                    studentId = userId
                 )
 
             } catch (_: ConnectException) {

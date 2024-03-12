@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
@@ -33,7 +34,6 @@ private fun DefaultPreviewLoading() {
             selectedTeacher = IndividualFacultyData(
                 _id = "",
                 name = "",
-                avgRating = 2.3,
                 avgTeachingRating = 3.2,
                 avgMarkingRating = 4.3,
                 avgAttendanceRating = 4.3,
@@ -61,10 +61,10 @@ fun TeacherDetailsHeaderCard(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        // TODO :- Need to add Image on the Database
         // Teacher Profile Picture
-        Image(
-            painter = painterResource(id = R.drawable.profile_photo),
+        AsyncImage(
+            model = selectedTeacher.avatar,
+            placeholder = painterResource(id = R.drawable.profile_photo),
             contentDescription = stringResource(id = R.string.profile),
             modifier = Modifier
                 .size(72.dp)

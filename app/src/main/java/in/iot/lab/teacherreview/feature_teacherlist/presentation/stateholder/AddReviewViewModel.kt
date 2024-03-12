@@ -160,9 +160,7 @@ class AddReviewViewModel : ViewModel() {
             val postData = ReviewPostData(
                 review = userInputOverallReview,
                 rating = ratingData,
-                faculty = selectedTeacherId._id,
-                // TODO :- Real Subject needs to be implemented here
-                subject = "63b206d844b81bcd4940d1e6"
+                faculty = selectedTeacherId._id
             )
 
             // CHanging the State of the Api Accordingly

@@ -23,31 +23,31 @@ interface RetrofitApi {
     // This calls the API and fetches all the Teachers there in the Database
     @GET(Constants.TEACHER_LIST_ENDPOINT)
     suspend fun getTeacherList(
-        @Header("Authorization") token: String = Constants.ACCESS_TOKEN,
+        @Header("Authorization") token: String,
         @Query("${"$"}limit") limitValue: Int,
         @Query("name[${"$"}search]") facultyName: String?
-    ): retrofit2.Response<FacultiesData>
+    ): Response<FacultiesData>
 
     // This calls the API and fetches detailed Reviews of a Teacher and all about him in the database
-    @GET("reviews?${"$"}populate=faculty&${"$"}populate=subject&${"$"}populate=createdBy")
+    @GET("reviews?${"$"}populate=faculty&${"$"}populate=createdBy")
     suspend fun getIndividualTeacherReviews(
-        @Header("Authorization") token: String = Constants.ACCESS_TOKEN,
+        @Header("Authorization") token: String,
         @Query("faculty") facultyId: String,
         @Query("${"$"}limit") limitValue: Int
-    ): retrofit2.Response<ReviewData>
+    ): Response<ReviewData>
 
     // This calls the API and fetches the particular Student Review History
-    @GET("reviews?${"$"}populate=faculty&${"$"}populate=subject&${"$"}populate=createdBy")
+    @GET("reviews?${"$"}populate=faculty&${"$"}populate=createdBy")
     suspend fun getStudentReviewHistory(
-        @Header("Authorization") token: String = Constants.ACCESS_TOKEN,
-        @Query("createdBy") studentId: String = Constants.STUDENT_ID,
+        @Header("Authorization") token: String,
+        @Query("createdBy") studentId: String,
         @Query("${"$"}limit") limitValue: Int
-    ): retrofit2.Response<ReviewData>
+    ): Response<ReviewData>
 
     // This calls the API and posts the Review Data to the Database
     @POST(Constants.POST_TEACHER_REVIEW_ENDPOINT)
     suspend fun postTeacherReviews(
-        @Header("Authorization") token: String = Constants.ACCESS_TOKEN,
+        @Header("Authorization") token: String,
         @Body post: ReviewPostData
-    ): retrofit2.Response<ReviewPostData>
+    ): Response<ReviewPostData>
 }

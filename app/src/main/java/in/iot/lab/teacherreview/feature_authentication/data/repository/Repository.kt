@@ -1,20 +1,19 @@
 package `in`.iot.lab.teacherreview.feature_authentication.data.repository
 
+import android.app.Activity
 import android.content.Context
-import androidx.credentials.CredentialManager
-import androidx.credentials.CustomCredential
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.GetCredentialResponse
-import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
+import android.content.Intent
+import androidx.activity.result.ActivityResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import `in`.iot.lab.teacherreview.R
+import `in`.iot.lab.teacherreview.core.utils.await
 import `in`.iot.lab.teacherreview.feature_authentication.data.models.LoginResult
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.toUser
-import kotlinx.coroutines.tasks.await
+import `in`.iot.lab.teacherreview.feature_authentication.data.models.toLocalUser
 
 /**
  * This class basically is responsible for calling for the Data and returning the Data needed by
@@ -26,56 +25,46 @@ class Repository {
     private val auth = Firebase.auth
 
     fun checkIfUserIsLoggedIn(): Boolean {
-        return auth.currentUser != null
+        return getCurrentUser() != null
     }
 
-    suspend fun startLoginWithGoogle(context: Context): LoginResult {
-        val request: GetCredentialRequest = GetCredentialRequest.Builder()
-            .addCredentialOption(
-                GetSignInWithGoogleOption
-                    .Builder(context.getString(R.string.web_client_id))
-                    .build()
-            )
+    fun getCurrentUser() = auth.currentUser
+
+    suspend fun getCurrentUserIdToken(): String? {
+        if (!checkIfUserIsLoggedIn()) return null
+
+        val tokenTask = getCurrentUser()!!.getIdToken(false)
+        tokenTask.await()
+        return tokenTask.result?.token
+    }
+
+    fun startLoginWithGoogle(context: Context): Intent {
+        val options = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.web_client_id))
+            .requestProfile()
             .build()
-
-        val credentialManager = CredentialManager.create(context)
-
-        val result = credentialManager.getCredential(
-            request = request,
-            context = context,
-        )
-        return handleSignIn(result)
+        val googleSignInClient = GoogleSignIn.getClient(context, options)
+        return googleSignInClient.signInIntent
     }
 
-    private suspend fun handleSignIn(result: GetCredentialResponse): LoginResult {
-        return when (val credential = result.credential) {
-            is CustomCredential -> {
-                if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                    try {
-                        val googleIdTokenCredential =
-                            GoogleIdTokenCredential.createFrom(credential.data)
-                        val idToken = googleIdTokenCredential.idToken
-                        loginWithFirebase(idToken)
-                    } catch (e: GoogleIdTokenParsingException) {
-                        LoginResult(
-                            data = null,
-                            errorMessage = "Received an invalid google id token response"
-                        )
-                    }
-                } else {
-                    LoginResult(
-                        data = null,
-                        errorMessage = "Unexpected type of credential"
-                    )
-                }
-            }
-
-            else -> {
+    suspend fun handleSignIn(result: ActivityResult): LoginResult {
+        return if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                val idToken = account.idToken!!
+                loginWithFirebase(idToken)
+            } catch (e: Exception) {
                 LoginResult(
                     data = null,
-                    errorMessage = "Unexpected type of credential"
+                    errorMessage = "Received an invalid google id token response"
                 )
             }
+        } else {
+            LoginResult(
+                data = null,
+                errorMessage = "Google sign in failed"
+            )
         }
     }
 
@@ -83,8 +72,18 @@ class Repository {
         val googleCredentials = GoogleAuthProvider.getCredential(idToken, null)
         val firebaseUser = auth.signInWithCredential(googleCredentials).await().user
         return LoginResult(
-            data = firebaseUser.toUser(),
+            data = firebaseUser.toLocalUser(),
             errorMessage = null
         )
+    }
+
+    fun logout(context: Context) {
+        auth.signOut()
+        val options = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.web_client_id))
+            .requestProfile()
+            .build()
+        val googleSignInClient = GoogleSignIn.getClient(context, options)
+        googleSignInClient.signOut()
     }
 }

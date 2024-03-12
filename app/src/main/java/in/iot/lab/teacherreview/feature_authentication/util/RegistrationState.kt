@@ -1,6 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_authentication.util
 
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.UserData
+import `in`.iot.lab.teacherreview.feature_authentication.data.models.LocalUser
 import `in`.iot.lab.teacherreview.feature_authentication.util.RegistrationState.*
 
 /**
@@ -14,6 +14,6 @@ import `in`.iot.lab.teacherreview.feature_authentication.util.RegistrationState.
 sealed class RegistrationState{
     object Initialized : RegistrationState()
     object Loading : RegistrationState()
-    class Success(val data : UserData) : RegistrationState()
+    class Success(val data : LocalUser) : RegistrationState()
     class Failure(val errorMessage : String) : RegistrationState()
 }

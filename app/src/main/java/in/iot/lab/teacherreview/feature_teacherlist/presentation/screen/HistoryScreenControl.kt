@@ -136,7 +136,7 @@ fun HistoryScreenSuccess(
 
             // Showing the Review in the reviewCard UI
             ReviewCardItem(
-                topTitle = reviewItem.createdBy.name,
+                createdBy = reviewItem.createdBy,
                 review = reviewItem.review!!
             )
 
