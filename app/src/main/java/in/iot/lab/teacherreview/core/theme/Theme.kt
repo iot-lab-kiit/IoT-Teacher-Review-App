@@ -79,11 +79,8 @@ fun CustomAppTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = if (!useDarkTheme) {
-        LightColors
-    } else {
-        DarkColors
-    }
+    // TODO: Use DarkTheme colors once the design is finalized
+    val colors = LightColors
 
     MaterialTheme(
         colorScheme = colors,
