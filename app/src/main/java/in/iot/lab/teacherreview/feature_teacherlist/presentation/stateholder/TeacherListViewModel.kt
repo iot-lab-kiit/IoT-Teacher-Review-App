@@ -82,7 +82,7 @@ class TeacherListViewModel : ViewModel() {
 
                 // Response from the Server
                 myRepository.getIndividualTeacherReviews(
-                    limitValue = 10,
+                    limitValue = 50,
                     facultyId = facultyId
                 )
 
