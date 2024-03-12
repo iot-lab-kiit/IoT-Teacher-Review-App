@@ -80,6 +80,7 @@ dependencies {
     // Hilt Dependencies
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     //Retrofit 2.0 Dependency
     implementation(libs.retrofit)
@@ -90,10 +91,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
 
-    // Credential Manager
-    implementation("androidx.credentials:credentials:1.3.0-alpha01")
-    implementation("androidx.credentials:credentials-play-services-auth:1.3.0-alpha01")
-    implementation ("com.google.android.libraries.identity.googleid:googleid:1.1.0")
+    // Legacy
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // Coil
     implementation(libs.coil.compose)

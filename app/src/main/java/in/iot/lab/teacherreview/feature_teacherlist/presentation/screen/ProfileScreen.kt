@@ -165,7 +165,7 @@ fun ProfileScreen(
 
             // Sign Out Button
             Button(onClick = {
-               myViewModel.signOut()
+               myViewModel.signOut(context)
                 context.startActivity(Intent(context, MainActivity::class.java))
                 (context as Activity).finish()
             }) {

@@ -4,6 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,10 +16,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -41,27 +51,25 @@ import `in`.iot.lab.teacherreview.feature_bottom_navigation.HomeActivity
 @Composable
 private fun DefaultPreview() {
     CustomAppTheme {
-        LoginScreen()
+        LoginScreenImpl(
+            isLoading = true
+        )
     }
 }
 
-/**
- * The Main Register Screen of this File which calls all the Other Composable functions and places them
- *
- * @param modifier  Modifiers is passed to prevent Hardcoding and can be used in multiple occasions
- */
+// For Readability, Renamed The Launcher used for Legacy Google SignIn
+internal typealias SignInLauncher = ManagedActivityResultLauncher<Intent, ActivityResult>
+
 @Composable
-fun LoginScreen(
-    modifier: Modifier = Modifier
-) {
-    // Focus Manager for Input Text Fields
-    val focusManager = LocalFocusManager.current
-    // ViewModel Class Variable for Storing Data and User UI events
+fun LoginScreen() {
     val myViewModel = viewModel<LoginViewModel>()
-    // Context of the Activity
     val context = LocalContext.current
-    // Boolean which stores if there is already a Login Request being processed at the time
-    var loginRequestEmpty = true
+    var loading by remember { mutableStateOf(false) }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = myViewModel::onSignInResult
+    )
 
     // This Effect is called when the Screen is Launched
     LaunchedEffect(Unit) {
@@ -71,31 +79,44 @@ fun LoginScreen(
         }
     }
 
+
     // Checking what to do according to the different States of UI
     when (myViewModel.loginState) {
         is LoginState.Success -> {
-            loginRequestEmpty = true
-
-            // Starting the New Activity
+            loading = false
             context.startActivity(Intent(context, HomeActivity::class.java))
             (context as Activity).finish()
+        }
 
-        }
         is LoginState.Loading -> {
-            loginRequestEmpty = false
+            loading = true
         }
+
         is LoginState.Failure -> {
+            loading = false
             Toast.makeText(
                 context,
                 (myViewModel.loginState as LoginState.Failure).errorMessage,
                 Toast.LENGTH_SHORT
             ).show()
         }
+
         else -> {}
     }
 
+    LoginScreenImpl(
+        isLoading = loading,
+        onSignIn = {
+            myViewModel.signIn(context, launcher)
+        }
+    )
+}
 
-    // Surface Covers the Whole screen and keeps the background color for Better App UI colors
+@Composable
+private fun LoginScreenImpl(
+    isLoading: Boolean = false,
+    onSignIn: () -> Unit = {}
+) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -103,10 +124,11 @@ fun LoginScreen(
 
         // This Column Aligns the UI vertically one after another
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp),
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             // This Function draws the Image and the Heading Text For the Screen
@@ -129,14 +151,12 @@ fun LoginScreen(
                         contentDescription = "Google",
                         modifier = Modifier.size(36.dp)
                     )
-                }
-            ) {
-
-                // Checking if already a login Request is getting processed
-                if (loginRequestEmpty)
-                    myViewModel.sendLoginRequest(context)
-                else
-                    Toast.makeText(context, "Wait", Toast.LENGTH_SHORT).show()
+                },
+                onClickEvent = onSignIn
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            if (isLoading) {
+                CircularProgressIndicator()
             }
         }
     }

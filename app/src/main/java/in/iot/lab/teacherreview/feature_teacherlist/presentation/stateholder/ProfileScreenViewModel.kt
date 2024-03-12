@@ -1,5 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.iot.lab.teacherreview.core.utils.UserUtils
@@ -23,10 +24,10 @@ class ProfileScreenViewModel : ViewModel() {
         _currentUser.value = myRepository.getCurrentUser()?.toLocalUser()
     }
 
-    fun signOut() {
+    fun signOut(context: Context) {
         viewModelScope.launch {
             UserUtils.deleteUserID()
-            myRepository.logout()
+            myRepository.logout(context)
         }
     }
 }
