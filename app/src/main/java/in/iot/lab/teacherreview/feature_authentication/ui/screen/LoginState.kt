@@ -1,4 +1,4 @@
-package `in`.iot.lab.teacherreview.feature_authentication.util
+package `in`.iot.lab.teacherreview.feature_authentication.ui.screen
 
 import `in`.iot.lab.teacherreview.feature_authentication.domain.models.LocalUser
 
