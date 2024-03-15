@@ -1,6 +1,5 @@
 package `in`.iot.lab.teacherreview.feature_bottom_navigation.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +27,7 @@ internal fun HomeScreen(navController: NavHostController = rememberNavController
         Surface(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(it)
                 .padding(bottom = it.calculateBottomPadding()),
         ) {
             HomeNavGraph(navController = navController)
