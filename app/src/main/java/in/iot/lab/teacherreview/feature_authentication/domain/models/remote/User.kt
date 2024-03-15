@@ -1,4 +1,6 @@
-package `in`.iot.lab.teacherreview.feature_authentication.data.models
+package `in`.iot.lab.teacherreview.feature_authentication.domain.models.remote
+
+import com.google.gson.annotations.SerializedName
 
 /**
  * This is the Structure of the User data which will be sent by the Database server and be stored
@@ -13,11 +15,18 @@ package `in`.iot.lab.teacherreview.feature_authentication.data.models
  * @property status this contains whether the user is a verified User
  */
 data class User(
+    @SerializedName("_id")
     val _id: String = "",
+    @SerializedName("name")
     val name: String = "",
+    @SerializedName("email")
     val email: String = "",
+    @SerializedName("uid")
     val uid: String = "",
+    @SerializedName("pictureUrl")
     val pictureUrl: String = "",
+    @SerializedName("role")
     val role: Int = 0,
+    @SerializedName("status")
     val status: Int = 0
 )
