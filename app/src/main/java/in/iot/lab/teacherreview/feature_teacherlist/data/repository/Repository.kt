@@ -1,6 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.data.repository
 
-import `in`.iot.lab.teacherreview.feature_authentication.data.repository.Repository
+import `in`.iot.lab.teacherreview.feature_authentication.domain.repository.AuthRepository
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.data_source.remote.RetrofitInstance
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewPostData
@@ -8,6 +8,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherReviewApiCall
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState
+import javax.inject.Inject
 
 /**
  * This is the repository which is going to control flow of every data related to
@@ -21,8 +22,10 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallSt
  * History of a particular Student
  * @property postReviewData This function posts the Review Data to the database
  */
-class Repository {
-    private suspend fun getToken() = Repository().getCurrentUserIdToken() ?: ""
+class Repository @Inject constructor(
+    private val authRepository: AuthRepository
+) {
+    private suspend fun getToken() = authRepository.getUserIdToken().getOrDefault("")
 
     // This Function calls the Server and fetches the Teacher List to be shown to the user
     suspend fun getTeacherList(

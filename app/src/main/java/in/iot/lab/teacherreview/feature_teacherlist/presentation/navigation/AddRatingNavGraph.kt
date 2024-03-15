@@ -1,7 +1,7 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,7 +27,7 @@ fun AddRatingNavGraph(
 ) {
 
     // Shared View Model which is shared between the add review and add rating Screens
-    val myViewModel: AddReviewViewModel = viewModel()
+    val myViewModel: AddReviewViewModel = hiltViewModel()
 
     // Setting the Current Teacher Details in the View Model
     myViewModel.setTeacherId(teacherData)

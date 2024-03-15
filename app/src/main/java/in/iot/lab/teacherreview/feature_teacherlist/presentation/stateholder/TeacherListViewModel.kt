@@ -12,6 +12,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherRev
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState
 import kotlinx.coroutines.launch
 import java.net.ConnectException
+import javax.inject.Inject
 
 /**
  * This is the ViewModel Class for the [HomeScreenControl]
@@ -25,10 +26,9 @@ import java.net.ConnectException
  * @property addTeacherForNextScreen This function initialises the Teacher variable for
  * the next Screen
  */
-class TeacherListViewModel : ViewModel() {
-
-    // Repository Variable
-    private val myRepository = Repository()
+class TeacherListViewModel @Inject constructor(
+    private val myRepository: Repository
+) : ViewModel() {
 
     // Api Call state variable which also contains the data fetched from the API Call
     var teacherListApiCallState: TeacherListApiCallState by mutableStateOf(TeacherListApiCallState.Initialized)

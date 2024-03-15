@@ -1,18 +1,23 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import `in`.iot.lab.teacherreview.core.utils.UserUtils
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.LocalUser
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.toLocalUser
-import `in`.iot.lab.teacherreview.feature_authentication.data.repository.Repository
+import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.lifecycle.HiltViewModel
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.LocalUser
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.toLocalUser
+import `in`.iot.lab.teacherreview.feature_authentication.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProfileScreenViewModel : ViewModel() {
-    private val myRepository = Repository()
+@HiltViewModel
+class ProfileScreenViewModel @Inject constructor(
+    private val repository: AuthRepository,
+    private val auth: FirebaseAuth
+) : ViewModel() {
+
     private val _currentUser: MutableStateFlow<LocalUser?> = MutableStateFlow(null)
     val currentUser: StateFlow<LocalUser?> = _currentUser
 
@@ -21,13 +26,12 @@ class ProfileScreenViewModel : ViewModel() {
     }
 
     private fun getCurrentUser() {
-        _currentUser.value = myRepository.getCurrentUser()?.toLocalUser()
+        _currentUser.value = auth.currentUser?.toLocalUser()
     }
 
-    fun signOut(context: Context) {
+    fun signOut() {
         viewModelScope.launch {
-            UserUtils.deleteUserID()
-            myRepository.logout(context)
+            repository.logout()
         }
     }
 }

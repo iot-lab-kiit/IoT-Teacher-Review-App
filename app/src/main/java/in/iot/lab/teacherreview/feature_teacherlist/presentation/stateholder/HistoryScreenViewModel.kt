@@ -5,12 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import `in`.iot.lab.teacherreview.core.utils.UserUtils
+import dagger.hilt.android.lifecycle.HiltViewModel
+import `in`.iot.lab.teacherreview.core.data.local.UserPreferences
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HistoryScreenControl
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState
 import kotlinx.coroutines.launch
 import java.net.ConnectException
+import javax.inject.Inject
 
 /**
  * This is the ViewModel of the [HistoryScreenControl] Screen
@@ -19,12 +21,13 @@ import java.net.ConnectException
  * @property getHistoryApiCallState  This holds the state of the History Api Request
  * @property getStudentReviewHistory This function fetches the Student's History Reviews
  */
-class HistoryScreenViewModel : ViewModel() {
-    private val userIdFlow = UserUtils.getUserID()
+@HiltViewModel
+class HistoryScreenViewModel @Inject constructor(
+    userPreferences: UserPreferences,
+    private val myRepository: Repository
+) : ViewModel() {
+    private val userIdFlow = userPreferences.userId
     private var userId = ""
-
-    // Repository Variable
-    private val myRepository: Repository = Repository()
 
     // This holds the state of the History Api Request
     var getHistoryApiCallState: GetHistoryApiCallState by mutableStateOf(

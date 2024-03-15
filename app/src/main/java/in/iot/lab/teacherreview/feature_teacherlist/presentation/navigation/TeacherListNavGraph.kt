@@ -1,7 +1,7 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,7 +20,7 @@ fun TeacherListNavGraph(
 ) {
 
     // Teacher List ViewModel which will be passed down to different Functions
-    val teacherListViewModel: TeacherListViewModel = viewModel()
+    val teacherListViewModel: TeacherListViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,

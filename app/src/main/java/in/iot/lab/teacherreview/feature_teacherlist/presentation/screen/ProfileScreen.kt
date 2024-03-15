@@ -30,7 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
@@ -66,11 +66,11 @@ private fun DefaultPreviewLoading() {
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    viewModel: ProfileScreenViewModel = hiltViewModel()
 ) {
 
-    val myViewModel: ProfileScreenViewModel = viewModel()
-    val user by myViewModel.currentUser.collectAsState()
+    val user by viewModel.currentUser.collectAsState()
     val context = LocalContext.current
     // This is the Parent Composable which contains all the Components
     Surface(
@@ -165,7 +165,7 @@ fun ProfileScreen(
 
             // Sign Out Button
             Button(onClick = {
-               myViewModel.signOut(context)
+               viewModel.signOut()
                 context.startActivity(Intent(context, MainActivity::class.java))
                 (context as Activity).finish()
             }) {

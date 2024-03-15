@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.R
@@ -34,8 +35,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.A
 private fun DefaultPreviewLoading() {
     CustomAppTheme {
         AddRatingScreen(
-            navController = rememberNavController(),
-            myViewModel = AddReviewViewModel()
+            navController = rememberNavController()
         )
     }
 }
@@ -51,7 +51,7 @@ private fun DefaultPreviewLoading() {
 fun AddRatingScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    myViewModel: AddReviewViewModel
+    myViewModel: AddReviewViewModel = hiltViewModel()
 ) {
 
     // This is the Parent Composable which contains all the Components
