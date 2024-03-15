@@ -1,8 +1,8 @@
-package `in`.iot.lab.teacherreview.feature_authentication.data.data_source.remote
+package `in`.iot.lab.teacherreview.feature_authentication.data.remote
 
 import `in`.iot.lab.teacherreview.core.utils.Constants
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.AuthResponse
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.PostLoginData
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.remote.AuthResponse
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.remote.PostLoginData
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -13,7 +13,7 @@ import retrofit2.http.POST
  * @property postLoginRequest this function requests the Server to authenticate the User and
  * to create/update a new User
  */
-interface RetrofitApi {
+interface AuthApi {
 
     // This calls the Api and posts the Login Request to the Server for Authentication
     @POST(Constants.LOGIN_AUTHENTICATION_ENDPOINT)

@@ -1,4 +1,4 @@
-package `in`.iot.lab.teacherreview.feature_authentication.presentation.components
+package `in`.iot.lab.teacherreview.feature_authentication.ui.components
 
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes

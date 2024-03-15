@@ -1,19 +1,10 @@
 package `in`.iot.lab.teacherreview.feature_authentication.util
 
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.LoginResult
-import `in`.iot.lab.teacherreview.feature_authentication.util.LoginState.*
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.LocalUser
 
-/**
- * This sealed Class contains all the States of the Login Request in a API
- *
- * @property Initialized is used to define the Initial State
- * @property Loading is used to define the state of the API call when it is in fetching Phase
- * @property Success is used to define when the API call is a Success
- * @property Failure is used to define when the API call is a Failure
- */
-sealed class LoginState{
-    object Initialized : LoginState()
-    object Loading : LoginState()
-    class Success(val data : LoginResult) : LoginState()
-    class Failure(val errorMessage : String) : LoginState()
+sealed interface LoginState {
+    data object Initialized: LoginState
+    data object Loading: LoginState
+    data class Success(val data: LocalUser? = null): LoginState
+    data class Failure(val message: String): LoginState
 }
