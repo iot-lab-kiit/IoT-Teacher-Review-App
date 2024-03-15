@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HomeScreenControl
@@ -26,6 +27,7 @@ import javax.inject.Inject
  * @property addTeacherForNextScreen This function initialises the Teacher variable for
  * the next Screen
  */
+@HiltViewModel
 class TeacherListViewModel @Inject constructor(
     private val myRepository: Repository
 ) : ViewModel() {
