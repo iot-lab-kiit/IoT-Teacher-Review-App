@@ -23,4 +23,8 @@ data class IndividualFacultyData(
 ) {
     val avgRating: Double
         get() = (avgTeachingRating + avgMarkingRating + avgAttendanceRating) / 3
+
+    // TODO: Add total reviews count serverside
+    val totalReviews: Int
+        get() = 100
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.R
@@ -35,8 +36,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherRev
 private fun DefaultPreviewControl() {
     CustomAppTheme {
         IndividualTeacherControl(
-            navController = rememberNavController(),
-            TeacherListViewModel()
+            navController = rememberNavController()
         )
     }
 }
@@ -51,7 +51,9 @@ private fun DefaultPreviewControl() {
 private fun DefaultPreviewLoading() {
     CustomAppTheme {
         IndividualTeacherLoading(
-            selectedTeacher = TeacherListViewModel().selectedTeacher!!
+            selectedTeacher = IndividualFacultyData(
+                _id = ""
+            )
         )
     }
 }
@@ -84,7 +86,9 @@ private fun DefaultPreviewSuccess() {
 private fun DefaultPreviewFailure() {
     CustomAppTheme {
         IndividualTeacherFailure(
-            selectedTeacher = TeacherListViewModel().selectedTeacher!!,
+            selectedTeacher = IndividualFacultyData(
+                _id = ""
+            ),
             onClickRetry = {},
             textToShow = stringResource(R.string.failed_to_load_tap_to_retry)
         )
@@ -100,7 +104,7 @@ private fun DefaultPreviewFailure() {
 @Composable
 fun IndividualTeacherControl(
     navController: NavController,
-    myViewModel: TeacherListViewModel
+    myViewModel: TeacherListViewModel = hiltViewModel()
 ) {
 
     // Checking which state my app is in Currently

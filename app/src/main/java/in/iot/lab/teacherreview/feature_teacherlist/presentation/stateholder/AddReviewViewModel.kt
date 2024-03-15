@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.RatingData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.RatingParameterData
@@ -13,10 +14,12 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
 import kotlinx.coroutines.launch
 import java.net.ConnectException
+import javax.inject.Inject
 
-class AddReviewViewModel : ViewModel() {
-
-    private val myRepository: Repository = Repository()
+@HiltViewModel
+class AddReviewViewModel @Inject constructor(
+    private val myRepository: Repository
+) : ViewModel() {
 
     var userInputMarkingRating: Double by mutableStateOf(1.0)
         private set

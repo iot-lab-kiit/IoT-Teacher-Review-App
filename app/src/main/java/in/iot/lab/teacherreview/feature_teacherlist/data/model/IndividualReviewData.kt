@@ -1,6 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.data.model
 
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.User
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.remote.User
 
 /**
  * This is the Structure of the Each Review Data

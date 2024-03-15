@@ -1,30 +1,45 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material3.Card
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
+import `in`.iot.lab.teacherreview.core.theme.muted
+import `in`.iot.lab.teacherreview.core.theme.redDot
+import `in`.iot.lab.teacherreview.core.theme.yellowDot
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 
 // This is the Preview function of the Login Screen
@@ -42,7 +57,10 @@ private fun DefaultPreview() {
                 _id = "82323dhub21dh181dbd1x",
                 name = "Anirban Basak",
                 code = "Operating System",
-                avatar = ""
+                avatar = "",
+                avgAttendanceRating = 3.1,
+                avgMarkingRating = 3.9,
+                avgTeachingRating = 4.0
             ),
         ) {}
     }
@@ -62,70 +80,115 @@ fun TeacherListCardItem(
     onTeacherClick: () -> Unit
 ) {
 
-    // Outer Card shown for each Teacher
-    Card(
+    ElevatedCard(
+        shape = RoundedCornerShape(20.dp),
         modifier = modifier
-            .padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 8.dp)
             .fillMaxWidth()
-            .clickable {
-                onTeacherClick()
-            },
+            .padding(16.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .clickable { onTeacherClick() },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        ),
+        elevation = CardDefaults.elevatedCardElevation(
+            defaultElevation = 8.dp,
+            pressedElevation = 12.dp,
+            hoveredElevation = 12.dp,
+            disabledElevation = 0.dp,
+            draggedElevation = 12.dp,
+            focusedElevation = 12.dp
+        )
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp, top = 12.dp, bottom = 12.dp, end = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(16.dp)
         ) {
-
-            // This is the profile photo of the Teacher
-            AsyncImage(
-                model = teacher.avatar,
-                placeholder = painterResource(id = R.drawable.profile_photo),
-                contentDescription = stringResource(id = R.string.profile),
-                modifier = Modifier
-                    .size(54.dp)
-                    .clip(CircleShape)
-                    .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-            )
-
-            // This Column displays the Details of the Teacher
-            Column(
-                modifier = Modifier
-                    .padding(start = 24.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
-                // Name of the Teacher
-                Text(
-                    text = teacher.name,
-                    style = MaterialTheme.typography.titleMedium
+                AsyncImage(
+                    model = teacher.avatar,
+                    placeholder = painterResource(id = R.drawable.profile_photo),
+                    contentDescription = stringResource(id = R.string.profile),
+                    modifier = Modifier
+                        .size(54.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
                 )
-
-                // Subject Taught by the teacher
-                Text(
-                    text = teacher.code ?: "",
-                    style = MaterialTheme.typography.bodySmall
-                )
-
-                // This function draws the stars according to the rating
-                StarsRow(starCount = teacher.avgRating)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Top
+                    ) {
+                        Text(
+                            text = teacher.name,
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.ExtraBold,
+                                fontSize = 20.sp
+                            )
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = teacher.code ?: "",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = muted
+                        )
+                    }
+                    RatingDot(rating = teacher.avgRating)
+                }
             }
-
-            // This Box Contains the Show More Button to the end of every Card
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 8.dp),
-                contentAlignment = Alignment.CenterEnd
+            Spacer(modifier = Modifier.height(16.dp))
+            Divider(modifier = Modifier.height(1.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-
-                // Arrow Forward Button
-                Image(
-                    imageVector = Icons.Default.ArrowForward,
-                    contentDescription = stringResource(R.string.show_more_details),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+                val color = when {
+                    teacher.avgRating < 2.5 -> redDot
+                    teacher.avgRating < 3.5 -> yellowDot
+                    else -> Color.Green
+                }
+                // Rating only 1 decimal places shown
+                val rating = teacher.avgRating.toString().substring(0, 3)
+                Text(
+                    text = "$rating Rating",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = color
+                )
+                Spacer(modifier = Modifier.width(80.dp))
+                Text(
+                    text = "${teacher.totalReviews} Reviews",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
     }
+}
+
+@Composable
+fun RatingDot(rating: Double) {
+    val color = when {
+        rating < 2.5 -> redDot
+        rating < 3.5 -> yellowDot
+        else -> Color.Green
+    }
+    Box(
+        modifier = Modifier
+            .size(24.dp)
+            .clip(CircleShape)
+            .background(color)
+    )
 }

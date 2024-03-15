@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.R
@@ -47,7 +48,6 @@ private fun DefaultPreviewSuccess() {
         HomeScreenSuccess(
             navController = rememberNavController(),
             teacherList = FacultiesData(),
-            myViewModel = TeacherListViewModel()
         )
     }
 }
@@ -77,7 +77,7 @@ private fun DefaultPreviewFailure() {
 @Composable
 fun HomeScreenControl(
     navController: NavController,
-    myViewModel: TeacherListViewModel
+    myViewModel: TeacherListViewModel = hiltViewModel()
 ) {
 
     // Checking which State to Show
@@ -116,7 +116,7 @@ fun HomeScreenSuccess(
     modifier: Modifier = Modifier,
     navController: NavController,
     teacherList: FacultiesData,
-    myViewModel: TeacherListViewModel
+    myViewModel: TeacherListViewModel = hiltViewModel()
 ) {
 
     Column(

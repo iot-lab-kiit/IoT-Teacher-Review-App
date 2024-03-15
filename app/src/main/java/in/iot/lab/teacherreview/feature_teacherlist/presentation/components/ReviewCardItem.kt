@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
-import `in`.iot.lab.teacherreview.feature_authentication.data.models.User
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.remote.User
 
 // This is the Preview function of the Teacher Review Control Screen
 @Preview("Light")
