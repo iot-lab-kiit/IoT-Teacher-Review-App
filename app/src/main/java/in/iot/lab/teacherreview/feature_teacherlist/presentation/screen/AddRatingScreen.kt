@@ -35,7 +35,11 @@ private fun DefaultPreviewLoading() {
     CustomAppTheme {
         AddRatingScreen(
             navController = rememberNavController(),
-            action = {}
+            action = {},
+            teacherName = "Teacher Name",
+            markingRating = 3.0,
+            attendanceRating = 4.0,
+            teachingRating = 5.0
         )
     }
 }
@@ -52,6 +56,10 @@ fun AddRatingScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     action : (AddReviewAction) -> Unit,
+    teacherName : String,
+    markingRating : Double,
+    attendanceRating : Double,
+    teachingRating : Double
 ) {
 
     // This is the Parent Composable which contains all the Components
@@ -109,7 +117,7 @@ fun AddRatingScreen(
                     // Teacher Name
                     // TODO Need to attach the Real Name of the Teacher
                     Text(
-                        text = AddReviewAction.ReturnTeacherName.toString(),
+                        text = teacherName,
                         style = MaterialTheme.typography.headlineSmall,
                     )
 
@@ -119,7 +127,7 @@ fun AddRatingScreen(
                     // This is the Marking Rating Input Field
                     AddStarWithHeadingTitleUI(
                         headingTitle = R.string.marking_rating,
-                        starCount = AddReviewAction.ReturnUserInputMarkingRating.toString().toDouble(),
+                        starCount = markingRating,
                         onAddClick = { action(AddReviewAction.UpdateUserInputMarkingRating(1)) },
                         onSubtractClick = { action(AddReviewAction.UpdateUserInputMarkingRating(0)) }
                     )
@@ -130,7 +138,7 @@ fun AddRatingScreen(
                     // This is the Attendance Rating Input Field
                     AddStarWithHeadingTitleUI(
                         headingTitle = R.string.attendance_rating,
-                        starCount = AddReviewAction.ReturnUserInputAttendanceRating.toString().toDouble(),
+                        starCount = attendanceRating,
                         onAddClick = { action(AddReviewAction.UpdateUserInputAttendanceRating(1)) },
                         onSubtractClick = { action(AddReviewAction.UpdateUserInputAttendanceRating(0)) }
                     )
@@ -141,7 +149,7 @@ fun AddRatingScreen(
                     // This is the Teaching Rating Input Field
                     AddStarWithHeadingTitleUI(
                         headingTitle = R.string.teaching_rating,
-                        starCount = AddReviewAction.ReturnUserInputTeachingRating.toString().toDouble(),
+                        starCount = teachingRating,
                         onAddClick = { action(AddReviewAction.UpdateUserInputTeachingRating(1)) },
                         onSubtractClick = { action(AddReviewAction.UpdateUserInputTeachingRating(0)) }
                     )

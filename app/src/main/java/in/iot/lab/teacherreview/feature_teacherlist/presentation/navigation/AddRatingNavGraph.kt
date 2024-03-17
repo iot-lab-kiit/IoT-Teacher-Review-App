@@ -1,6 +1,7 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -44,6 +45,10 @@ fun AddRatingNavGraph(
                     AddRatingScreen(
                         navController = navController,
                         action = myViewModel::action,
+                        teacherName = teacherData.name,
+                        markingRating = myViewModel.userInputMarkingRating.collectAsState().value,
+                        attendanceRating = myViewModel.userInputAttendanceRating.collectAsState().value,
+                        teachingRating = myViewModel.userInputTeachingRating.collectAsState().value
                     )
                 }
             )

@@ -13,8 +13,4 @@ sealed class AddReviewAction {
     data object ResetToDefault : AddReviewAction()
     data object ResetApiToInitialize : AddReviewAction()
     data object PostReviewData : AddReviewAction()
-    data object ReturnTeacherName : AddReviewAction()
-    data object ReturnUserInputMarkingRating : AddReviewAction()
-    data object ReturnUserInputAttendanceRating : AddReviewAction()
-    data object ReturnUserInputTeachingRating : AddReviewAction()
 }
