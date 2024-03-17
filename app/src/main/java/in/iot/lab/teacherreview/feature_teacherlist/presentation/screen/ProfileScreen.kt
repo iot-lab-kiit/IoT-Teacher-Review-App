@@ -38,8 +38,10 @@ import `in`.iot.lab.teacherreview.MainActivity
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.ProfileItemUI
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state.ProfileState
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.ProfileScreenViewModel
 import java.time.LocalDate
+
 
 // This is the Preview function of the Screen
 @RequiresApi(Build.VERSION_CODES.O)
@@ -56,6 +58,7 @@ private fun DefaultPreviewLoading() {
     }
 }
 
+
 /**
  * This is the Profile Screen Main UI Function
  *
@@ -67,10 +70,11 @@ private fun DefaultPreviewLoading() {
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: ProfileScreenViewModel = hiltViewModel()
+   // viewModel: ProfileScreenViewModel = hiltViewModel()
 ) {
+    val profileVm: ProfileScreenViewModel = hiltViewModel()
 
-    val user by viewModel.currentUser.collectAsState()
+    val user by profileVm.currentUser.collectAsState()
     val context = LocalContext.current
     // This is the Parent Composable which contains all the Components
     Surface(
@@ -146,7 +150,7 @@ fun ProfileScreen(
                 val currentYear = LocalDate.now().year.toString().substring(2, 4).toInt()
                 val currentMonth = LocalDate.now().monthValue
                 val semester = (currentYear - joiningYear) * 2 + if (currentMonth in 7..12) 1 else 0
-                val finalSemester = when(semester) {
+                val finalSemester = when (semester) {
                     1 -> "1st"
                     2 -> "2nd"
                     3 -> "3rd"
@@ -164,10 +168,11 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Sign Out Button
-            Button(onClick = {
-               viewModel.signOut()
+            Button(onClick = {profileVm.profileAction(ProfileState.signOut)
                 context.startActivity(Intent(context, MainActivity::class.java))
                 (context as Activity).finish()
+//                viewModel.signOut()
+
             }) {
                 Text(
                     text = "Sign Out",
