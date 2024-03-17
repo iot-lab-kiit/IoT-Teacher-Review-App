@@ -46,9 +46,9 @@ fun AddRatingNavGraph(
                         navController = navController,
                         action = myViewModel::action,
                         teacherName = teacherData.name,
-                        markingRating = myViewModel.userInputMarkingRating.collectAsState().value,
-                        attendanceRating = myViewModel.userInputAttendanceRating.collectAsState().value,
-                        teachingRating = myViewModel.userInputTeachingRating.collectAsState().value
+                        markingRating = myViewModel._userInputReview.collectAsState().value.markingRating,
+                        attendanceRating = myViewModel._userInputReview.collectAsState().value.attendanceRating,
+                        teachingRating = myViewModel._userInputReview.collectAsState().value.teachingRating
                     )
                 }
             )
@@ -58,8 +58,14 @@ fun AddRatingNavGraph(
                 route = TeacherListRoutes.AddReviewRoute.route,
                 content = {
                     AddReviewScreen(
-                        myViewModel = myViewModel,
-                        refreshTeacherReviews = refreshTeacherReviews
+                        refreshTeacherReviews = refreshTeacherReviews,
+                        action = myViewModel::action,
+                        addReviewApiState = myViewModel.addReviewApiState,
+                        teacherName = teacherData.name,
+                        overallReview = myViewModel._userInputReview.collectAsState().value.overallReview,
+                        markingReview = myViewModel._userInputReview.collectAsState().value.markingReview,
+                        attendanceReview = myViewModel._userInputReview.collectAsState().value.attendanceReview,
+                        teachingReview = myViewModel._userInputReview.collectAsState().value.teachingReview
                     )
                 }
             )

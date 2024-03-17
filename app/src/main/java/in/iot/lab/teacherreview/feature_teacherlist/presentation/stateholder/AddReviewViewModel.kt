@@ -12,6 +12,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.RatingParameter
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewPostData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.AddReviewAction
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.ReviewStateFlow
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,27 +25,18 @@ class AddReviewViewModel @Inject constructor(
     private val myRepository: Repository
 ) : ViewModel() {
 
-    var _userInputMarkingRating = MutableStateFlow(1.0)
-    val userInputMarkingRating = _userInputMarkingRating.asStateFlow()
-
-    var _userInputAttendanceRating = MutableStateFlow(1.0)
-    val userInputAttendanceRating = _userInputAttendanceRating.asStateFlow()
-
-    var _userInputTeachingRating = MutableStateFlow(1.0)
-    val userInputTeachingRating = _userInputTeachingRating.asStateFlow()
-
-    var _userInputOverallReview = MutableStateFlow("")
-    val userInputOverallReview = _userInputOverallReview.asStateFlow()
-
-    var _userInputMarkingReview = MutableStateFlow("")
-    val userInputMarkingReview = _userInputMarkingReview.asStateFlow()
-
-
-    var _userInputAttendanceReview = MutableStateFlow("")
-    val userInputAttendanceReview = _userInputAttendanceReview.asStateFlow()
-
-    var _userInputTeachingReview = MutableStateFlow("")
-    val userInputTeachingReview = _userInputTeachingReview.asStateFlow()
+    var _userInputReview = MutableStateFlow(
+        ReviewStateFlow(
+            markingRating = 1.0,
+            attendanceRating = 1.0,
+            teachingRating = 1.0,
+            overallReview = "",
+            markingReview = "",
+            attendanceReview = "",
+            teachingReview = ""
+        )
+    )
+    val userInputReview = _userInputReview.asStateFlow()
 
     lateinit var selectedTeacherId: IndividualFacultyData
         private set
@@ -59,10 +51,10 @@ class AddReviewViewModel @Inject constructor(
      * If the flag is 1 then it increases otherwise it decreases the variable
      */
     fun updateUserInputMarkingRating(flag: Int) {
-        if (flag == 1 && userInputMarkingRating.value < 5)
-            _userInputMarkingRating.value++
-        if (flag == 0 && userInputMarkingRating.value > 0)
-            _userInputMarkingRating.value--
+        if (flag == 1 && userInputReview.value.markingRating < 5)
+            userInputReview.value.markingRating++
+        if (flag == 0 && userInputReview.value.markingRating > 0)
+            userInputReview.value.markingRating--
     }
 
     /**
@@ -72,10 +64,10 @@ class AddReviewViewModel @Inject constructor(
      * If the flag is 1 then it increases otherwise it decreases the variable
      */
     fun updateUserInputAttendanceRating(flag: Int) {
-        if (flag == 1 && _userInputAttendanceRating.value < 5)
-            _userInputAttendanceRating.value++
-        if (flag == 0 && _userInputAttendanceRating.value > 0)
-            _userInputAttendanceRating.value--
+        if (flag == 1 && _userInputReview.value.attendanceRating < 5)
+            _userInputReview.value.attendanceRating++
+        if (flag == 0 && _userInputReview.value.attendanceRating > 0)
+            _userInputReview.value.attendanceRating--
     }
 
     /**
@@ -85,26 +77,26 @@ class AddReviewViewModel @Inject constructor(
      * If the flag is 1 then it increases otherwise it decreases the variable
      */
     fun updateUserInputTeachingRating(flag: Int) {
-        if (flag == 1 && _userInputTeachingRating.value < 5)
-            _userInputTeachingRating.value++
-        if (flag == 0 && _userInputTeachingRating.value > 0)
-            _userInputTeachingRating.value--
+        if (flag == 1 && _userInputReview.value.teachingRating < 5)
+            _userInputReview.value.teachingRating++
+        if (flag == 0 && _userInputReview.value.teachingRating > 0)
+            _userInputReview.value.teachingRating--
     }
 
     fun updateOverallReview(newValue: String) {
-        _userInputOverallReview.value = newValue
+        _userInputReview.value.overallReview = newValue
     }
 
     fun updateMarkingReview(newValue: String) {
-        _userInputMarkingReview.value = newValue
+        _userInputReview.value.markingReview = newValue
     }
 
     fun updateAttendanceReview(newValue: String) {
-        _userInputAttendanceReview.value = newValue
+        _userInputReview.value.attendanceReview = newValue
     }
 
     fun updateTeachingReview(newValue: String) {
-        _userInputTeachingReview.value = newValue
+        _userInputReview.value.teachingReview = newValue
     }
 
     fun setTeacherId(teacherId: IndividualFacultyData) {
@@ -114,15 +106,14 @@ class AddReviewViewModel @Inject constructor(
 
     // Resets all the values to default
     fun resetToDefault() {
-        _userInputTeachingRating.value = 0.0
-        _userInputMarkingRating.value = 0.0
-        _userInputAttendanceRating.value = 0.0
+        _userInputReview.value.teachingReview = ""
+        _userInputReview.value.attendanceReview = ""
+        _userInputReview.value.markingReview = ""
+        _userInputReview.value.overallReview = ""
 
-
-        _userInputOverallReview.value = ""
-        _userInputAttendanceReview.value = ""
-        _userInputTeachingReview.value = ""
-        _userInputMarkingReview.value = ""
+        _userInputReview.value.teachingRating = 1.0
+        _userInputReview.value.attendanceRating = 1.0
+        _userInputReview.value.markingRating = 1.0
 
         addReviewApiState = AddReviewApiState.Initialized
     }
@@ -139,7 +130,7 @@ class AddReviewViewModel @Inject constructor(
         addReviewApiState = AddReviewApiState.Loading
 
         // Checking if the Overall Review is given or not
-        if (userInputOverallReview.value.isEmpty()) {
+        if (userInputReview.value.overallReview.isEmpty()) {
             addReviewApiState =
                 AddReviewApiState.Failure("Need to Fill the Overall Rating at least")
             return
@@ -151,22 +142,22 @@ class AddReviewViewModel @Inject constructor(
             // Creating the RatingData model object to be passed to the retrofit for posting
             val ratingData = RatingData(
                 teachingRating = RatingParameterData(
-                    ratedPoints = _userInputTeachingRating.value,
-                    description = _userInputTeachingReview.value
+                    ratedPoints = _userInputReview.value.teachingRating,
+                    description = _userInputReview.value.teachingReview
                 ),
                 markingRating = RatingParameterData(
-                    ratedPoints = _userInputMarkingRating.value,
-                    description = _userInputMarkingReview.value
+                    ratedPoints = _userInputReview.value.markingRating,
+                    description = _userInputReview.value.markingReview
                 ),
                 attendanceRating = RatingParameterData(
-                    ratedPoints = _userInputAttendanceRating.value,
-                    description = _userInputAttendanceReview.value
+                    ratedPoints = _userInputReview.value.attendanceRating,
+                    description = _userInputReview.value.attendanceReview
                 )
             )
 
             // The Actual post data that will be sent to the Database
             val postData = ReviewPostData(
-                review = _userInputOverallReview.value,
+                review = _userInputReview.value.overallReview,
                 rating = ratingData,
                 faculty = selectedTeacherId._id
             )
