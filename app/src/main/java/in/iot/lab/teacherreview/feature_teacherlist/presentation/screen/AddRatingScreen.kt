@@ -15,14 +15,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.AddReviewAction
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.AddStarWithHeadingTitleUI
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation.TeacherListRoutes
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.AddReviewViewModel
 
 // This is the Preview function of the Screen
 @Preview("Light")
@@ -35,7 +34,8 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.A
 private fun DefaultPreviewLoading() {
     CustomAppTheme {
         AddRatingScreen(
-            navController = rememberNavController()
+            navController = rememberNavController(),
+            action = {}
         )
     }
 }
@@ -51,7 +51,7 @@ private fun DefaultPreviewLoading() {
 fun AddRatingScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    myViewModel: AddReviewViewModel = hiltViewModel()
+    action : (AddReviewAction) -> Unit,
 ) {
 
     // This is the Parent Composable which contains all the Components
@@ -109,7 +109,7 @@ fun AddRatingScreen(
                     // Teacher Name
                     // TODO Need to attach the Real Name of the Teacher
                     Text(
-                        text = myViewModel.selectedTeacherId.name,
+                        text = AddReviewAction.ReturnTeacherName.toString(),
                         style = MaterialTheme.typography.headlineSmall,
                     )
 
@@ -119,9 +119,9 @@ fun AddRatingScreen(
                     // This is the Marking Rating Input Field
                     AddStarWithHeadingTitleUI(
                         headingTitle = R.string.marking_rating,
-                        starCount = myViewModel.userInputMarkingRating,
-                        onAddClick = { myViewModel.updateUserInputMarkingRating(1) },
-                        onSubtractClick = { myViewModel.updateUserInputMarkingRating(0) }
+                        starCount = AddReviewAction.ReturnUserInputMarkingRating.toString().toDouble(),
+                        onAddClick = { action(AddReviewAction.UpdateUserInputMarkingRating(1)) },
+                        onSubtractClick = { action(AddReviewAction.UpdateUserInputMarkingRating(0)) }
                     )
 
                     // Spacing of 16 dp
@@ -130,9 +130,9 @@ fun AddRatingScreen(
                     // This is the Attendance Rating Input Field
                     AddStarWithHeadingTitleUI(
                         headingTitle = R.string.attendance_rating,
-                        starCount = myViewModel.userInputAttendanceRating,
-                        onAddClick = { myViewModel.updateUserInputAttendanceRating(1) },
-                        onSubtractClick = { myViewModel.updateUserInputAttendanceRating(0) }
+                        starCount = AddReviewAction.ReturnUserInputAttendanceRating.toString().toDouble(),
+                        onAddClick = { action(AddReviewAction.UpdateUserInputAttendanceRating(1)) },
+                        onSubtractClick = { action(AddReviewAction.UpdateUserInputAttendanceRating(0)) }
                     )
 
                     // Spacing of 16 dp
@@ -141,9 +141,9 @@ fun AddRatingScreen(
                     // This is the Teaching Rating Input Field
                     AddStarWithHeadingTitleUI(
                         headingTitle = R.string.teaching_rating,
-                        starCount = myViewModel.userInputTeachingRating,
-                        onAddClick = { myViewModel.updateUserInputTeachingRating(1) },
-                        onSubtractClick = { myViewModel.updateUserInputTeachingRating(0) }
+                        starCount = AddReviewAction.ReturnUserInputTeachingRating.toString().toDouble(),
+                        onAddClick = { action(AddReviewAction.UpdateUserInputTeachingRating(1)) },
+                        onSubtractClick = { action(AddReviewAction.UpdateUserInputTeachingRating(0)) }
                     )
 
                     // Spacing of 24 dp

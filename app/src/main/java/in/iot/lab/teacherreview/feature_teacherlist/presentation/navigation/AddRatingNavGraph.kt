@@ -43,7 +43,7 @@ fun AddRatingNavGraph(
                 content = {
                     AddRatingScreen(
                         navController = navController,
-                        myViewModel = myViewModel
+                        action = myViewModel::action,
                     )
                 }
             )

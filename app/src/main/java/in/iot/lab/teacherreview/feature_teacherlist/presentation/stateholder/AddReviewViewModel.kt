@@ -11,6 +11,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.RatingData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.RatingParameterData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewPostData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.AddReviewAction
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
 import kotlinx.coroutines.launch
 import java.net.ConnectException
@@ -107,6 +108,7 @@ class AddReviewViewModel @Inject constructor(
         selectedTeacherId = teacherId
     }
 
+
     // Resets all the values to default
     fun resetToDefault() {
         userInputTeachingRating = 0.0
@@ -174,4 +176,25 @@ class AddReviewViewModel @Inject constructor(
             }
         }
     }
+
+    fun action(action : AddReviewAction){
+        when(action){
+            AddReviewAction.PostReviewData -> postReviewData()
+            AddReviewAction.ResetApiToInitialize -> resetApiToInitialize()
+            AddReviewAction.ResetToDefault -> resetToDefault()
+            is AddReviewAction.SetTeacherId -> setTeacherId(action.teacherId)
+            is AddReviewAction.UpdateAttendanceReview -> updateAttendanceReview(action.review)
+            is AddReviewAction.UpdateMarkingReview -> updateMarkingReview(action.review)
+            is AddReviewAction.UpdateOverallReview -> updateOverallReview(action.review)
+            is AddReviewAction.UpdateTeachingReview -> updateTeachingReview(action.review)
+            is AddReviewAction.UpdateUserInputAttendanceRating -> updateUserInputAttendanceRating(action.flag)
+            is AddReviewAction.UpdateUserInputMarkingRating -> updateUserInputMarkingRating(action.flag)
+            is AddReviewAction.UpdateUserInputTeachingRating -> updateUserInputTeachingRating(action.flag)
+            AddReviewAction.ReturnTeacherName -> selectedTeacherId.name
+            AddReviewAction.ReturnUserInputMarkingRating -> userInputMarkingRating
+            AddReviewAction.ReturnUserInputAttendanceRating -> userInputAttendanceRating
+            AddReviewAction.ReturnUserInputTeachingRating -> userInputTeachingRating
+        }
+    }
+
 }
