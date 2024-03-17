@@ -17,5 +17,4 @@ sealed class AddReviewAction {
     data object ReturnUserInputMarkingRating : AddReviewAction()
     data object ReturnUserInputAttendanceRating : AddReviewAction()
     data object ReturnUserInputTeachingRating : AddReviewAction()
-
 }
