@@ -1,6 +1,8 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -32,6 +34,8 @@ fun AddRatingNavGraph(
     // Setting the Current Teacher Details in the View Model
     myViewModel.setTeacherId(teacherData)
 
+    val state by myViewModel.userInputReview.collectAsState()
+
     NavHost(
         navController = navController,
         startDestination = TeacherListRoutes.AddRatingRoute.route,
@@ -43,7 +47,11 @@ fun AddRatingNavGraph(
                 content = {
                     AddRatingScreen(
                         navController = navController,
-                        myViewModel = myViewModel
+                        action = myViewModel::action,
+                        teacherName = teacherData.name,
+                        markingRating = state.markingRating,
+                        attendanceRating = state.attendanceRating,
+                        teachingRating = state.teachingRating
                     )
                 }
             )
@@ -53,8 +61,14 @@ fun AddRatingNavGraph(
                 route = TeacherListRoutes.AddReviewRoute.route,
                 content = {
                     AddReviewScreen(
-                        myViewModel = myViewModel,
-                        refreshTeacherReviews = refreshTeacherReviews
+                        refreshTeacherReviews = refreshTeacherReviews,
+                        action = myViewModel::action,
+                        addReviewApiState = myViewModel.addReviewApiState,
+                        teacherName = teacherData.name,
+                        overallReview = state.overallReview,
+                        markingReview = state.markingReview,
+                        attendanceReview = state.attendanceReview,
+                        teachingReview = state.teachingReview
                     )
                 }
             )

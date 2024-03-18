@@ -11,7 +11,11 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.RatingData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.RatingParameterData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewPostData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.AddReviewAction
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.ReviewState
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import javax.inject.Inject
@@ -21,26 +25,8 @@ class AddReviewViewModel @Inject constructor(
     private val myRepository: Repository
 ) : ViewModel() {
 
-    var userInputMarkingRating: Double by mutableStateOf(1.0)
-        private set
-
-    var userInputAttendanceRating: Double by mutableStateOf(1.0)
-        private set
-
-    var userInputTeachingRating: Double by mutableStateOf(1.0)
-        private set
-
-    var userInputOverallReview: String by mutableStateOf("")
-        private set
-
-    var userInputMarkingReview: String by mutableStateOf("")
-        private set
-
-    var userInputAttendanceReview: String by mutableStateOf("")
-        private set
-
-    var userInputTeachingReview: String by mutableStateOf("")
-        private set
+    private val _userInputReview = MutableStateFlow(ReviewState())
+    val userInputReview = _userInputReview.asStateFlow()
 
     lateinit var selectedTeacherId: IndividualFacultyData
         private set
@@ -55,10 +41,10 @@ class AddReviewViewModel @Inject constructor(
      * If the flag is 1 then it increases otherwise it decreases the variable
      */
     fun updateUserInputMarkingRating(flag: Int) {
-        if (flag == 1 && userInputMarkingRating < 5)
-            userInputMarkingRating++
-        if (flag == 0 && userInputMarkingRating > 0)
-            userInputMarkingRating--
+        if (flag == 1 && userInputReview.value.markingRating < 5)
+            userInputReview.value.markingRating++
+        if (flag == 0 && userInputReview.value.markingRating > 0)
+            userInputReview.value.markingRating--
     }
 
     /**
@@ -68,10 +54,10 @@ class AddReviewViewModel @Inject constructor(
      * If the flag is 1 then it increases otherwise it decreases the variable
      */
     fun updateUserInputAttendanceRating(flag: Int) {
-        if (flag == 1 && userInputAttendanceRating < 5)
-            userInputAttendanceRating++
-        if (flag == 0 && userInputAttendanceRating > 0)
-            userInputAttendanceRating--
+        if (flag == 1 && _userInputReview.value.attendanceRating < 5)
+            _userInputReview.value.attendanceRating++
+        if (flag == 0 && _userInputReview.value.attendanceRating > 0)
+            _userInputReview.value.attendanceRating--
     }
 
     /**
@@ -81,43 +67,43 @@ class AddReviewViewModel @Inject constructor(
      * If the flag is 1 then it increases otherwise it decreases the variable
      */
     fun updateUserInputTeachingRating(flag: Int) {
-        if (flag == 1 && userInputTeachingRating < 5)
-            userInputTeachingRating++
-        if (flag == 0 && userInputTeachingRating > 0)
-            userInputTeachingRating--
+        if (flag == 1 && _userInputReview.value.teachingRating < 5)
+            _userInputReview.value.teachingRating++
+        if (flag == 0 && _userInputReview.value.teachingRating > 0)
+            _userInputReview.value.teachingRating--
     }
 
     fun updateOverallReview(newValue: String) {
-        userInputOverallReview = newValue
+        _userInputReview.value.overallReview = newValue
     }
 
     fun updateMarkingReview(newValue: String) {
-        userInputMarkingReview = newValue
+        _userInputReview.value.markingReview = newValue
     }
 
     fun updateAttendanceReview(newValue: String) {
-        userInputAttendanceReview = newValue
+        _userInputReview.value.attendanceReview = newValue
     }
 
     fun updateTeachingReview(newValue: String) {
-        userInputTeachingReview = newValue
+        _userInputReview.value.teachingReview = newValue
     }
 
     fun setTeacherId(teacherId: IndividualFacultyData) {
         selectedTeacherId = teacherId
     }
 
+
     // Resets all the values to default
     fun resetToDefault() {
-        userInputTeachingRating = 0.0
-        userInputMarkingRating = 0.0
-        userInputAttendanceRating = 0.0
+        _userInputReview.value.teachingReview = ""
+        _userInputReview.value.attendanceReview = ""
+        _userInputReview.value.markingReview = ""
+        _userInputReview.value.overallReview = ""
 
-
-        userInputOverallReview = ""
-        userInputAttendanceReview = ""
-        userInputTeachingReview = ""
-        userInputMarkingReview = ""
+        _userInputReview.value.teachingRating = 1.0
+        _userInputReview.value.attendanceRating = 1.0
+        _userInputReview.value.markingRating = 1.0
 
         addReviewApiState = AddReviewApiState.Initialized
     }
@@ -134,7 +120,7 @@ class AddReviewViewModel @Inject constructor(
         addReviewApiState = AddReviewApiState.Loading
 
         // Checking if the Overall Review is given or not
-        if (userInputOverallReview.isEmpty()) {
+        if (userInputReview.value.overallReview.isEmpty()) {
             addReviewApiState =
                 AddReviewApiState.Failure("Need to Fill the Overall Rating at least")
             return
@@ -146,22 +132,22 @@ class AddReviewViewModel @Inject constructor(
             // Creating the RatingData model object to be passed to the retrofit for posting
             val ratingData = RatingData(
                 teachingRating = RatingParameterData(
-                    ratedPoints = userInputTeachingRating,
-                    description = userInputTeachingReview
+                    ratedPoints = _userInputReview.value.teachingRating,
+                    description = _userInputReview.value.teachingReview
                 ),
                 markingRating = RatingParameterData(
-                    ratedPoints = userInputMarkingRating,
-                    description = userInputMarkingReview
+                    ratedPoints = _userInputReview.value.markingRating,
+                    description = _userInputReview.value.markingReview
                 ),
                 attendanceRating = RatingParameterData(
-                    ratedPoints = userInputAttendanceRating,
-                    description = userInputAttendanceReview
+                    ratedPoints = _userInputReview.value.attendanceRating,
+                    description = _userInputReview.value.attendanceReview
                 )
             )
 
             // The Actual post data that will be sent to the Database
             val postData = ReviewPostData(
-                review = userInputOverallReview,
+                review = _userInputReview.value.overallReview,
                 rating = ratingData,
                 faculty = selectedTeacherId._id
             )
@@ -174,4 +160,21 @@ class AddReviewViewModel @Inject constructor(
             }
         }
     }
+
+    fun action(action : AddReviewAction){
+        when(action){
+            AddReviewAction.PostReviewData -> postReviewData()
+            AddReviewAction.ResetApiToInitialize -> resetApiToInitialize()
+            AddReviewAction.ResetToDefault -> resetToDefault()
+            is AddReviewAction.SetTeacherId -> setTeacherId(action.teacherId)
+            is AddReviewAction.UpdateAttendanceReview -> updateAttendanceReview(action.review)
+            is AddReviewAction.UpdateMarkingReview -> updateMarkingReview(action.review)
+            is AddReviewAction.UpdateOverallReview -> updateOverallReview(action.review)
+            is AddReviewAction.UpdateTeachingReview -> updateTeachingReview(action.review)
+            is AddReviewAction.UpdateUserInputAttendanceRating -> updateUserInputAttendanceRating(action.flag)
+            is AddReviewAction.UpdateUserInputMarkingRating -> updateUserInputMarkingRating(action.flag)
+            is AddReviewAction.UpdateUserInputTeachingRating -> updateUserInputTeachingRating(action.flag)
+        }
+    }
+
 }
