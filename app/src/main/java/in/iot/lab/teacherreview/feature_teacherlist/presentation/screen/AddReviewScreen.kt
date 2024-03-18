@@ -17,10 +17,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.AddReviewWithHeadingTitleUI
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.AddReviewAction
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.AddReviewViewModel
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
 
@@ -34,7 +34,16 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
 @Composable
 private fun DefaultPreviewLoading() {
     CustomAppTheme {
-        AddReviewScreen{ }
+        AddReviewScreen(
+            action = {},
+            refreshTeacherReviews = {},
+            addReviewApiState = AddReviewApiState.Initialized,
+            teacherName = "Teacher Name",
+            overallReview = "",
+            markingReview = "",
+            attendanceReview = "",
+            teachingReview = ""
+        )
     }
 }
 
@@ -48,15 +57,21 @@ private fun DefaultPreviewLoading() {
 @Composable
 fun AddReviewScreen(
     modifier: Modifier = Modifier,
-    myViewModel: AddReviewViewModel = hiltViewModel(),
-    refreshTeacherReviews: () -> Unit
+    action: (AddReviewAction) -> Unit,
+    refreshTeacherReviews: () -> Unit,
+    addReviewApiState: AddReviewApiState,
+    teacherName: String,
+    overallReview: String,
+    markingReview: String,
+    attendanceReview: String,
+    teachingReview: String
 ) {
 
     // Context Variable
     val context = LocalContext.current
 
     // Checking which api state it is and doing the things accordingly
-    when (myViewModel.addReviewApiState) {
+    when (addReviewApiState) {
         is AddReviewApiState.Initialized -> {}
         is AddReviewApiState.Loading -> {
 
@@ -80,20 +95,20 @@ fun AddReviewScreen(
             refreshTeacherReviews()
 
             //Resetting everything to Default
-            myViewModel.resetToDefault()
+            action(AddReviewAction.ResetToDefault)
         }
         else -> {
 
             // Failed Toast
             Toast.makeText(
                 context,
-                (myViewModel.addReviewApiState as AddReviewApiState.Failure)
+                (addReviewApiState as AddReviewApiState.Failure)
                     .errorMessage,
                 Toast.LENGTH_SHORT
             ).show()
 
             //Resetting Api State to Default
-            myViewModel.resetApiToInitialize()
+            action(AddReviewAction.ResetApiToInitialize)
 
         }
     }
@@ -153,7 +168,7 @@ fun AddReviewScreen(
                     // Teacher Name
                     // TODO Need to attach the Real Name of the Teacher
                     Text(
-                        text = myViewModel.selectedTeacherId.name,
+                        text = teacherName,
                         style = MaterialTheme.typography.headlineSmall,
                     )
 
@@ -163,9 +178,9 @@ fun AddReviewScreen(
                     // Overall Review
                     AddReviewWithHeadingTitleUI(
                         headingTitle = R.string.overall_review,
-                        userInput = myViewModel.userInputOverallReview,
+                        userInput = overallReview,
                         onUserInputChange = {
-                            myViewModel.updateOverallReview(it)
+                            action(AddReviewAction.UpdateOverallReview(it))
                         }
                     )
 
@@ -175,9 +190,9 @@ fun AddReviewScreen(
                     // Marking Review
                     AddReviewWithHeadingTitleUI(
                         headingTitle = R.string.marking_review,
-                        userInput = myViewModel.userInputMarkingReview,
+                        userInput = markingReview,
                         onUserInputChange = {
-                            myViewModel.updateMarkingReview(it)
+                            action(AddReviewAction.UpdateMarkingReview(it))
                         }
                     )
 
@@ -187,9 +202,9 @@ fun AddReviewScreen(
                     // Attendance Review
                     AddReviewWithHeadingTitleUI(
                         headingTitle = R.string.attendance_review,
-                        userInput = myViewModel.userInputAttendanceReview,
+                        userInput = attendanceReview,
                         onUserInputChange = {
-                            myViewModel.updateAttendanceReview(it)
+                            action(AddReviewAction.UpdateAttendanceReview(it))
                         }
                     )
 
@@ -199,9 +214,9 @@ fun AddReviewScreen(
                     // Teaching Review
                     AddReviewWithHeadingTitleUI(
                         headingTitle = R.string.teaching_review,
-                        userInput = myViewModel.userInputTeachingReview,
+                        userInput = teachingReview,
                         onUserInputChange = {
-                            myViewModel.updateTeachingReview(it)
+                            action(AddReviewAction.UpdateTeachingReview(it))
                         }
                     )
 
@@ -210,7 +225,7 @@ fun AddReviewScreen(
                     // This Button Adds the Review
                     Button(
                         onClick = {
-                            myViewModel.postReviewData()
+                            action(AddReviewAction.PostReviewData)
                         },
                     ) {
                         Text(
