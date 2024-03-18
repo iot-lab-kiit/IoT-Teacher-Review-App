@@ -26,15 +26,7 @@ class AddReviewViewModel @Inject constructor(
 ) : ViewModel() {
 
     var _userInputReview = MutableStateFlow(
-        ReviewStateFlow(
-            markingRating = 1.0,
-            attendanceRating = 1.0,
-            teachingRating = 1.0,
-            overallReview = "",
-            markingReview = "",
-            attendanceReview = "",
-            teachingReview = ""
-        )
+        ReviewStateFlow()
     )
     val userInputReview = _userInputReview.asStateFlow()
 
