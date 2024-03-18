@@ -2,6 +2,7 @@ package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -33,6 +34,8 @@ fun AddRatingNavGraph(
     // Setting the Current Teacher Details in the View Model
     myViewModel.setTeacherId(teacherData)
 
+    val state by myViewModel.userInputReview.collectAsState()
+
     NavHost(
         navController = navController,
         startDestination = TeacherListRoutes.AddRatingRoute.route,
@@ -46,9 +49,9 @@ fun AddRatingNavGraph(
                         navController = navController,
                         action = myViewModel::action,
                         teacherName = teacherData.name,
-                        markingRating = myViewModel._userInputReview.collectAsState().value.markingRating,
-                        attendanceRating = myViewModel._userInputReview.collectAsState().value.attendanceRating,
-                        teachingRating = myViewModel._userInputReview.collectAsState().value.teachingRating
+                        markingRating = state.markingRating,
+                        attendanceRating = state.attendanceRating,
+                        teachingRating = state.teachingRating
                     )
                 }
             )
@@ -62,10 +65,10 @@ fun AddRatingNavGraph(
                         action = myViewModel::action,
                         addReviewApiState = myViewModel.addReviewApiState,
                         teacherName = teacherData.name,
-                        overallReview = myViewModel._userInputReview.collectAsState().value.overallReview,
-                        markingReview = myViewModel._userInputReview.collectAsState().value.markingReview,
-                        attendanceReview = myViewModel._userInputReview.collectAsState().value.attendanceReview,
-                        teachingReview = myViewModel._userInputReview.collectAsState().value.teachingReview
+                        overallReview = state.overallReview,
+                        markingReview = state.markingReview,
+                        attendanceReview = state.attendanceReview,
+                        teachingReview = state.teachingReview
                     )
                 }
             )

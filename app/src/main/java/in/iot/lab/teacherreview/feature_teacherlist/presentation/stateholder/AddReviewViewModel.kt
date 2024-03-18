@@ -25,9 +25,7 @@ class AddReviewViewModel @Inject constructor(
     private val myRepository: Repository
 ) : ViewModel() {
 
-    var _userInputReview = MutableStateFlow(
-        ReviewStateFlow()
-    )
+    private val _userInputReview = MutableStateFlow(ReviewStateFlow())
     val userInputReview = _userInputReview.asStateFlow()
 
     lateinit var selectedTeacherId: IndividualFacultyData
