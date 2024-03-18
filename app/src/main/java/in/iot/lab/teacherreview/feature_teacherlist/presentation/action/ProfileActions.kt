@@ -1,4 +1,4 @@
-package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state
+package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.action
 
 sealed class ProfileActions{
 

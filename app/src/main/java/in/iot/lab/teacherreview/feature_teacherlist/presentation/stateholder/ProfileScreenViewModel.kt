@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.teacherreview.feature_authentication.domain.models.LocalUser
 import `in`.iot.lab.teacherreview.feature_authentication.domain.models.toLocalUser
 import `in`.iot.lab.teacherreview.feature_authentication.domain.repository.AuthRepository
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state.ProfileActions
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.action.ProfileActions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
