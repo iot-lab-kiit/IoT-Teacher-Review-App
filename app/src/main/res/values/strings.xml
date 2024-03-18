@@ -42,5 +42,7 @@
 
     <string name="roll_number">Roll Number</string>
     <string name="web_client_id">725298587648-vvacnojh148tv2qb7rk3kqbqumbubhe2.apps.googleusercontent.com</string>
+    <string name="hero_title">Find the right college professor for you</string>
+    <string name="hero_desc">Explore and share your experiences with teachers at our college to help others make informed decisions.</string>
 
 </resources>
