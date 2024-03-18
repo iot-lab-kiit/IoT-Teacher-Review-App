@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,14 +32,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import `in`.iot.lab.teacherreview.MainActivity
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.LocalUser
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.ProfileItemUI
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state.ProfileState
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state.ProfileActions
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.ProfileScreenViewModel
 import java.time.LocalDate
 
@@ -54,10 +57,15 @@ import java.time.LocalDate
 @Composable
 private fun DefaultPreviewLoading() {
     CustomAppTheme {
-        ProfileScreen(navController = rememberNavController())
+        ProfileScreen(
+            navController = rememberNavController(),
+            profileAction = {},
+            userPhoto = "",
+            userEmail = "",
+            userUserName = ""
+        )
     }
 }
-
 
 /**
  * This is the Profile Screen Main UI Function
@@ -65,16 +73,18 @@ private fun DefaultPreviewLoading() {
  * @param modifier Default Modifier to pass modifications from the parent function
  * @param navController This is the navigation Controller which helps in navigation
  */
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-   // viewModel: ProfileScreenViewModel = hiltViewModel()
+    profileAction: (ProfileActions) -> Unit,
+    userPhoto: String,
+    userEmail: String,
+    userUserName : String
 ) {
-    val profileVm: ProfileScreenViewModel = hiltViewModel()
 
-    val user by profileVm.currentUser.collectAsState()
     val context = LocalContext.current
     // This is the Parent Composable which contains all the Components
     Surface(
@@ -102,7 +112,7 @@ fun ProfileScreen(
 
             // User Profile Picture
             AsyncImage(
-                model = user?.photoUrl,
+                model = userPhoto,
                 placeholder = painterResource(id = R.drawable.profile_photo),
                 contentDescription = stringResource(id = R.string.profile),
                 modifier = Modifier
@@ -115,7 +125,7 @@ fun ProfileScreen(
 
             // User Name
             Text(
-                text = user?.username ?: "User Name",
+                text = userUserName ,
                 style = MaterialTheme.typography.headlineSmall
             )
 
@@ -123,11 +133,11 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             // This is the Roll Number UI
-            if (user?.email?.contains("kiit.ac.in") == true) {
+            if (userEmail.contains("kiit.ac.in") == true) {
                 ProfileItemUI(
                     headingTitle = R.string.roll_number,
                     leadingIcon = Icons.Default.Person,
-                    fieldValue = user?.email?.substringBefore("@") ?: "21051880"
+                    fieldValue = userEmail.substringBefore("@") ?: "21051880"
                 )
             }
 
@@ -138,14 +148,14 @@ fun ProfileScreen(
             ProfileItemUI(
                 headingTitle = R.string.email_id,
                 leadingIcon = Icons.Default.Person,
-                fieldValue = user?.email ?: ""
+                fieldValue = userEmail
             )
 
             // Spacing of 16 dp
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (user?.email?.contains("kiit.ac.in") == true) {
-                val rollNumber = user?.email?.substringBefore("@") ?: "21051880"
+            if (userEmail.contains("kiit.ac.in") == true) {
+                val rollNumber = userEmail.substringBefore("@") ?: "21051880"
                 val joiningYear = rollNumber.substring(0, 2).toInt()
                 val currentYear = LocalDate.now().year.toString().substring(2, 4).toInt()
                 val currentMonth = LocalDate.now().monthValue
@@ -168,10 +178,11 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Sign Out Button
-            Button(onClick = {profileVm.profileAction(ProfileState.signOut)
+            Button(onClick = {
+                profileAction(ProfileActions.SignOut)
                 context.startActivity(Intent(context, MainActivity::class.java))
                 (context as Activity).finish()
-//                viewModel.signOut()
+
 
             }) {
                 Text(

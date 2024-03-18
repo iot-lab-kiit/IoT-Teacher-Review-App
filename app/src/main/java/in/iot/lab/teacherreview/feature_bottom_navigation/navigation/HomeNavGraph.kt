@@ -1,6 +1,8 @@
 package `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -8,12 +10,15 @@ import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation.TeacherListNavGraph
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HistoryScreenControl
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.ProfileScreen
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.ProfileScreenViewModel
 
 /**
  * Navigation Graph : It contains all the Different Routes in the bottom Navigation
  */
 @Composable
 fun HomeNavGraph(navController: NavHostController) {
+
+    val viewModel :ProfileScreenViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -42,7 +47,13 @@ fun HomeNavGraph(navController: NavHostController) {
             // Profile Bottom Navigation Options
             composable(
                 BottomNavRoutes.ProfileRoute.route,
-                content = { ProfileScreen(navController = navController) }
+                content = { ProfileScreen(
+                    navController = navController,
+                    profileAction = viewModel::profileAction,
+                    userPhoto = viewModel.currentUser.collectAsState().value?.photoUrl.toString(),
+                    userEmail = viewModel.currentUser.collectAsState().value?.email.toString(),
+                    userUserName = viewModel.currentUser.collectAsState().value?.username.toString())
+                }
             )
         }
     )

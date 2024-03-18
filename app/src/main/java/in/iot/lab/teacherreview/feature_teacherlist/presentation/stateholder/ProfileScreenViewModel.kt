@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.teacherreview.feature_authentication.domain.models.LocalUser
 import `in`.iot.lab.teacherreview.feature_authentication.domain.models.toLocalUser
 import `in`.iot.lab.teacherreview.feature_authentication.domain.repository.AuthRepository
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state.ProfileState
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state.ProfileActions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -37,10 +37,11 @@ class ProfileScreenViewModel @Inject constructor(
         }
     }
 
-    fun profileAction(profileState: ProfileState) {
-        when (profileState) {
-            `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state.ProfileState.getCurrentUser -> getCurrentUser()
-            `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state.ProfileState.signOut -> signOut()
+    fun profileAction(profileActions: ProfileActions) {
+        when (profileActions) {
+            ProfileActions.GetCurrentUser -> getCurrentUser()
+            ProfileActions.SignOut -> signOut()
+
         }
     }
 
