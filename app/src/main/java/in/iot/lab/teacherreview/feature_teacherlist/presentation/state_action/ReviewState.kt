@@ -1,6 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action
 
-data class ReviewStateFlow(
+data class ReviewState(
     var markingRating: Double = 1.0,
     var attendanceRating: Double = 1.0,
     var teachingRating: Double = 1.0,

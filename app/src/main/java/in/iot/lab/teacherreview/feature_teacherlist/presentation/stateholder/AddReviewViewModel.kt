@@ -12,7 +12,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.RatingParameter
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewPostData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.AddReviewAction
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.ReviewStateFlow
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.ReviewState
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +25,7 @@ class AddReviewViewModel @Inject constructor(
     private val myRepository: Repository
 ) : ViewModel() {
 
-    private val _userInputReview = MutableStateFlow(ReviewStateFlow())
+    private val _userInputReview = MutableStateFlow(ReviewState())
     val userInputReview = _userInputReview.asStateFlow()
 
     lateinit var selectedTeacherId: IndividualFacultyData
