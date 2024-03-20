@@ -16,7 +16,10 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.P
  * Navigation Graph : It contains all the Different Routes in the bottom Navigation
  */
 @Composable
-fun HomeNavGraph(navController: NavHostController, profileVm: ProfileScreenViewModel) {
+fun HomeNavGraph(
+    navController: NavHostController,
+    profileVm: ProfileScreenViewModel = hiltViewModel()
+) {
     val currentUserState = profileVm.currentUser.collectAsState().value
     NavHost(
         navController = navController,
@@ -45,12 +48,14 @@ fun HomeNavGraph(navController: NavHostController, profileVm: ProfileScreenViewM
             // Profile Bottom Navigation Options
             composable(
                 BottomNavRoutes.ProfileRoute.route,
-                content = { ProfileScreen(
-                    navController = navController,
-                    profileAction = profileVm::profileAction,
-                    userPhoto = currentUserState?.photoUrl.toString(),
-                    userEmail = currentUserState?.email.toString(),
-                    userUserName = currentUserState?.username.toString())
+                content = {
+                    ProfileScreen(
+                        navController = navController,
+                        profileAction = profileVm::profileAction,
+                        userPhoto = currentUserState?.photoUrl.toString(),
+                        userEmail = currentUserState?.email.toString(),
+                        userUserName = currentUserState?.username.toString()
+                    )
                 }
             )
         }
