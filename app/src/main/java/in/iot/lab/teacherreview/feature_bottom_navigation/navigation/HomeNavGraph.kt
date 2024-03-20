@@ -20,6 +20,7 @@ fun HomeNavGraph(
     navController: NavHostController,
     profileVm: ProfileScreenViewModel = hiltViewModel()
 ) {
+
     val currentUserState = profileVm.currentUser.collectAsState().value
     NavHost(
         navController = navController,
