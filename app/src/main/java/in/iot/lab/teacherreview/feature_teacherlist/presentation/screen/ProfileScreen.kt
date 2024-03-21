@@ -20,8 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
@@ -38,8 +35,9 @@ import `in`.iot.lab.teacherreview.MainActivity
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.ProfileItemUI
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.ProfileScreenViewModel
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.action.ProfileActions
 import java.time.LocalDate
+
 
 // This is the Preview function of the Screen
 @RequiresApi(Build.VERSION_CODES.O)
@@ -52,7 +50,13 @@ import java.time.LocalDate
 @Composable
 private fun DefaultPreviewLoading() {
     CustomAppTheme {
-        ProfileScreen(navController = rememberNavController())
+        ProfileScreen(
+            navController = rememberNavController(),
+            profileAction = {},
+            userPhoto = "",
+            userEmail = "",
+            userUserName = ""
+        )
     }
 }
 
@@ -62,15 +66,18 @@ private fun DefaultPreviewLoading() {
  * @param modifier Default Modifier to pass modifications from the parent function
  * @param navController This is the navigation Controller which helps in navigation
  */
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: ProfileScreenViewModel = hiltViewModel()
+    profileAction: (ProfileActions) -> Unit,
+    userPhoto: String,
+    userEmail: String,
+    userUserName : String
 ) {
 
-    val user by viewModel.currentUser.collectAsState()
     val context = LocalContext.current
     // This is the Parent Composable which contains all the Components
     Surface(
@@ -98,7 +105,7 @@ fun ProfileScreen(
 
             // User Profile Picture
             AsyncImage(
-                model = user?.photoUrl,
+                model = userPhoto,
                 placeholder = painterResource(id = R.drawable.profile_photo),
                 contentDescription = stringResource(id = R.string.profile),
                 modifier = Modifier
@@ -111,7 +118,7 @@ fun ProfileScreen(
 
             // User Name
             Text(
-                text = user?.username ?: "User Name",
+                text = userUserName ,
                 style = MaterialTheme.typography.headlineSmall
             )
 
@@ -119,11 +126,11 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             // This is the Roll Number UI
-            if (user?.email?.contains("kiit.ac.in") == true) {
+            if (userEmail.contains("kiit.ac.in") == true) {
                 ProfileItemUI(
                     headingTitle = R.string.roll_number,
                     leadingIcon = Icons.Default.Person,
-                    fieldValue = user?.email?.substringBefore("@") ?: "21051880"
+                    fieldValue = userEmail.substringBefore("@") ?: "21051880"
                 )
             }
 
@@ -134,19 +141,19 @@ fun ProfileScreen(
             ProfileItemUI(
                 headingTitle = R.string.email_id,
                 leadingIcon = Icons.Default.Person,
-                fieldValue = user?.email ?: ""
+                fieldValue = userEmail
             )
 
             // Spacing of 16 dp
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (user?.email?.contains("kiit.ac.in") == true) {
-                val rollNumber = user?.email?.substringBefore("@") ?: "21051880"
+            if (userEmail.contains("kiit.ac.in") == true) {
+                val rollNumber = userEmail.substringBefore("@") ?: "21051880"
                 val joiningYear = rollNumber.substring(0, 2).toInt()
                 val currentYear = LocalDate.now().year.toString().substring(2, 4).toInt()
                 val currentMonth = LocalDate.now().monthValue
                 val semester = (currentYear - joiningYear) * 2 + if (currentMonth in 7..12) 1 else 0
-                val finalSemester = when(semester) {
+                val finalSemester = when (semester) {
                     1 -> "1st"
                     2 -> "2nd"
                     3 -> "3rd"
@@ -165,9 +172,11 @@ fun ProfileScreen(
 
             // Sign Out Button
             Button(onClick = {
-               viewModel.signOut()
+                profileAction(ProfileActions.SignOut)
                 context.startActivity(Intent(context, MainActivity::class.java))
                 (context as Activity).finish()
+
+
             }) {
                 Text(
                     text = "Sign Out",
