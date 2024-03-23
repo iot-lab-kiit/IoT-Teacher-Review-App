@@ -1,21 +1,17 @@
 package `in`.iot.lab.teacherreview.feature_authentication.ui.screen
 
 import android.app.Activity
-import android.content.res.Configuration
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -26,23 +22,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
-import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
-import `in`.iot.lab.teacherreview.core.theme.buttonShape
-import `in`.iot.lab.teacherreview.feature_authentication.ui.components.GradientButton
-import `in`.iot.lab.teacherreview.feature_authentication.ui.components.ImageAndScreenHeading
+import `in`.iot.lab.teacherreview.feature_authentication.ui.components.LoginButton
+import `in`.iot.lab.teacherreview.feature_authentication.ui.components.ScreenHeader
 
 @Preview("Light")
-@Preview(
-    name = "Dark",
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
 @Composable
 private fun DefaultPreview() {
     CustomAppTheme {
@@ -71,6 +60,7 @@ fun LoginScreen(
                     val account = task.getResult(ApiException::class.java)
                     if (account != null) {
                         account.idToken?.let { idToken ->
+                            // Initiate sign in
                             viewModel.signIn(idToken)
                         }
                     } else {
@@ -124,51 +114,34 @@ fun LoginScreen(
     LoginScreenImpl(
         isLoading = loading,
         onSignIn = {
+            loading = true
             launcher.launch(viewModel.getSignInIntent())
         }
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginScreenImpl(
     isLoading: Boolean = false,
     onSignIn: () -> Unit = {}
 ) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
+    Scaffold {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
+                .padding(it),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            ImageAndScreenHeading(
-                image = R.drawable.image_login_screen,
-                screenHeader = R.string.app_name
+            Spacer(modifier = Modifier.height(28.dp))
+            ScreenHeader()
+            Spacer(modifier = Modifier.height(32.dp))
+            LoginButton(
+                isLoading = isLoading,
+                onClick = onSignIn,
+                modifier = Modifier.padding(24.dp)
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            GradientButton(
-                buttonShape = buttonShape,
-                buttonText = R.string.login,
-                icon = {
-                    Image(
-                        painter = painterResource(id = R.drawable.google),
-                        contentDescription = "Google",
-                        modifier = Modifier.size(36.dp)
-                    )
-                },
-                onClickEvent = onSignIn
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            if (isLoading) {
-                CircularProgressIndicator()
-            }
         }
     }
 }
