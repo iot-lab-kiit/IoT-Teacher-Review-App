@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation.TeacherListNavGraph
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HistoryScreenControl
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.ProfileScreen
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.HistoryScreenViewModel
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.ProfileScreenViewModel
 
 /**
@@ -18,7 +19,8 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.P
 @Composable
 fun HomeNavGraph(
     navController: NavHostController,
-    profileVm: ProfileScreenViewModel = hiltViewModel()
+    profileVm: ProfileScreenViewModel = hiltViewModel(),
+    historyVm: HistoryScreenViewModel = hiltViewModel()
 ) {
 
     val currentUserState = profileVm.currentUser.collectAsState().value
@@ -43,7 +45,11 @@ fun HomeNavGraph(
             // History Bottom Navigation Option
             composable(
                 BottomNavRoutes.HistoryRoute.route,
-                content = { HistoryScreenControl() }
+                content = { HistoryScreenControl(
+                    historyActions = historyVm::historyAction,
+                    getHistoryApiCallState = historyVm.getHistoryApiCallState,
+                    userIdFlow = currentUserState?.uid.toString()
+                ) }
             )
 
             // Profile Bottom Navigation Options
