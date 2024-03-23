@@ -26,8 +26,10 @@ class ProfileScreenViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getCurrentUser() {
-        _currentUser.value = repository.getCurrentUser().getOrNull()
+    private fun getCurrentUser() {
+        viewModelScope.launch {
+            _currentUser.value = repository.getCurrentUser().getOrNull()
+        }
     }
 
     fun signOut() {
