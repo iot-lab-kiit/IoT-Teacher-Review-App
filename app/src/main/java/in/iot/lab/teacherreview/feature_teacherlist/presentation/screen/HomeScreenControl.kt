@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.R
@@ -20,6 +19,7 @@ import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.FacultiesData
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.TeacherListCardItem
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation.TeacherListRoutes
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.TeacherListAction
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.TeacherListViewModel
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState
 
@@ -48,6 +48,7 @@ private fun DefaultPreviewSuccess() {
         HomeScreenSuccess(
             navController = rememberNavController(),
             teacherList = FacultiesData(),
+            action = {}
         )
     }
 }
@@ -77,22 +78,22 @@ private fun DefaultPreviewFailure() {
 @Composable
 fun HomeScreenControl(
     navController: NavController,
-    myViewModel: TeacherListViewModel = hiltViewModel()
+    action : (TeacherListAction) -> Unit,
+    teacherListApiCallState : TeacherListApiCallState
 ) {
 
     // Checking which State to Show
-    when (myViewModel.teacherListApiCallState) {
+    when (teacherListApiCallState) {
         is TeacherListApiCallState.Initialized -> {
-            myViewModel.getTeacherList()
+            action(TeacherListAction.GetTeacherList)
         }
         is TeacherListApiCallState.Loading -> HomeScreenLoading()
         is TeacherListApiCallState.Success -> HomeScreenSuccess(
             navController = navController,
-            teacherList = (myViewModel.teacherListApiCallState as TeacherListApiCallState.Success)
-                .facultyData,
-            myViewModel = myViewModel
+            teacherList = (teacherListApiCallState as (TeacherListApiCallState.Success)).facultyData,
+            action = action
         )
-        else -> HomeScreenFailure(getTeacherList = { myViewModel.getTeacherList() })
+        else -> HomeScreenFailure(getTeacherList = { action(TeacherListAction.GetTeacherList)})
     }
 }
 
@@ -116,13 +117,12 @@ fun HomeScreenSuccess(
     modifier: Modifier = Modifier,
     navController: NavController,
     teacherList: FacultiesData,
-    myViewModel: TeacherListViewModel = hiltViewModel()
+    action: (TeacherListAction) -> Unit
 ) {
 
     Column(
         modifier = modifier,
     ) {
-
         // Checking if there is any data inside the Teacher List yet or not
         if (teacherList.individualFacultyData?.size != null) {
             LazyColumn {
@@ -136,12 +136,11 @@ fun HomeScreenSuccess(
                         navController = navController,
                         teacher = teacher
                     ) {
-
                         // Setting the Current Selected Teacher in the shared ViewModel
-                        myViewModel.addTeacherForNextScreen(teacher)
+                        action(TeacherListAction.AddTeacherForNextScreen(teacher))
 
                         // Fetching the Teacher Reviews
-                        myViewModel.getIndividualTeacherReviews()
+                        action(TeacherListAction.GetIndividualTeacherReviews(teacher._id))
 
                         // Navigating to the next Screen
                         navController.navigate(TeacherListRoutes.IndividualTeacherRoute.route)

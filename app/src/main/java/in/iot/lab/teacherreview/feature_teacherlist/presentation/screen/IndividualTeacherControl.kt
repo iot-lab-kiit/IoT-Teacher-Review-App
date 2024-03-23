@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.R
@@ -23,6 +22,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.ReviewCardItem
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.TeacherDetailsHeaderCard
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation.TeacherListRoutes
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.TeacherListAction
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.TeacherListViewModel
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherReviewApiCall
 
@@ -36,7 +36,13 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherRev
 private fun DefaultPreviewControl() {
     CustomAppTheme {
         IndividualTeacherControl(
-            navController = rememberNavController()
+            navController = rememberNavController(),
+            selectedTeacher = IndividualFacultyData(
+                _id = ""
+            ),
+            action = {},
+            individualTeacherReviewApiCall = IndividualTeacherReviewApiCall.Initialized
+
         )
     }
 }
@@ -104,23 +110,25 @@ private fun DefaultPreviewFailure() {
 @Composable
 fun IndividualTeacherControl(
     navController: NavController,
-    myViewModel: TeacherListViewModel = hiltViewModel()
+    selectedTeacher: IndividualFacultyData,
+    individualTeacherReviewApiCall: IndividualTeacherReviewApiCall,
+    action : (TeacherListAction) -> Unit,
 ) {
 
     // Checking which state my app is in Currently
-    when (myViewModel.individualTeacherReviewApiCall) {
+    when (individualTeacherReviewApiCall) {
         is IndividualTeacherReviewApiCall.Initialized -> {}
         is IndividualTeacherReviewApiCall.Loading -> {
 
             // Showing the Loading Screen
             IndividualTeacherLoading(
-                selectedTeacher = myViewModel.selectedTeacher!!
+                selectedTeacher = selectedTeacher
             )
         }
         is IndividualTeacherReviewApiCall.Success -> {
 
             // Taking all the review Data
-            val reviewData = (myViewModel.individualTeacherReviewApiCall as
+            val reviewData = (individualTeacherReviewApiCall as
                     IndividualTeacherReviewApiCall.Success).reviewData
 
             //Checking if the review Data is Empty or Not
@@ -128,8 +136,8 @@ fun IndividualTeacherControl(
 
                 // Calling the Failed Screen
                 IndividualTeacherFailure(
-                    selectedTeacher = myViewModel.selectedTeacher!!,
-                    onClickRetry = { myViewModel.getIndividualTeacherReviews() },
+                    selectedTeacher = selectedTeacher,
+                    onClickRetry = { action(TeacherListAction.GetIndividualTeacherReviews(selectedTeacher._id)) },
                     textToShow = stringResource(id = R.string.dont_have_anything_to_show)
                 )
 
@@ -137,7 +145,7 @@ fun IndividualTeacherControl(
             } else {
                 IndividualTeacherSuccess(
                     reviewData = reviewData,
-                    selectedTeacher = myViewModel.selectedTeacher!!
+                    selectedTeacher = selectedTeacher
                 )
             }
         }
@@ -145,12 +153,8 @@ fun IndividualTeacherControl(
 
             // Showing the Failure Data
             IndividualTeacherFailure(
-                selectedTeacher = myViewModel.selectedTeacher!!,
-                onClickRetry = {
-                    myViewModel.getIndividualTeacherReviews(
-                        myViewModel.selectedTeacher!!._id,
-                    )
-                },
+                selectedTeacher = selectedTeacher,
+                onClickRetry = { action(TeacherListAction.GetIndividualTeacherReviews(selectedTeacher._id)) },
                 textToShow = stringResource(R.string.failed_to_load_tap_to_retry)
             )
         }
