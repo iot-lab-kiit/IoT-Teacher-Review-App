@@ -33,7 +33,8 @@ fun TeacherListNavGraph(
                 content = {
                     HomeScreenControl(
                         navController = navController,
-                        myViewModel = teacherListViewModel
+                        action = teacherListViewModel::action,
+                        teacherListApiCallState = teacherListViewModel.teacherListApiCallState,
                     )
                 }
             )
@@ -44,7 +45,10 @@ fun TeacherListNavGraph(
                 content = {
                     IndividualTeacherControl(
                         navController = navController,
-                        myViewModel = teacherListViewModel
+                        selectedTeacher = teacherListViewModel.selectedTeacher!!,
+                        action = teacherListViewModel::action,
+                        individualTeacherReviewApiCall = teacherListViewModel.individualTeacherReviewApiCall
+
                     )
                 }
             )

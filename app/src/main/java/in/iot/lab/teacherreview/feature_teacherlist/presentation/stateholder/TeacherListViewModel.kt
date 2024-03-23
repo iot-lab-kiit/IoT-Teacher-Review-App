@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HomeScreenControl
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.TeacherListAction
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherReviewApiCall
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState
 import kotlinx.coroutines.launch
@@ -91,6 +92,13 @@ class TeacherListViewModel @Inject constructor(
             } catch (_: ConnectException) {
                 IndividualTeacherReviewApiCall.Failure("No Internet Connection")
             }
+        }
+    }
+    fun action(operation : TeacherListAction) {
+        when (operation) {
+            TeacherListAction.GetTeacherList -> getTeacherList()
+            is TeacherListAction.AddTeacherForNextScreen -> addTeacherForNextScreen(operation.teacher)
+            is TeacherListAction.GetIndividualTeacherReviews -> getIndividualTeacherReviews(operation.teacherId)
         }
     }
 }

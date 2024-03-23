@@ -70,6 +70,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+
 
     // Material 3 Dependencies
     implementation(libs.androidx.material3)

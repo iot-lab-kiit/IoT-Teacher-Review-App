@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewData
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.action.HistoryActions
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.ReviewCardItem
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.HistoryScreenViewModel
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState
@@ -80,16 +81,19 @@ private fun DefaultPreviewFailure() {
  */
 @Composable
 fun HistoryScreenControl(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    historyActions: (HistoryActions)->Unit,
+    getHistoryApiCallState: GetHistoryApiCallState,
+    userIdFlow : String
 ) {
 
     // ViewModel Variable
-    val myViewModel: HistoryScreenViewModel = hiltViewModel()
+    //val myViewModel: HistoryScreenViewModel = hiltViewModel()
 
     // Redirecting to respective Screens
-    when (myViewModel.getHistoryApiCallState) {
+    when (getHistoryApiCallState) {
         is GetHistoryApiCallState.Initialized -> {
-            myViewModel.getStudentReviewHistory()
+            historyActions(HistoryActions.GetStudentReviewHistory)
         }
         is GetHistoryApiCallState.Loading -> {
             HistoryScreenLoading(
@@ -99,13 +103,13 @@ fun HistoryScreenControl(
         is GetHistoryApiCallState.Success -> {
             HistoryScreenSuccess(
                 reviewData = (
-                        myViewModel.getHistoryApiCallState as
+                        getHistoryApiCallState as
                                 GetHistoryApiCallState.Success).reviewData
             )
         }
         else -> {
             HistoryScreenFailure {
-                myViewModel.getStudentReviewHistory()
+                historyActions(HistoryActions.GetStudentReviewHistory)
             }
         }
     }
