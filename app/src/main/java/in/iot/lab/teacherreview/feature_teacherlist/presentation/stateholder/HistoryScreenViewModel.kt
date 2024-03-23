@@ -72,7 +72,7 @@ class HistoryScreenViewModel @Inject constructor(
 
     fun historyAction(historyActions: HistoryActions){
         when(historyActions){
-            HistoryActions.GetStudentReviewHistory->getStudentReviewHistory()
+            is HistoryActions.GetStudentReviewHistory->getStudentReviewHistory()
         }
     }
 
