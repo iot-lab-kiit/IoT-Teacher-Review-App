@@ -9,4 +9,5 @@ interface AuthRepository {
     fun isUserSignedIn(): Boolean
 
     suspend fun getUserIdToken(): Result<String>
+    suspend fun getCurrentUser(): Result<LocalUser>
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.teacherreview.core.data.local.UserPreferences
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.Repository
+import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.action.HistoryActions
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HistoryScreenControl
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState
 import kotlinx.coroutines.launch
@@ -68,4 +69,11 @@ class HistoryScreenViewModel @Inject constructor(
             }
         }
     }
+
+    fun historyAction(historyActions: HistoryActions){
+        when(historyActions){
+            is HistoryActions.GetStudentReviewHistory->getStudentReviewHistory()
+        }
+    }
+    // Testing
 }

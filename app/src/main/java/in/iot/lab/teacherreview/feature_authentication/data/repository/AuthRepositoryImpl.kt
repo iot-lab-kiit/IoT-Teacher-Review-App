@@ -89,4 +89,14 @@ class AuthRepositoryImpl @Inject constructor(
             return Result.failure(e)
         }
     }
+
+    override suspend fun getCurrentUser(): Result<LocalUser> {
+        try {
+            val firebaseUser = firebaseAuth.currentUser ?: return Result.failure(Exception("User is null"))
+            return Result.success(firebaseUser.toLocalUser())
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return Result.failure(e)
+        }
+    }
 }
