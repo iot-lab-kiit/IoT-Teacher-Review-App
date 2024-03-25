@@ -42,9 +42,9 @@ class AddReviewViewModel @Inject constructor(
      */
     fun updateUserInputMarkingRating(flag: Int) {
         if (flag == 1 && userInputReview.value.markingRating < 5)
-            userInputReview.value.markingRating++
+            _userInputReview.value = _userInputReview.value.copy(markingRating = _userInputReview.value.markingRating + 1)
         if (flag == 0 && userInputReview.value.markingRating > 0)
-            userInputReview.value.markingRating--
+            _userInputReview.value = _userInputReview.value.copy(markingRating = _userInputReview.value.markingRating - 1)
     }
 
     /**
@@ -55,9 +55,9 @@ class AddReviewViewModel @Inject constructor(
      */
     fun updateUserInputAttendanceRating(flag: Int) {
         if (flag == 1 && _userInputReview.value.attendanceRating < 5)
-            _userInputReview.value.attendanceRating++
+            _userInputReview.value = _userInputReview.value.copy(attendanceRating = _userInputReview.value.attendanceRating + 1)
         if (flag == 0 && _userInputReview.value.attendanceRating > 0)
-            _userInputReview.value.attendanceRating--
+            _userInputReview.value = _userInputReview.value.copy(attendanceRating = _userInputReview.value.attendanceRating - 1)
     }
 
     /**
@@ -68,25 +68,25 @@ class AddReviewViewModel @Inject constructor(
      */
     fun updateUserInputTeachingRating(flag: Int) {
         if (flag == 1 && _userInputReview.value.teachingRating < 5)
-            _userInputReview.value.teachingRating++
+            _userInputReview.value = _userInputReview.value.copy(teachingRating = _userInputReview.value.teachingRating + 1)
         if (flag == 0 && _userInputReview.value.teachingRating > 0)
-            _userInputReview.value.teachingRating--
+            _userInputReview.value = _userInputReview.value.copy(teachingRating = _userInputReview.value.teachingRating - 1)
     }
 
     fun updateOverallReview(newValue: String) {
-        _userInputReview.value.overallReview = newValue
+        _userInputReview.value = _userInputReview.value.copy(overallReview = newValue)
     }
 
     fun updateMarkingReview(newValue: String) {
-        _userInputReview.value.markingReview = newValue
+        _userInputReview.value = _userInputReview.value.copy(markingReview = newValue)
     }
 
     fun updateAttendanceReview(newValue: String) {
-        _userInputReview.value.attendanceReview = newValue
+        _userInputReview.value = _userInputReview.value.copy(attendanceReview = newValue)
     }
 
     fun updateTeachingReview(newValue: String) {
-        _userInputReview.value.teachingReview = newValue
+        _userInputReview.value = _userInputReview.value.copy(teachingReview = newValue)
     }
 
     fun setTeacherId(teacherId: IndividualFacultyData) {
@@ -96,15 +96,15 @@ class AddReviewViewModel @Inject constructor(
 
     // Resets all the values to default
     fun resetToDefault() {
-        _userInputReview.value.teachingReview = ""
-        _userInputReview.value.attendanceReview = ""
-        _userInputReview.value.markingReview = ""
-        _userInputReview.value.overallReview = ""
-
-        _userInputReview.value.teachingRating = 1.0
-        _userInputReview.value.attendanceRating = 1.0
-        _userInputReview.value.markingRating = 1.0
-
+        _userInputReview.value = _userInputReview.value.copy(
+            attendanceRating = 1.0,
+            markingRating = 1.0,
+            teachingRating = 1.0,
+            overallReview = "",
+            attendanceReview = "",
+            markingReview = "",
+            teachingReview = ""
+        )
         addReviewApiState = AddReviewApiState.Initialized
     }
 
