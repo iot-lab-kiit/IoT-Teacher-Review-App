@@ -46,7 +46,6 @@ class AddReviewViewModel @Inject constructor(
         if (flag == 0 && userInputReview.value.markingRating > 0)
             _userInputReview.value = _userInputReview.value.copy(markingRating = _userInputReview.value.markingRating - 1)
     }
-
     /**
      * This function updates the user Input Attendance Rating variable
      *
