@@ -1,5 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_authentication.data.repository
 
+import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -74,7 +75,9 @@ class AuthRepositoryImpl @Inject constructor(
     private suspend fun postLoginRequest(postLoginData: PostLoginData): Result<Boolean> {
         try {
             val response = authApi.postLoginRequest(postLoginData)
+            Log.e("repo", response.toString())
             if (!response.isSuccessful) {
+                logout()
                 throw Exception("Failed to post login data")
             }
 
