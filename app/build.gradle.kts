@@ -3,9 +3,13 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
+
+    // Hilt Dependency Plugin
+    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.androidHilt)
+
+    // Google Services Plugin
     alias(libs.plugins.googleServices)
 }
 
@@ -31,7 +35,10 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -57,58 +64,66 @@ android {
 
 dependencies {
 
+    // Base Dependencies :----------------------------------------------------
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Material 3 Dependency
+    implementation(libs.androidx.material3)
+    // Navigation Dependency
+    implementation(libs.androidx.navigation)
+    // -----------------------------------------------------------------------
 
-    // ViewModel Dependencies
+    // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
 
     // Material 3 Dependencies
     implementation(libs.androidx.material3)
 
     // Navigation Dependencies
-    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation)
 
     // Hilt Dependencies
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation(libs.com.google.dagger)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation)
 
     //Retrofit 2.0 Dependency
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    implementation(libs.okhttp)
+
 
     // Firebase Auth
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+    // Google Legacy
+    implementation(libs.com.google.android.gms)
 
-    // Legacy
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // Coil
-    implementation(libs.coil.compose)
+    implementation(libs.coil.kt.compose)
 
     // Datastore
     implementation(libs.androidx.datastore.preferences)
 
-    // Logger
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    // okHttp Dependency
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
 }
 
 fun getBaseUrlInCIEnvironment(): String {

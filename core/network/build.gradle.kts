@@ -3,11 +3,11 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
 
     // Hilt Dependency
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.androidHilt)
 }
 
 android {
@@ -58,8 +58,8 @@ dependencies {
 
 
     // Hilt Dependencies
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
+    implementation(libs.com.google.dagger)
+    ksp(libs.hilt.compiler)
 
     // okHttp Dependency
     implementation(libs.okhttp)
