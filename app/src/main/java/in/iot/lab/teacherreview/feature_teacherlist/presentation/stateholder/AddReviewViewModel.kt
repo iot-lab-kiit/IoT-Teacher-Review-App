@@ -28,7 +28,7 @@ class AddReviewViewModel @Inject constructor(
     private val _userInputReview = MutableStateFlow(ReviewState())
     val userInputReview = _userInputReview.asStateFlow()
 
-    lateinit var selectedTeacherId: IndividualFacultyData
+    private lateinit var selectedTeacherId: IndividualFacultyData
         private set
 
     var addReviewApiState: AddReviewApiState by mutableStateOf(AddReviewApiState.Initialized)
@@ -40,24 +40,23 @@ class AddReviewViewModel @Inject constructor(
      * @param flag
      * If the flag is 1 then it increases otherwise it decreases the variable
      */
-    fun updateUserInputMarkingRating(flag: Int) {
+    private fun updateUserInputMarkingRating(flag: Int) {
         if (flag == 1 && userInputReview.value.markingRating < 5)
-            userInputReview.value.markingRating++
+            _userInputReview.value = _userInputReview.value.copy(markingRating = _userInputReview.value.markingRating + 1)
         if (flag == 0 && userInputReview.value.markingRating > 0)
-            userInputReview.value.markingRating--
+            _userInputReview.value = _userInputReview.value.copy(markingRating = _userInputReview.value.markingRating - 1)
     }
-
     /**
      * This function updates the user Input Attendance Rating variable
      *
      * @param flag
      * If the flag is 1 then it increases otherwise it decreases the variable
      */
-    fun updateUserInputAttendanceRating(flag: Int) {
+    private fun updateUserInputAttendanceRating(flag: Int) {
         if (flag == 1 && _userInputReview.value.attendanceRating < 5)
-            _userInputReview.value.attendanceRating++
+            _userInputReview.value = _userInputReview.value.copy(attendanceRating = _userInputReview.value.attendanceRating + 1)
         if (flag == 0 && _userInputReview.value.attendanceRating > 0)
-            _userInputReview.value.attendanceRating--
+            _userInputReview.value = _userInputReview.value.copy(attendanceRating = _userInputReview.value.attendanceRating - 1)
     }
 
     /**
@@ -66,27 +65,27 @@ class AddReviewViewModel @Inject constructor(
      * @param flag
      * If the flag is 1 then it increases otherwise it decreases the variable
      */
-    fun updateUserInputTeachingRating(flag: Int) {
+    private fun updateUserInputTeachingRating(flag: Int) {
         if (flag == 1 && _userInputReview.value.teachingRating < 5)
-            _userInputReview.value.teachingRating++
+            _userInputReview.value = _userInputReview.value.copy(teachingRating = _userInputReview.value.teachingRating + 1)
         if (flag == 0 && _userInputReview.value.teachingRating > 0)
-            _userInputReview.value.teachingRating--
+            _userInputReview.value = _userInputReview.value.copy(teachingRating = _userInputReview.value.teachingRating - 1)
     }
 
-    fun updateOverallReview(newValue: String) {
-        _userInputReview.value.overallReview = newValue
+    private fun updateOverallReview(newValue: String) {
+        _userInputReview.value = _userInputReview.value.copy(overallReview = newValue)
     }
 
-    fun updateMarkingReview(newValue: String) {
-        _userInputReview.value.markingReview = newValue
+    private fun updateMarkingReview(newValue: String) {
+        _userInputReview.value = _userInputReview.value.copy(markingReview = newValue)
     }
 
-    fun updateAttendanceReview(newValue: String) {
-        _userInputReview.value.attendanceReview = newValue
+    private fun updateAttendanceReview(newValue: String) {
+        _userInputReview.value = _userInputReview.value.copy(attendanceReview = newValue)
     }
 
-    fun updateTeachingReview(newValue: String) {
-        _userInputReview.value.teachingReview = newValue
+    private fun updateTeachingReview(newValue: String) {
+        _userInputReview.value = _userInputReview.value.copy(teachingReview = newValue)
     }
 
     fun setTeacherId(teacherId: IndividualFacultyData) {
@@ -95,26 +94,26 @@ class AddReviewViewModel @Inject constructor(
 
 
     // Resets all the values to default
-    fun resetToDefault() {
-        _userInputReview.value.teachingReview = ""
-        _userInputReview.value.attendanceReview = ""
-        _userInputReview.value.markingReview = ""
-        _userInputReview.value.overallReview = ""
-
-        _userInputReview.value.teachingRating = 1.0
-        _userInputReview.value.attendanceRating = 1.0
-        _userInputReview.value.markingRating = 1.0
-
+    private fun resetToDefault() {
+        _userInputReview.value = _userInputReview.value.copy(
+            attendanceRating = 1.0,
+            markingRating = 1.0,
+            teachingRating = 1.0,
+            overallReview = "",
+            attendanceReview = "",
+            markingReview = "",
+            teachingReview = ""
+        )
         addReviewApiState = AddReviewApiState.Initialized
     }
 
     // Reset only the Api State to default
-    fun resetApiToInitialize() {
+    private fun resetApiToInitialize() {
         addReviewApiState = AddReviewApiState.Initialized
     }
 
     // This function posts the Review Data to the database
-    fun postReviewData() {
+    private fun postReviewData() {
 
         // Setting the api state to loading
         addReviewApiState = AddReviewApiState.Loading
