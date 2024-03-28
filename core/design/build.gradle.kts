@@ -1,14 +1,10 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-
-    // Hilt Dependency Plugin
-    alias(libs.plugins.devtools.ksp)
-    alias(libs.plugins.androidHilt)
 }
 
 android {
-    namespace = "in.iot.lab.teacherreview"
+    namespace = "in.iot.lab.design"
     compileSdk = 34
 
     defaultConfig {
@@ -33,9 +29,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-    buildFeatures {
-        compose = true
     }
     buildFeatures {
         compose = true
@@ -64,24 +57,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Material 3 Dependency
+    implementation(libs.androidx.material3)
+    // Navigation Dependency
+    implementation(libs.androidx.navigation)
+    // -----------------------------------------------------------------------
 
-    // Hilt Dependencies
-    implementation(libs.com.google.dagger)
-    ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation)
-
-
-    //Retrofit 2.0 Dependency
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
-
-    // Firebase Auth
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth)
-    // Google Legacy
-    implementation(libs.com.google.android.gms)
-
-    // Datastore
-    implementation(libs.androidx.datastore.preferences)
+    // Material Extended Icons Dependency
+    implementation(libs.material.icons.extended)
 }
