@@ -18,3 +18,4 @@ rootProject.name = "IoT Teacher Review"
 include(":app")
 include(":core:network")
 include(":data")
+include(":core:design")
