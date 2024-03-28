@@ -2,39 +2,29 @@ import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
 
-    // Hilt Dependency Plugin
+    // Hilt Dependency
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.androidHilt)
-
-    // Google Services Plugin
-    alias(libs.plugins.googleServices)
 }
 
 android {
-    namespace = "in.iot.lab.teacherreview"
+    namespace = "in.iot.lab.network"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "in.iot.lab.teacherreview"
         minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
         buildConfigField("String", "BASE_URL", getBaseUrlInCIEnvironment())
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -49,16 +39,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
-        compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
     }
 }
 
@@ -80,52 +61,23 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Material 3 Dependency
-    implementation(libs.androidx.material3)
-    // Navigation Dependency
-    implementation(libs.androidx.navigation)
-    // -----------------------------------------------------------------------
-
-    // ViewModel
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-
-
-    // Material 3 Dependencies
-    implementation(libs.androidx.material3)
-
-    // Navigation Dependencies
-    implementation(libs.androidx.navigation)
-
-    // Hilt Dependencies
-    implementation(libs.com.google.dagger)
-    ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation)
-
     //Retrofit 2.0 Dependency
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
 
 
-    // Firebase Auth
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth)
-    // Google Legacy
-    implementation(libs.com.google.android.gms)
-
-
-    // Coil
-    implementation(libs.coil.kt.compose)
-
-    // Datastore
-    implementation(libs.androidx.datastore.preferences)
+    // Hilt Dependencies
+    implementation(libs.com.google.dagger)
+    ksp(libs.hilt.compiler)
 
     // okHttp Dependency
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
-}
 
+    // Firebase Auth
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+}
 fun getBaseUrlInCIEnvironment(): String {
     val propFile = rootProject.file("./local.properties")
     val properties = Properties()
