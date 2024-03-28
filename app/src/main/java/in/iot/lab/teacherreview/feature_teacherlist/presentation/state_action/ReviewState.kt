@@ -1,5 +1,7 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action
 
+import kotlinx.coroutines.flow.MutableStateFlow
+
 data class ReviewState(
     var markingRating: Double = 1.0,
     var attendanceRating: Double = 1.0,
