@@ -32,6 +32,8 @@ object AuthModule {
     ): GoogleSignInOptions {
         return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(context.getString(R.string.web_client_id))
+            .requestId()
+            .requestEmail()
             .requestProfile()
             .build()
     }
