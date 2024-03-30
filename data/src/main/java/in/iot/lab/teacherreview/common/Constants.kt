@@ -1,7 +1,20 @@
 package `in`.iot.lab.teacherreview.common
 
 object Constants {
-    const val LOGIN_AUTHENTICATION_ENDPOINT = "authentication"
-    const val TEACHER_LIST_ENDPOINT = "faculties"
-    const val POST_TEACHER_REVIEW_ENDPOINT = "reviews"
+
+    // Authentication Endpoints
+    const val LOGIN_AUTH_ENDPOINT = ""
+
+    // User Endpoints
+    const val USER_FETCH_ENDPOINT = ""
+    const val USER_DELETE_ENDPOINT = ""
+
+    // Faculty Endpoints
+    const val FACULTY_FETCH_BY_NAME_ENDPOINT = ""
+    const val FACULTY_FETCH_ALL_ENDPOINT = ""
+
+    // Review Endpoints
+    const val FACULTY_REVIEW_FETCH_ENDPOINT = ""
+    const val USER_REVIEW_HISTORY_ENDPOINT = ""
+    const val USER_POST_REVIEW_ENDPOINT = ""
 }
