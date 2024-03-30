@@ -81,7 +81,8 @@ private fun DefaultPreviewFailure() {
 fun HistoryScreenControl(
     modifier: Modifier = Modifier,
     historyActions: (HistoryActions)->Unit,
-    getHistoryApiCallState: GetHistoryApiCallState
+    getHistoryApiCallState: GetHistoryApiCallState,
+    userIdFlow:String
 ) {
 
     // ViewModel Variable
