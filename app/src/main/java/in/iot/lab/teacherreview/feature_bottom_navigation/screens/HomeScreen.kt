@@ -2,7 +2,6 @@ package `in`.iot.lab.teacherreview.feature_bottom_navigation.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -15,7 +14,6 @@ import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNav
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.HomeNavGraph
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.ProfileScreenViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun HomeScreen(navController: NavHostController = rememberNavController()) {
     val profileVm: ProfileScreenViewModel = hiltViewModel()
@@ -30,8 +28,7 @@ internal fun HomeScreen(navController: NavHostController = rememberNavController
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
-                .padding(bottom = it.calculateBottomPadding()),
+                .padding(it),
         ) {
             HomeNavGraph(navController = navController,
                 profileVm = profileVm)

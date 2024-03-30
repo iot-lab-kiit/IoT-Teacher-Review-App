@@ -124,6 +124,9 @@ dependencies {
     // okHttp Dependency
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
+
+    //Implementing the design module
+    implementation(project(":core:design"))
 }
 
 fun getBaseUrlInCIEnvironment(): String {

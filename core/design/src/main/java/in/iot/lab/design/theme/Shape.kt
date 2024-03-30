@@ -1,4 +1,4 @@
-package `in`.iot.lab.teacherreview.core.theme
+package `in`.iot.lab.design.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes
