@@ -1,4 +1,4 @@
-package `in`.iot.lab.teacherreview.core.theme
+package `in`.iot.lab.design.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -81,8 +81,8 @@ fun CustomAppTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        typography = Typography,
         shapes = Shapes,
-        content = content
+        content = content,
+        typography = Typography
     )
 }

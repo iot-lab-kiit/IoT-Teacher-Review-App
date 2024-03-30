@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
+import `in`.iot.lab.design.theme.*
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.ReviewCardItem
@@ -128,8 +128,7 @@ fun IndividualTeacherControl(
         is IndividualTeacherReviewApiCall.Success -> {
 
             // Taking all the review Data
-            val reviewData = (individualTeacherReviewApiCall as
-                    IndividualTeacherReviewApiCall.Success).reviewData
+            val reviewData = individualTeacherReviewApiCall.reviewData
 
             //Checking if the review Data is Empty or Not
             if (reviewData.individualReviewData.isNullOrEmpty()) {

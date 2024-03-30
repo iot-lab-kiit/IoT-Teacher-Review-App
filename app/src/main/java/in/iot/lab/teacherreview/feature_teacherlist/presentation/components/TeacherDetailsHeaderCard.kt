@@ -1,7 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -17,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
+import `in`.iot.lab.design.theme.*
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 
 // This is the Preview function of the Screen when Loading

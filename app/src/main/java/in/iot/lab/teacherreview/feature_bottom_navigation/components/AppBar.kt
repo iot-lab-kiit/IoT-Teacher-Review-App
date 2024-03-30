@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
+import `in`.iot.lab.design.theme.*
 
 // This is the Preview function of the Top App Bar
 @Preview("Light")

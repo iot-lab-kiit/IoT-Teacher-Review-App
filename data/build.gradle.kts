@@ -84,4 +84,7 @@ dependencies {
 
     // Datastore
     implementation(libs.androidx.datastore.preferences)
+
+    // Data Module Dependency
+    implementation(project(":core:network"))
 }

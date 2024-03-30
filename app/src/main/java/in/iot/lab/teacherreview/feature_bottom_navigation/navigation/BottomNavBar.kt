@@ -1,7 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
+import `in`.iot.lab.design.theme.*
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavOptions.Companion.menuItems
 
 // This is the Preview function of the Bottom Navigation Bar
