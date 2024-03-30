@@ -90,7 +90,7 @@ fun HomeScreenControl(
         is TeacherListApiCallState.Loading -> HomeScreenLoading()
         is TeacherListApiCallState.Success -> HomeScreenSuccess(
             navController = navController,
-            teacherList = (teacherListApiCallState as (TeacherListApiCallState.Success)).facultyData,
+            teacherList = teacherListApiCallState.facultyData,
             action = action
         )
         else -> HomeScreenFailure(getTeacherList = { action(TeacherListAction.GetTeacherList)})

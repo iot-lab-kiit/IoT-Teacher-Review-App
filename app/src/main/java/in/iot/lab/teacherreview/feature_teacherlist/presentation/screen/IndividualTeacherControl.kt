@@ -128,8 +128,7 @@ fun IndividualTeacherControl(
         is IndividualTeacherReviewApiCall.Success -> {
 
             // Taking all the review Data
-            val reviewData = (individualTeacherReviewApiCall as
-                    IndividualTeacherReviewApiCall.Success).reviewData
+            val reviewData = individualTeacherReviewApiCall.reviewData
 
             //Checking if the review Data is Empty or Not
             if (reviewData.individualReviewData.isNullOrEmpty()) {

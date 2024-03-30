@@ -21,7 +21,6 @@ import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.design.theme.*
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.AddReviewWithHeadingTitleUI
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.state_action.AddReviewAction
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.AddReviewViewModel
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
 
 // This is the Preview function of the Screen

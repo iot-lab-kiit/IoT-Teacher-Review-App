@@ -1,7 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card

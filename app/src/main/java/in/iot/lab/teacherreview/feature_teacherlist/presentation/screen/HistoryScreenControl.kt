@@ -81,8 +81,7 @@ private fun DefaultPreviewFailure() {
 fun HistoryScreenControl(
     modifier: Modifier = Modifier,
     historyActions: (HistoryActions)->Unit,
-    getHistoryApiCallState: GetHistoryApiCallState,
-    userIdFlow : String
+    getHistoryApiCallState: GetHistoryApiCallState
 ) {
 
     // ViewModel Variable
@@ -100,9 +99,7 @@ fun HistoryScreenControl(
         }
         is GetHistoryApiCallState.Success -> {
             HistoryScreenSuccess(
-                reviewData = (
-                        getHistoryApiCallState as
-                                GetHistoryApiCallState.Success).reviewData
+                reviewData = getHistoryApiCallState.reviewData
             )
         }
         else -> {
