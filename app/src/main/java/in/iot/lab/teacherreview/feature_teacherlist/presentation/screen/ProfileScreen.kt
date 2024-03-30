@@ -33,7 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import `in`.iot.lab.teacherreview.MainActivity
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
+import `in`.iot.lab.design.theme.*
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.ProfileItemUI
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.action.ProfileActions
 import java.time.LocalDate

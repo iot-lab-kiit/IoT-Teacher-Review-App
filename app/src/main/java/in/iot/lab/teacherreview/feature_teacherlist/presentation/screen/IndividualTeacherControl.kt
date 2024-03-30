@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
+import `in`.iot.lab.design.theme.*
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.ReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.ReviewCardItem
