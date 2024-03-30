@@ -16,4 +16,5 @@ object Constants {
     // Review Endpoints
     const val FACULTY_REVIEW_FETCH_ENDPOINT = ""
     const val USER_REVIEW_HISTORY_ENDPOINT = ""
+    const val USER_POST_REVIEW_ENDPOINT = ""
 }
