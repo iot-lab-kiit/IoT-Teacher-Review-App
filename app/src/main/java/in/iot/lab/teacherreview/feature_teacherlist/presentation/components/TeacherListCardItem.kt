@@ -36,10 +36,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
-import `in`.iot.lab.teacherreview.core.theme.muted
-import `in`.iot.lab.teacherreview.core.theme.redDot
-import `in`.iot.lab.teacherreview.core.theme.yellowDot
+import `in`.iot.lab.design.theme.*
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.IndividualFacultyData
 
 // This is the Preview function of the Login Screen

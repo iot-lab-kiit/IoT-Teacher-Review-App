@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.teacherreview.core.theme.CustomAppTheme
+import `in`.iot.lab.design.theme.*
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.FacultiesData
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.components.TeacherListCardItem
 import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.navigation.TeacherListRoutes
@@ -90,7 +90,7 @@ fun HomeScreenControl(
         is TeacherListApiCallState.Loading -> HomeScreenLoading()
         is TeacherListApiCallState.Success -> HomeScreenSuccess(
             navController = navController,
-            teacherList = (teacherListApiCallState as (TeacherListApiCallState.Success)).facultyData,
+            teacherList = teacherListApiCallState.facultyData,
             action = action
         )
         else -> HomeScreenFailure(getTeacherList = { action(TeacherListAction.GetTeacherList)})
