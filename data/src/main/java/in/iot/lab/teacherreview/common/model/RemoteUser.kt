@@ -1,5 +1,7 @@
 package `in`.iot.lab.teacherreview.common.model
 
+import com.google.firebase.auth.FirebaseUser
+
 
 /**
  * This data class is the blueprint for the User Schema.
@@ -21,3 +23,16 @@ data class RemoteUser(
     val role: Int,
     val status: Int
 )
+
+
+fun FirebaseUser.toRemoteUser(): RemoteUser {
+    return RemoteUser(
+        id = "Dummy Data",
+        uid = uid,
+        name = displayName,
+        email = email,
+        photoUrl = photoUrl?.toString(),
+        role = 0,
+        status = 0
+    )
+}

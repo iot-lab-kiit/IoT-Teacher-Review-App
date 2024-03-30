@@ -2,6 +2,8 @@ package `in`.iot.lab.network.utils
 
 import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.network.state.UiState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 import java.io.IOException
 
@@ -16,26 +18,29 @@ object NetworkUtil {
         onSuccess: suspend () -> Unit = {},
         onFailure: suspend (Exception) -> Unit = {},
         request: suspend () -> Response<T>
-    ): ResponseState<T> {
+    ): Flow<ResponseState<T>> {
 
-        return try {
+        return flow {
+            emit(ResponseState.Loading)
+            try {
 
-            // Response from the Retrofit Api call
-            val response = request()
+                // Response from the Retrofit Api call
+                val response = request()
 
-            if (response.isSuccessful) {
-                onSuccess()
-                ResponseState.Success(response.body()!!)
-            } else
-                ResponseState.NoDataFound
+                if (response.isSuccessful) {
+                    onSuccess()
+                    emit(ResponseState.Success(response.body()!!))
+                } else
+                    emit(ResponseState.NoDataFound)
 
-        } catch (exception: IOException) {
-            ResponseState.NoInternet
-        } catch (e: Exception) {
+            } catch (exception: IOException) {
+                emit(ResponseState.NoInternet)
+            } catch (e: Exception) {
 
-            // Calling the Custom Failure Function
-            onFailure(e)
-            ResponseState.Error(e)
+                // Calling the Custom Failure Function
+                onFailure(e)
+                emit(ResponseState.Error(e))
+            }
         }
     }
 
