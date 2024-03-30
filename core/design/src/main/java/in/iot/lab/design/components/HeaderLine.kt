@@ -63,7 +63,7 @@ fun Header() {
     }
 }
 
-@Preview(showSystemUi = true)
+
 @Preview(showBackground = true)
 @Composable
 private fun HeaderPreview() {

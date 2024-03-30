@@ -68,14 +68,3 @@ fun <T> PullToRefresh(
         )
     }
 }
-
-@Preview
-@Composable
-private fun Preview() {
-    PullToRefresh(
-        items = listOf(1,2,3,4,5),
-        content = { items -> Text(text = "$items") },
-        isRefreshing = false,
-        onRefresh = { /*TODO*/ })
-
-}
