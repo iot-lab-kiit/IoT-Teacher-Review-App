@@ -1,6 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.utils
 
-import `in`.iot.lab.teacherreview.feature_teacherlist.data.model.FacultiesData
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.FacultiesData
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState.*
 
 /**

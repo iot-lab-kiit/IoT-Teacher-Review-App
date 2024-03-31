@@ -1,7 +1,7 @@
 package `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation
 
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavRoutes.*
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.screen.HomeScreenControl
+import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.HomeScreenControl
 
 /**
  * This File contains all the Routes inside the Bottom Navigation Bar

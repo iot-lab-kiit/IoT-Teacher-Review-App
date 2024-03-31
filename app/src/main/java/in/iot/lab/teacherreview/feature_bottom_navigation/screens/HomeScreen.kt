@@ -12,7 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomBar
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavOptions
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.HomeNavGraph
-import `in`.iot.lab.teacherreview.feature_teacherlist.presentation.stateholder.ProfileScreenViewModel
+import `in`.iot.lab.teacherreview.feature_teacherlist.ui.stateholder.ProfileScreenViewModel
 
 @Composable
 internal fun HomeScreen(navController: NavHostController = rememberNavController()) {
