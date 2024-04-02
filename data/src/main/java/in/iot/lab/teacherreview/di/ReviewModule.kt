@@ -4,9 +4,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import `in`.iot.lab.teacherreview.data.review.remote.ReviewApiService
-import `in`.iot.lab.teacherreview.data.review.repo.ReviewRepo
-import `in`.iot.lab.teacherreview.data.review.repo.ReviewRepoImpl
+import `in`.iot.lab.teacherreview.data.remote.ReviewApiService
+import `in`.iot.lab.teacherreview.domain.repository.ReviewRepo
+import `in`.iot.lab.teacherreview.data.repository.ReviewRepoImpl
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
