@@ -1,11 +1,13 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.RateReview
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,8 +17,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import `in`.iot.lab.teacherreview.R
+import `in`.iot.lab.design.components.PullToRefresh
 import `in`.iot.lab.design.theme.*
+import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.ReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.ReviewCardItem
@@ -27,6 +30,7 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.ui.stateholder.TeacherList
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherReviewApiCall
 
 // This is the Preview function of the Teacher Review Control Screen
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview("Light")
 @Preview(
     name = "Dark",
@@ -41,7 +45,8 @@ private fun DefaultPreviewControl() {
                 _id = ""
             ),
             action = {},
-            individualTeacherReviewApiCall = IndividualTeacherReviewApiCall.Initialized
+            individualTeacherReviewApiCall = IndividualTeacherReviewApiCall.Initialized,
+            currentUserId = ""
 
         )
     }
@@ -65,6 +70,7 @@ private fun DefaultPreviewLoading() {
 }
 
 // This is the Preview function of the Teacher Review Success Screen
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview("Light")
 @Preview(
     name = "Dark",
@@ -77,7 +83,8 @@ private fun DefaultPreviewSuccess() {
             reviewData = ReviewData(),
             selectedTeacher = IndividualFacultyData(
                 _id = ""
-            )
+            ),
+            currentUserId = ""
         )
     }
 }
@@ -107,77 +114,119 @@ private fun DefaultPreviewFailure() {
  * @param navController This is kept to navigate to different Screens
  * @param myViewModel This is the [TeacherListViewModel] variable
  */
+@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun IndividualTeacherControl(
     navController: NavController,
     selectedTeacher: IndividualFacultyData,
     individualTeacherReviewApiCall: IndividualTeacherReviewApiCall,
-    action : (TeacherListAction) -> Unit,
+    currentUserId: String?,
+    action: (TeacherListAction) -> Unit,
 ) {
-
-    // Checking which state my app is in Currently
-    when (individualTeacherReviewApiCall) {
-        is IndividualTeacherReviewApiCall.Initialized -> {}
-        is IndividualTeacherReviewApiCall.Loading -> {
-
-            // Showing the Loading Screen
-            IndividualTeacherLoading(
-                selectedTeacher = selectedTeacher
-            )
-        }
-        is IndividualTeacherReviewApiCall.Success -> {
-
-            // Taking all the review Data
-            val reviewData = individualTeacherReviewApiCall.reviewData
-
-            //Checking if the review Data is Empty or Not
-            if (reviewData.individualReviewData.isNullOrEmpty()) {
-
-                // Calling the Failed Screen
-                IndividualTeacherFailure(
-                    selectedTeacher = selectedTeacher,
-                    onClickRetry = { action(TeacherListAction.GetIndividualTeacherReviews(selectedTeacher._id)) },
-                    textToShow = stringResource(id = R.string.dont_have_anything_to_show)
-                )
-
-
-            } else {
-                IndividualTeacherSuccess(
-                    reviewData = reviewData,
-                    selectedTeacher = selectedTeacher
-                )
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(TeacherListRoutes.AddRatingRoute.route)
+                },
+                shape = RoundedCornerShape(12.dp),
+                containerColor = MaterialTheme.colorScheme.primary,
+            ) {
+                Row(
+                    modifier = Modifier.padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.RateReview,
+                        contentDescription = stringResource(id = R.string.add),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Text(text = "Add Your Review")
+                }
             }
-        }
-        else -> {
-
-            // Showing the Failure Data
-            IndividualTeacherFailure(
-                selectedTeacher = selectedTeacher,
-                onClickRetry = { action(TeacherListAction.GetIndividualTeacherReviews(selectedTeacher._id)) },
-                textToShow = stringResource(R.string.failed_to_load_tap_to_retry)
-            )
-        }
-    }
-
-    // Showing the Floating Action Button On the Screen clicking which will redirect to add review Screen
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(end = 24.dp, bottom = 16.dp),
-        contentAlignment = Alignment.BottomEnd
+        },
     ) {
-        FloatingActionButton(
-            onClick = {
-                navController.navigate(TeacherListRoutes.AddRatingRoute.route)
-            },
-            shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.primary
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = stringResource(id = R.string.add),
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
+
+            when (individualTeacherReviewApiCall) {
+                is IndividualTeacherReviewApiCall.Initialized -> {}
+                is IndividualTeacherReviewApiCall.Loading -> {
+
+                    // Showing the Loading Screen
+                    IndividualTeacherLoading(
+                        selectedTeacher = selectedTeacher,
+                        onBackClick = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+
+                is IndividualTeacherReviewApiCall.Success -> {
+
+                    // Taking all the review Data
+                    val reviewData = individualTeacherReviewApiCall.reviewData
+
+                    //Checking if the review Data is Empty or Not
+                    if (reviewData.individualReviewData.isNullOrEmpty()) {
+
+                        // Calling the Failed Screen
+                        IndividualTeacherFailure(
+                            selectedTeacher = selectedTeacher,
+                            onClickRetry = {
+                                action(
+                                    TeacherListAction.GetIndividualTeacherReviews(
+                                        selectedTeacher._id
+                                    )
+                                )
+                            },
+                            textToShow = stringResource(id = R.string.dont_have_anything_to_show),
+                            onBackClick = {
+                                navController.popBackStack()
+                            }
+                        )
+
+
+                    } else {
+                        IndividualTeacherSuccess(
+                            loading = individualTeacherReviewApiCall is IndividualTeacherReviewApiCall.Loading,
+                            reviewData = reviewData,
+                            selectedTeacher = selectedTeacher,
+                            onBackClick = {
+                                navController.popBackStack()
+                            },
+                            currentUserId = currentUserId,
+                            refreshReviews = {
+                                action(
+                                    TeacherListAction.GetIndividualTeacherReviews(
+                                        selectedTeacher._id
+                                    )
+                                )
+                            }
+                        )
+                    }
+                }
+
+                else -> {
+
+                    // Showing the Failure Data
+                    IndividualTeacherFailure(
+                        selectedTeacher = selectedTeacher,
+                        onClickRetry = {
+                            action(
+                                TeacherListAction.GetIndividualTeacherReviews(
+                                    selectedTeacher._id
+                                )
+                            )
+                        },
+                        textToShow = stringResource(R.string.failed_to_load_tap_to_retry)
+                    )
+                }
+            }
         }
     }
 }
@@ -191,17 +240,20 @@ fun IndividualTeacherControl(
 @Composable
 fun IndividualTeacherLoading(
     modifier: Modifier = Modifier,
-    selectedTeacher: IndividualFacultyData
+    selectedTeacher: IndividualFacultyData,
+    onBackClick: () -> Unit = {}
 ) {
 
     Column(
         modifier = modifier
-            .padding(16.dp)
             .fillMaxWidth(),
     ) {
 
         // Showing the Teacher Details
-        TeacherDetailsHeaderCard(selectedTeacher = selectedTeacher)
+        TeacherDetailsHeaderCard(
+            selectedTeacher = selectedTeacher,
+            onBackPressed = onBackClick
+        )
 
         // Spacer of Height 16 dp
         Spacer(modifier = Modifier.height(16.dp))
@@ -210,7 +262,7 @@ fun IndividualTeacherLoading(
         // Showing the Progress Bar
         Box(
             modifier = Modifier
-                .padding(32.dp)
+                .padding(end = 16.dp, start = 16.dp)
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
@@ -225,40 +277,90 @@ fun IndividualTeacherLoading(
  * @param reviewData This is the review data of the particular review
  * @param selectedTeacher This is the selected Teacher
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun IndividualTeacherSuccess(
+    loading: Boolean = false,
     reviewData: ReviewData,
-    selectedTeacher: IndividualFacultyData
+    selectedTeacher: IndividualFacultyData,
+    currentUserId: String?,
+    onBackClick: () -> Unit = {},
+    refreshReviews: () -> Unit = {}
 ) {
-
     // Lazy Column to Show the List of Reviews
-    LazyColumn(
-        modifier = Modifier
-            .padding(top = 16.dp, end = 16.dp, start = 16.dp, bottom = 44.dp),
-    ) {
-        items(reviewData.individualReviewData!!.size + 1) {
-            val itemCount = it - 1
+    PullToRefresh(
+        items = reviewData.individualReviewData!!,
+        isRefreshing = loading,
+        onRefresh = {
+            refreshReviews()
+        },
+        preContent = {
+            TeacherDetailsHeaderCard(
+                selectedTeacher = selectedTeacher,
+                onBackPressed = onBackClick
+            )
 
-            // Drawing the Header of the Teacher with his overall stats
-            if (itemCount == -1) {
-                TeacherDetailsHeaderCard(
-                    selectedTeacher = selectedTeacher
-                )
-
-                // Spacer of Height 16 dp
-                Spacer(modifier = Modifier.height(16.dp))
-            } else {
-                val reviewItem = reviewData.individualReviewData[itemCount]
-                ReviewCardItem(
-                    createdBy = reviewItem.createdBy,
-                    review = reviewItem.review!!
-                )
-
-                // Spacer of Height 16 dp
-                Spacer(modifier = Modifier.height(16.dp))
+            // Spacer of Height 16 dp
+            Spacer(modifier = Modifier.height(16.dp))
+        },
+        content = {
+            val reviewItem = it
+            val rating = with(reviewItem.rating!!) {
+                attendanceRating?.ratedPoints
+                    ?.plus(teachingRating?.ratedPoints!!)
+                    ?.plus(markingRating?.ratedPoints!!)
+                    ?.plus(overallRating)?.div(4) ?: 0.0
             }
+            ReviewCardItem(
+                modifier = Modifier
+                    .padding(end = 16.dp, start = 16.dp),
+                createdBy = reviewItem.createdBy,
+                review = reviewItem.review!!,
+                rating = rating,
+                createdAt = reviewItem.createdAt!!,
+                currentUserId = currentUserId
+            )
+
+            // Spacer of Height 16 dp
+            Spacer(modifier = Modifier.height(16.dp))
         }
-    }
+    )
+//    LazyColumn {
+//        items(reviewData.individualReviewData!!.size + 1) {
+//            val itemCount = it - 1
+//
+//            // Drawing the Header of the Teacher with his overall stats
+//            if (itemCount == -1) {
+//                TeacherDetailsHeaderCard(
+//                    selectedTeacher = selectedTeacher,
+//                    onBackPressed = onBackClick
+//                )
+//
+//                // Spacer of Height 16 dp
+//                Spacer(modifier = Modifier.height(16.dp))
+//            } else {
+//                val reviewItem = reviewData.individualReviewData[itemCount]
+//                val rating = with(reviewItem.rating!!) {
+//                    attendanceRating?.ratedPoints
+//                        ?.plus(teachingRating?.ratedPoints!!)
+//                        ?.plus(markingRating?.ratedPoints!!)
+//                        ?.plus(overallRating)?.div(4) ?: 0.0
+//                }
+//                ReviewCardItem(
+//                    modifier = Modifier
+//                        .padding(end = 16.dp, start = 16.dp),
+//                    createdBy = reviewItem.createdBy,
+//                    review = reviewItem.review!!,
+//                    rating = rating,
+//                    createdAt = reviewItem.createdAt!!,
+//                    currentUserId = currentUserId
+//                )
+//
+//                // Spacer of Height 16 dp
+//                Spacer(modifier = Modifier.height(16.dp))
+//            }
+//        }
+//    }
 }
 
 /**
@@ -274,25 +376,29 @@ fun IndividualTeacherFailure(
     modifier: Modifier = Modifier,
     selectedTeacher: IndividualFacultyData,
     onClickRetry: () -> Unit,
-    textToShow: String
+    textToShow: String,
+    onBackClick: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         // Drawing the Header of the Teacher with his overall stats
-        TeacherDetailsHeaderCard(selectedTeacher = selectedTeacher)
+        TeacherDetailsHeaderCard(
+            selectedTeacher = selectedTeacher,
+            onBackPressed = onBackClick
+        )
 
         // Spacer of Height 16 dp
         Spacer(modifier = Modifier.height(16.dp))
 
         // This is a text Button which says to Try Again
         TextButton(
-            onClick = { onClickRetry() }
+            onClick = { onClickRetry() },
+            modifier = Modifier.padding(end = 16.dp, start = 16.dp),
         ) {
             Text(
                 text = textToShow,

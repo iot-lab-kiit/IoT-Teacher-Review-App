@@ -4,13 +4,7 @@ import android.util.Log
 import `in`.iot.lab.teacherreview.feature_authentication.domain.repository.AuthRepository
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.remote.TeachersApi
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.FacultiesData
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.ReviewData
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.ReviewPostData
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.repository.TeachersRepository
-import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
-import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState
-import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherReviewApiCall
-import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState
 import javax.inject.Inject
 
 class TeacherRepositoryImpl @Inject constructor(

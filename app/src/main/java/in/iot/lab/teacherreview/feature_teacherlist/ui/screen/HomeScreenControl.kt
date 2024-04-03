@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -14,8 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.design.theme.*
+import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.FacultiesData
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.TeacherListCardItem
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation.TeacherListRoutes
@@ -78,22 +79,24 @@ private fun DefaultPreviewFailure() {
 @Composable
 fun HomeScreenControl(
     navController: NavController,
-    action : (TeacherListAction) -> Unit,
-    teacherListApiCallState : TeacherListApiCallState
+    action: (TeacherListAction) -> Unit,
+    teacherListApiCallState: TeacherListApiCallState
 ) {
 
     // Checking which State to Show
     when (teacherListApiCallState) {
         is TeacherListApiCallState.Initialized -> {
-            action(TeacherListAction.GetTeacherList)
+            action(TeacherListAction.GetTeacherList())
         }
+
         is TeacherListApiCallState.Loading -> HomeScreenLoading()
         is TeacherListApiCallState.Success -> HomeScreenSuccess(
             navController = navController,
             teacherList = teacherListApiCallState.facultyData,
             action = action
         )
-        else -> HomeScreenFailure(getTeacherList = { action(TeacherListAction.GetTeacherList)})
+
+        else -> HomeScreenFailure(getTeacherList = { action(TeacherListAction.GetTeacherList()) })
     }
 }
 
@@ -133,7 +136,6 @@ fun HomeScreenSuccess(
 
                     // This function draws each Teacher Card
                     TeacherListCardItem(
-                        navController = navController,
                         teacher = teacher
                     ) {
                         // Setting the Current Selected Teacher in the shared ViewModel

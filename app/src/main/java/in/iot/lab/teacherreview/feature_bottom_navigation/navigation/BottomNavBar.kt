@@ -44,10 +44,9 @@ fun BottomBar(
 ) {
 
     // This Composable makes the Bottom Navigation Bar
+
     NavigationBar(
-        modifier = modifier,
-        tonalElevation = 16.dp,
-        containerColor = MaterialTheme.colorScheme.secondaryContainer
+        modifier = modifier
     ) {
 
         // This Variable keeps track of the Latest BackStack Entry
@@ -66,8 +65,6 @@ fun BottomBar(
                     menuItem.onOptionClicked(navController)
                 },
                 icon = {
-
-                    // The current icon to be showed in the bottom navigation menu Item
                     val currentIcon = if (selected)
                         menuItem.selectedIcon
                     else
@@ -75,8 +72,7 @@ fun BottomBar(
 
                     Icon(
                         imageVector = currentIcon,
-                        contentDescription = stringResource(id = menuItem.labelOfIcon),
-//                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        contentDescription = stringResource(id = menuItem.labelOfIcon)
                     )
                 },
                 label = {
@@ -87,10 +83,11 @@ fun BottomBar(
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
-
-                    // TODO :- Subject To change
-//                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
-                    selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer
                 )
             )
         }

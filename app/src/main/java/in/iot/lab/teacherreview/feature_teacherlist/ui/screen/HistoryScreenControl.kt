@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import `in`.iot.lab.design.components.PullToRefresh
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.design.theme.*
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.ReviewData
@@ -51,7 +52,8 @@ private fun DefaultPreviewLoading() {
 private fun DefaultPreviewSuccess() {
     CustomAppTheme {
         HistoryScreenSuccess(
-            ReviewData()
+            ReviewData(),
+            currentUserId = "1"
         )
     }
 }
@@ -80,9 +82,9 @@ private fun DefaultPreviewFailure() {
 @Composable
 fun HistoryScreenControl(
     modifier: Modifier = Modifier,
-    historyActions: (HistoryActions)->Unit,
+    historyActions: (HistoryActions) -> Unit,
     getHistoryApiCallState: GetHistoryApiCallState,
-    userIdFlow:String
+    currentUserId: String?
 ) {
 
     // ViewModel Variable
@@ -93,16 +95,23 @@ fun HistoryScreenControl(
         is GetHistoryApiCallState.Initialized -> {
             historyActions(HistoryActions.GetStudentReviewHistory)
         }
+
         is GetHistoryApiCallState.Loading -> {
             HistoryScreenLoading(
                 modifier = modifier
             )
         }
+
         is GetHistoryApiCallState.Success -> {
             HistoryScreenSuccess(
-                reviewData = getHistoryApiCallState.reviewData
+                reviewData = getHistoryApiCallState.reviewData,
+                currentUserId = currentUserId,
+                refreshHistory = {
+                    historyActions(HistoryActions.GetStudentReviewHistory)
+                }
             )
         }
+
         else -> {
             HistoryScreenFailure {
                 historyActions(HistoryActions.GetStudentReviewHistory)
@@ -128,28 +137,56 @@ fun HistoryScreenLoading(
 // This function is shown when the API call request is a Success
 @Composable
 fun HistoryScreenSuccess(
-    reviewData: ReviewData
+    reviewData: ReviewData,
+    currentUserId: String?,
+    refreshHistory: () -> Unit = {}
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .padding(16.dp)
-    ) {
-
-        items(reviewData.individualReviewData!!.size) { itemCount ->
-
-            // Current Review
-            val reviewItem = reviewData.individualReviewData[itemCount]
-
-            // Showing the Review in the reviewCard UI
+    PullToRefresh(
+        items = reviewData.individualReviewData!!,
+        content = {
+            val rating = with(it.rating!!) {
+                attendanceRating?.ratedPoints
+                    ?.plus(teachingRating?.ratedPoints!!)
+                    ?.plus(markingRating?.ratedPoints!!)
+                    ?.plus(overallRating)?.div(4) ?: 0.0
+            }
             ReviewCardItem(
-                createdBy = reviewItem.createdBy,
-                review = reviewItem.review!!
+                createdBy = it.createdBy,
+                review = it.review!!,
+                createdAt = it.createdAt,
+                currentUserId = currentUserId,
+                rating = rating
             )
 
             // Spacer of Height 16 dp
             Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
+        },
+        isRefreshing = false,
+        onRefresh = refreshHistory,
+        modifier = Modifier.padding(8.dp)
+    )
+//    LazyColumn(
+//        modifier = Modifier
+//            .padding(16.dp)
+//    ) {
+//
+//        items(reviewData.individualReviewData!!.size) { itemCount ->
+//
+//            // Current Review
+//            val reviewItem = reviewData.individualReviewData[itemCount]
+//
+//            // Showing the Review in the reviewCard UI
+//            ReviewCardItem(
+//                createdBy = reviewItem.createdBy,
+//                review = reviewItem.review!!,
+//                createdAt = reviewItem.createdAt,
+//                currentUserId = currentUserId
+//            )
+//
+//            // Spacer of Height 16 dp
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//    }
 }
 
 
