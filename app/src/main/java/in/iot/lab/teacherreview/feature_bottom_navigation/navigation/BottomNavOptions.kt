@@ -2,17 +2,19 @@ package `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavOptions.*
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavOptions.Companion.menuItems
+import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavOptions.HistoryOption
+import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavOptions.HomeOption
+import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavOptions.ProfileOption
 
 /**
  * This class will contain all the Various Screens related to the bottom Navigation bar
@@ -63,8 +65,8 @@ sealed class BottomNavOptions(
     object HistoryOption : BottomNavOptions(
         route = BottomNavRoutes.HistoryRoute.route,
         labelOfIcon = R.string.history,
-        unselectedIcon = Icons.Outlined.Email,
-        selectedIcon = Icons.Filled.Email,
+        unselectedIcon = Icons.Outlined.History,
+        selectedIcon = Icons.Filled.History,
         onOptionClicked = {
             it.navigate(BottomNavRoutes.HistoryRoute.route) {
                 popUpTo(it.graph.startDestinationId)

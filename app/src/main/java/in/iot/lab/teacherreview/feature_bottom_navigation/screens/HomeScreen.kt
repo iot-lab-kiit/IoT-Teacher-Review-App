@@ -6,17 +6,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomBar
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavOptions
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.HomeNavGraph
-import `in`.iot.lab.teacherreview.feature_teacherlist.ui.stateholder.ProfileScreenViewModel
 
 @Composable
 internal fun HomeScreen(navController: NavHostController = rememberNavController()) {
-    val profileVm: ProfileScreenViewModel = hiltViewModel()
     Scaffold(
         bottomBar = {
             BottomBar(
@@ -30,8 +27,9 @@ internal fun HomeScreen(navController: NavHostController = rememberNavController
                 .fillMaxSize()
                 .padding(it),
         ) {
-            HomeNavGraph(navController = navController,
-                profileVm = profileVm)
+            HomeNavGraph(
+                navController = navController
+            )
         }
     }
 }
