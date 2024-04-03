@@ -1,7 +1,9 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,12 +45,13 @@ fun TeacherListNavGraph(
             composable(
                 TeacherListRoutes.IndividualTeacherRoute.route,
                 content = {
+                    val currentUserId by teacherListViewModel.currentUserId.collectAsStateWithLifecycle()
                     IndividualTeacherControl(
                         navController = navController,
                         selectedTeacher = teacherListViewModel.selectedTeacher!!,
                         action = teacherListViewModel::action,
-                        individualTeacherReviewApiCall = teacherListViewModel.individualTeacherReviewApiCall
-
+                        individualTeacherReviewApiCall = teacherListViewModel.individualTeacherReviewApiCall,
+                        currentUserId = currentUserId,
                     )
                 }
             )
