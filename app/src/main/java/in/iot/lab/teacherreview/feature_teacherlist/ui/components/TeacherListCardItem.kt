@@ -32,8 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.design.theme.*
@@ -49,7 +47,6 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Indiv
 private fun DefaultPreview() {
     CustomAppTheme {
         TeacherListCardItem(
-            navController = rememberNavController(),
             teacher = IndividualFacultyData(
                 _id = "82323dhub21dh181dbd1x",
                 name = "Anirban Basak",
@@ -72,7 +69,6 @@ private fun DefaultPreview() {
 @Composable
 fun TeacherListCardItem(
     modifier: Modifier = Modifier,
-    navController: NavController,
     teacher: IndividualFacultyData,
     onTeacherClick: () -> Unit
 ) {
@@ -184,8 +180,8 @@ fun RatingDot(rating: Double) {
     }
     Box(
         modifier = Modifier
-            .size(24.dp)
+            .size(16.dp)
             .clip(CircleShape)
-            .background(color)
+            .background(color.copy(alpha = 0.6f))
     )
 }
