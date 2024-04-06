@@ -128,6 +128,10 @@ dependencies {
 
     //Implementing the design module
     implementation(project(":core:design"))
+
+    // Paging 3
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
 }
 
 fun getBaseUrlInCIEnvironment(): String {
