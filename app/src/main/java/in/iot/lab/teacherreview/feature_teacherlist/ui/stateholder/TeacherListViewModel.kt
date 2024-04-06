@@ -5,16 +5,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.teacherreview.core.data.local.UserPreferences
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.repository.ReviewRepository
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.repository.TeachersRepository
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.HomeScreenControl
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.state_action.TeacherListAction
-import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherReviewApiCall
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.net.ConnectException
 import javax.inject.Inject
@@ -45,13 +50,12 @@ class TeacherListViewModel @Inject constructor(
     var selectedTeacher: IndividualFacultyData? = null
         private set
 
-    var individualTeacherReviewApiCall: IndividualTeacherReviewApiCall by mutableStateOf(
-        IndividualTeacherReviewApiCall.Initialized
-    )
-        private set
-
     private val _currentUserId = userPreferences.userId
     val currentUserId: MutableStateFlow<String?> = MutableStateFlow(null)
+
+    private var _pagingFlow: MutableStateFlow<PagingData<IndividualReviewData>> =
+        MutableStateFlow(value = PagingData.empty())
+    val pagingFlow: StateFlow<PagingData<IndividualReviewData>> = _pagingFlow
 
     init {
         viewModelScope.launch {
@@ -78,7 +82,6 @@ class TeacherListViewModel @Inject constructor(
                 // Response from the Server
                 teachersRepository.getAllTeachers(
                     limitValue = 10,
-                    // TODO: To be implemented later
                     searchQuery = searchQuery
                 ).onSuccess {
                     teacherListApiCallState = TeacherListApiCallState.Success(it)
@@ -94,36 +97,28 @@ class TeacherListViewModel @Inject constructor(
     }
 
     // This function initialises the Teacher variable for the next Screen
-    fun addTeacherForNextScreen(teacher: IndividualFacultyData) {
+    private fun addTeacherForNextScreen(teacher: IndividualFacultyData) {
         selectedTeacher = teacher
     }
 
     // This function fetches the List of Teachers
     fun getIndividualTeacherReviews(facultyId: String = selectedTeacher!!._id) {
-
-        // Setting the Current State to Loading Before Starting to Fetch Data
-        individualTeacherReviewApiCall = IndividualTeacherReviewApiCall.Loading
-
-        // Fetching the Data from the Server
-        viewModelScope.launch {
-
-            // Checking the State of the API call and storing it to reflect to the UI Layer
+        viewModelScope.launch(Dispatchers.IO) {
             try {
+                // Reset the Paging Flow
+                _pagingFlow.value = PagingData.empty()
 
-                // Response from the Server
                 reviewRepository.getTeacherReviews(
-                    limitValue = 50,
                     facultyId = facultyId
-                ).onSuccess {
-                    individualTeacherReviewApiCall = IndividualTeacherReviewApiCall.Success(it)
-                }.onFailure {
-                    individualTeacherReviewApiCall =
-                        IndividualTeacherReviewApiCall.Failure(it.message ?: "Unknown Error")
-                }
-
-            } catch (_: ConnectException) {
-                individualTeacherReviewApiCall =
-                    IndividualTeacherReviewApiCall.Failure("No Internet Connection")
+                )
+                    .getOrThrow()
+                    .distinctUntilChanged()
+                    .cachedIn(viewModelScope)
+                    .collect {
+                        _pagingFlow.value = it
+                    }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
