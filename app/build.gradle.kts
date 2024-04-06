@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         applicationId = "in.iot.lab.teacherreview"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -128,6 +128,10 @@ dependencies {
 
     //Implementing the design module
     implementation(project(":core:design"))
+
+    // Paging 3
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
 }
 
 fun getBaseUrlInCIEnvironment(): String {

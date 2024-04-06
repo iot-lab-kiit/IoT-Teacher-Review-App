@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -49,6 +50,60 @@ fun <T> PullToRefresh(
             items(items) {
                 content(it)
             }
+        }
+
+        if(pullToRefreshState.isRefreshing) {
+            LaunchedEffect(true) {
+                onRefresh()
+            }
+        }
+
+        LaunchedEffect(isRefreshing) {
+            if(isRefreshing) {
+                pullToRefreshState.startRefresh()
+            } else {
+                pullToRefreshState.endRefresh()
+            }
+        }
+
+        PullToRefreshContainer(
+            state = pullToRefreshState,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .offset(y = -8.dp),
+        )
+    }
+}
+
+// TODO: Merge this with the above PullToRefresh function
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PullToRefreshLazyColumn(
+    modifier: Modifier = Modifier,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    paddingValues: PaddingValues = PaddingValues(0.dp),
+    lazyListState: LazyListState = rememberLazyListState(),
+    reverseLayout: Boolean = false,
+    verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(8.dp),
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    content: LazyListScope.() -> Unit,
+) {
+    val pullToRefreshState = rememberPullToRefreshState()
+    Box(
+        modifier = modifier
+            .nestedScroll(pullToRefreshState.nestedScrollConnection)
+    ) {
+        LazyColumn(
+            state = lazyListState,
+            contentPadding = paddingValues,
+            modifier = Modifier
+                .fillMaxSize(),
+            reverseLayout = reverseLayout,
+            verticalArrangement = verticalArrangement,
+            horizontalAlignment = horizontalAlignment,
+        ) {
+            content(this)
         }
 
         if(pullToRefreshState.isRefreshing) {
