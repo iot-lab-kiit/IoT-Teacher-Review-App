@@ -1,11 +1,18 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.data.repository
 
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import `in`.iot.lab.teacherreview.core.utils.Constants
 import `in`.iot.lab.teacherreview.feature_authentication.domain.repository.AuthRepository
+import `in`.iot.lab.teacherreview.feature_teacherlist.data.paging_source.ReviewsSource
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.remote.ReviewsApi
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.ReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.ReviewPostData
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.repository.ReviewRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ReviewRepositoryImpl @Inject constructor(
@@ -34,36 +41,22 @@ class ReviewRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTeacherReviews(facultyId: String, limitValue: Int): Result<ReviewData> {
+    override suspend fun getTeacherReviews(facultyId: String): Result<Flow<PagingData<IndividualReviewData>>> {
         try {
-            val response = reviewsApi.getIndividualTeacherReviews(
-                limitValue = limitValue,
-                facultyId = facultyId,
-                token = getToken()
-            )
-            Log.d(TAG, response.toString())
-            if (!response.isSuccessful) {
-                throw Exception("Error Connecting to the Server")
-            }
+            val pager = Pager(
+                config = PagingConfig(
+                    pageSize = Constants.ITEMS_PER_PAGE,
+                    prefetchDistance = Constants.PREFETCH_DISTANCE,
+                )
+            ) {
+                ReviewsSource(
+                    facultyId = facultyId,
+                    authRepository = authRepository,
+                    reviewsApi = reviewsApi
+                )
+            }.flow
 
-            // TODO: Maybe cache the response here
-            val reviewData = response.body()!!
-
-            val sortedReviews = reviewData.individualReviewData?.sortedByDescending {
-                it.createdAt
-            }
-
-            val sortedResponse = ReviewData(
-                avgAttendanceRating = reviewData.avgAttendanceRating,
-                avgMarkingRating = reviewData.avgMarkingRating,
-                avgTeachingRating = reviewData.avgTeachingRating,
-                total = reviewData.total,
-                limit = reviewData.limit,
-                skip = reviewData.skip,
-                individualReviewData = sortedReviews
-            )
-
-            return Result.success(sortedResponse)
+            return Result.success(pager)
         } catch (e: Exception) {
             e.printStackTrace()
             return Result.failure(e)
