@@ -11,11 +11,13 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface ReviewsApi {
-    @GET("reviews?${"$"}populate=faculty&${"$"}populate=createdBy")
+    // TODO: expose the sort query parameter as function parameter to make it more flexible
+    @GET("reviews?${"$"}populate=faculty&${"$"}populate=createdBy&${"$"}sort[createdAt]=-1")
     suspend fun getIndividualTeacherReviews(
         @Header("Authorization") token: String,
         @Query("faculty") facultyId: String,
-        @Query("${"$"}limit") limitValue: Int
+        @Query("${"$"}limit") limitValue: Int,
+        @Query("${"$"}skip") skip: Int = 0
     ): Response<ReviewData>
 
 
