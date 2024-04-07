@@ -18,4 +18,7 @@ object Constants {
     const val LOGIN_AUTHENTICATION_ENDPOINT = "authentication"
     const val TEACHER_LIST_ENDPOINT = "faculties"
     const val POST_TEACHER_REVIEW_ENDPOINT = "reviews"
+
+    const val ITEMS_PER_PAGE = 10
+    const val PREFETCH_DISTANCE = 3
 }
