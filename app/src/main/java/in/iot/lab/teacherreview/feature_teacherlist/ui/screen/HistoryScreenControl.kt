@@ -1,6 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen
 
-import android.content.res.Configuration
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,26 +8,31 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.components.PullToRefresh
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.design.theme.*
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.ReviewData
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.action.HistoryActions
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.ReviewCardItem
-import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState
 
-// This is the Preview function of the Screen when Loading
+/*
+ This is the Preview function of the Screen when Loading
 @Preview("Light")
 @Preview(
     name = "Dark",
@@ -51,7 +56,7 @@ private fun DefaultPreviewLoading() {
 @Composable
 private fun DefaultPreviewSuccess() {
     CustomAppTheme {
-        HistoryScreenSuccess(
+        HistoryScreenContent(
             ReviewData(),
             currentUserId = "1"
         )
@@ -73,124 +78,133 @@ private fun DefaultPreviewFailure() {
         )
     }
 }
+*/
 
-/**
- * This function decides which screen to show according to the different States
- *
- * @param modifier This is the default Modifier passed from the Parent Class
- */
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HistoryScreenControl(
     modifier: Modifier = Modifier,
     historyActions: (HistoryActions) -> Unit,
-    getHistoryApiCallState: GetHistoryApiCallState,
+    lazyPagingItems: LazyPagingItems<IndividualReviewData>,
     currentUserId: String?
 ) {
 
-    // ViewModel Variable
-    //val myViewModel: HistoryScreenViewModel = hiltViewModel()
-
-    // Redirecting to respective Screens
-    when (getHistoryApiCallState) {
-        is GetHistoryApiCallState.Initialized -> {
-            historyActions(HistoryActions.GetStudentReviewHistory)
+    val loading by remember {
+        derivedStateOf {
+            val state = lazyPagingItems.loadState
+            when {
+                (state.source.refresh is LoadState.Loading) -> true
+                (state.refresh is LoadState.Loading) -> true
+                else -> false
+            }
         }
+    }
 
-        is GetHistoryApiCallState.Loading -> {
-            HistoryScreenLoading(
-                modifier = modifier
-            )
-        }
-
-        is GetHistoryApiCallState.Success -> {
-            HistoryScreenSuccess(
-                reviewData = getHistoryApiCallState.reviewData,
+    Scaffold {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .then(modifier)
+        ) {
+            HistoryScreenContent(
+                loading = loading,
+                lazyPagingItems = lazyPagingItems,
                 currentUserId = currentUserId,
                 refreshHistory = {
                     historyActions(HistoryActions.GetStudentReviewHistory)
                 }
             )
         }
+    }
+}
 
-        else -> {
-            HistoryScreenFailure {
-                historyActions(HistoryActions.GetStudentReviewHistory)
+@Composable
+fun HistoryScreenContent(
+    loading: Boolean = false,
+    lazyPagingItems: LazyPagingItems<IndividualReviewData>,
+    currentUserId: String?,
+    refreshHistory: () -> Unit = {}
+) {
+    val state: LazyListState = rememberLazyListState()
+    PullToRefresh(
+        lazyListState = state,
+        isRefreshing = loading,
+        onRefresh = refreshHistory,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+        items(count = lazyPagingItems.itemCount) { index ->
+            lazyPagingItems.get(index = index)?.let { review ->
+                val rating = with(review.rating!!) {
+                    calculateAverageRating()
+                }
+
+                ReviewCardItem(
+                    modifier = Modifier
+                        .padding(end = 16.dp, start = 16.dp),
+                    createdBy = review.createdBy,
+                    review = review.review!!,
+                    rating = rating,
+                    createdAt = review.createdAt,
+                    currentUserId = currentUserId
+                )
+
+                // Spacer of Height 16 dp
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+
+        when {
+            lazyPagingItems.loadState.refresh is LoadState.Loading && lazyPagingItems.itemCount == 0 -> {
+                item {
+                    CircularProgressIndicator()
+                }
+            }
+
+            lazyPagingItems.loadState.refresh is LoadState.Loading && lazyPagingItems.itemCount == 0 -> {
+                item {
+                    CircularProgressIndicator()
+                }
+            }
+
+            lazyPagingItems.loadState.refresh is LoadState.Error -> {
+                item {
+                    HistoryScreenFailure(
+                        onRetryClick = refreshHistory
+                    )
+                }
+            }
+
+            lazyPagingItems.loadState.append is LoadState.Loading -> {
+                item {
+                    CircularProgressIndicator()
+                }
+            }
+
+            lazyPagingItems.loadState.append is LoadState.Error -> {
+                item {
+                    HistoryScreenFailure(
+                        onRetryClick = refreshHistory
+                    )
+                }
+            }
+
+        }
+
+        if (lazyPagingItems.loadState.append.endOfPaginationReached) {
+            item {
+                Text(
+                    text = "No more reviews to show",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(16.dp)
+                )
             }
         }
     }
 }
 
-// This state is shown when the Screen is Loading
-@Composable
-fun HistoryScreenLoading(
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
-    }
-}
-
-// This function is shown when the API call request is a Success
-@Composable
-fun HistoryScreenSuccess(
-    reviewData: ReviewData,
-    currentUserId: String?,
-    refreshHistory: () -> Unit = {}
-) {
-    PullToRefresh(
-        items = reviewData.individualReviewData!!,
-        content = {
-            val rating = with(it.rating!!) {
-                attendanceRating?.ratedPoints
-                    ?.plus(teachingRating?.ratedPoints!!)
-                    ?.plus(markingRating?.ratedPoints!!)
-                    ?.plus(overallRating)?.div(4) ?: 0.0
-            }
-            ReviewCardItem(
-                createdBy = it.createdBy,
-                review = it.review!!,
-                createdAt = it.createdAt,
-                currentUserId = currentUserId,
-                rating = rating
-            )
-
-            // Spacer of Height 16 dp
-            Spacer(modifier = Modifier.height(16.dp))
-        },
-        isRefreshing = false,
-        onRefresh = refreshHistory,
-        modifier = Modifier.padding(8.dp)
-    )
-//    LazyColumn(
-//        modifier = Modifier
-//            .padding(16.dp)
-//    ) {
-//
-//        items(reviewData.individualReviewData!!.size) { itemCount ->
-//
-//            // Current Review
-//            val reviewItem = reviewData.individualReviewData[itemCount]
-//
-//            // Showing the Review in the reviewCard UI
-//            ReviewCardItem(
-//                createdBy = reviewItem.createdBy,
-//                review = reviewItem.review!!,
-//                createdAt = reviewItem.createdAt,
-//                currentUserId = currentUserId
-//            )
-//
-//            // Spacer of Height 16 dp
-//            Spacer(modifier = Modifier.height(16.dp))
-//        }
-//    }
-}
-
-
-// This Screen is Shown when the Request is a Failure
 @Composable
 fun HistoryScreenFailure(
     modifier: Modifier = Modifier,

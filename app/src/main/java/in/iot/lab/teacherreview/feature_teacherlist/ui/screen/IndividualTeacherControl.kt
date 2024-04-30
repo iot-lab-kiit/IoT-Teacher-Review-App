@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import `in`.iot.lab.design.components.PullToRefreshLazyColumn
+import `in`.iot.lab.design.components.PullToRefresh
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualReviewData
@@ -43,7 +43,6 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.TeacherDetai
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation.TeacherListRoutes
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.state_action.TeacherListAction
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun IndividualTeacherControl(
@@ -122,7 +121,6 @@ fun IndividualTeacherControl(
  * @param refreshReviews This is the Function to Refresh the Reviews
  *
  */
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun IndividualTeacherContent(
     loading: Boolean = false,
@@ -133,7 +131,7 @@ fun IndividualTeacherContent(
     refreshReviews: () -> Unit = {}
 ) {
     val state: LazyListState = rememberLazyListState()
-    PullToRefreshLazyColumn(
+    PullToRefresh(
         lazyListState = state,
         isRefreshing = loading,
         onRefresh = refreshReviews,
@@ -150,10 +148,7 @@ fun IndividualTeacherContent(
         items(count = lazyPagingItems.itemCount) { index ->
             lazyPagingItems.get(index = index)?.let { review ->
                 val rating = with(review.rating!!) {
-                    attendanceRating?.ratedPoints
-                        ?.plus(teachingRating?.ratedPoints!!)
-                        ?.plus(markingRating?.ratedPoints!!)
-                        ?.plus(overallRating)?.div(4) ?: 0.0
+                    calculateAverageRating()
                 }
 
                 ReviewCardItem(
@@ -162,7 +157,7 @@ fun IndividualTeacherContent(
                     createdBy = review.createdBy,
                     review = review.review!!,
                     rating = rating,
-                    createdAt = review.createdAt!!,
+                    createdAt = review.createdAt,
                     currentUserId = currentUserId
                 )
 

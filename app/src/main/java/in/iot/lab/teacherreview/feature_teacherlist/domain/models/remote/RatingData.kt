@@ -18,4 +18,18 @@ data class RatingData(
     val markingRating: RatingParameterData? = null,
     @SerializedName("attendance")
     val attendanceRating: RatingParameterData? = null
-)
+) {
+    /**
+     * This function calculates the Average Rating
+     *
+     * @return Double This returns the Average Rating
+     */
+    fun calculateAverageRating(): Double {
+        return with(this) {
+            attendanceRating?.ratedPoints
+                ?.plus(teachingRating?.ratedPoints!!)
+                ?.plus(markingRating?.ratedPoints!!)
+                ?.plus(overallRating)?.div(4) ?: 0.0
+        }
+    }
+}
