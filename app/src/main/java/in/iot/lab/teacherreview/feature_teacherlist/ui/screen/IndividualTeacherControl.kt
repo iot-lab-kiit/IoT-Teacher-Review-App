@@ -43,7 +43,6 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.TeacherDetai
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation.TeacherListRoutes
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.state_action.TeacherListAction
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun IndividualTeacherControl(
@@ -122,7 +121,6 @@ fun IndividualTeacherControl(
  * @param refreshReviews This is the Function to Refresh the Reviews
  *
  */
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun IndividualTeacherContent(
     loading: Boolean = false,
@@ -159,7 +157,7 @@ fun IndividualTeacherContent(
                     createdBy = review.createdBy,
                     review = review.review!!,
                     rating = rating,
-                    createdAt = review.createdAt!!,
+                    createdAt = review.createdAt,
                     currentUserId = currentUserId
                 )
 
