@@ -150,10 +150,7 @@ fun IndividualTeacherContent(
         items(count = lazyPagingItems.itemCount) { index ->
             lazyPagingItems.get(index = index)?.let { review ->
                 val rating = with(review.rating!!) {
-                    attendanceRating?.ratedPoints
-                        ?.plus(teachingRating?.ratedPoints!!)
-                        ?.plus(markingRating?.ratedPoints!!)
-                        ?.plus(overallRating)?.div(4) ?: 0.0
+                    calculateAverageRating()
                 }
 
                 ReviewCardItem(

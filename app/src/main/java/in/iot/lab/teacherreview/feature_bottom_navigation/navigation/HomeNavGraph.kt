@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation.TeacherListNavGraph
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.HistoryScreenControl
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.ProfileScreen
@@ -47,9 +48,11 @@ fun HomeNavGraph(
             // History Bottom Navigation Option
             composable(
                 BottomNavRoutes.HistoryRoute.route,
-                content = { HistoryScreenControl(
+                content = {
+                    val lazyPagingItems = historyVm.historyScreenPagingFlow.collectAsLazyPagingItems()
+                    HistoryScreenControl(
                     historyActions = historyVm::historyAction,
-                    getHistoryApiCallState = historyVm.getHistoryApiCallState,
+                    lazyPagingItems = lazyPagingItems,
                     currentUserId = currentUserId
                 ) }
             )

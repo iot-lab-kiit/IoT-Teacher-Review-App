@@ -21,11 +21,12 @@ interface ReviewsApi {
     ): Response<ReviewData>
 
 
-    @GET("reviews?${"$"}populate=faculty&${"$"}populate=createdBy")
+    @GET("reviews?${"$"}populate=faculty&${"$"}populate=createdBy&${"$"}sort[createdAt]=-1")
     suspend fun getStudentReviewHistory(
         @Header("Authorization") token: String,
         @Query("createdBy") studentId: String,
-        @Query("${"$"}limit") limitValue: Int
+        @Query("${"$"}limit") limitValue: Int,
+        @Query("${"$"}skip") skip: Int = 0
     ): Response<ReviewData>
 
 
