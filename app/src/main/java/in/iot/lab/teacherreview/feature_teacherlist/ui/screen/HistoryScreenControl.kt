@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import `in`.iot.lab.design.components.PullToRefreshLazyColumn
+import `in`.iot.lab.design.components.PullToRefresh
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualReviewData
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.action.HistoryActions
@@ -126,7 +126,7 @@ fun HistoryScreenContent(
     refreshHistory: () -> Unit = {}
 ) {
     val state: LazyListState = rememberLazyListState()
-    PullToRefreshLazyColumn(
+    PullToRefresh(
         lazyListState = state,
         isRefreshing = loading,
         onRefresh = refreshHistory,

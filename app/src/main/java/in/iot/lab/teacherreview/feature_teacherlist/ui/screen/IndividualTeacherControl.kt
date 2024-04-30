@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import `in`.iot.lab.design.components.PullToRefreshLazyColumn
+import `in`.iot.lab.design.components.PullToRefresh
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualReviewData
@@ -133,7 +133,7 @@ fun IndividualTeacherContent(
     refreshReviews: () -> Unit = {}
 ) {
     val state: LazyListState = rememberLazyListState()
-    PullToRefreshLazyColumn(
+    PullToRefresh(
         lazyListState = state,
         isRefreshing = loading,
         onRefresh = refreshReviews,
