@@ -1,8 +1,8 @@
 package `in`.iot.lab.teacherreview.feature_authentication.data.remote
 
 import `in`.iot.lab.teacherreview.core.utils.Constants
-import `in`.iot.lab.teacherreview.feature_authentication.domain.models.remote.AuthResponse
 import `in`.iot.lab.teacherreview.feature_authentication.domain.models.remote.PostLoginData
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.remote.User
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -19,5 +19,5 @@ interface AuthApi {
     @POST(Constants.LOGIN_AUTHENTICATION_ENDPOINT)
     suspend fun postLoginRequest(
         @Body postLoginData: PostLoginData
-    ): retrofit2.Response<AuthResponse>
+    ): retrofit2.Response<User>
 }

@@ -1,5 +1,5 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.ui.state_action
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Faculty
 
 sealed class AddReviewAction {
     data class UpdateUserInputMarkingRating(val flag : Int) : AddReviewAction()
@@ -9,7 +9,7 @@ sealed class AddReviewAction {
     data class UpdateMarkingReview(val review : String) : AddReviewAction()
     data class UpdateAttendanceReview(val review : String) : AddReviewAction()
     data class UpdateTeachingReview(val review : String) : AddReviewAction()
-    data class SetTeacherId(val teacherId : IndividualFacultyData) : AddReviewAction()
+    data class SetTeacherId(val teacherId : Faculty) : AddReviewAction()
     data object ResetToDefault : AddReviewAction()
     data object ResetApiToInitialize : AddReviewAction()
     data object PostReviewData : AddReviewAction()

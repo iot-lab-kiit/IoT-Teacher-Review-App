@@ -1,10 +1,8 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.ui.components
 
 import android.content.res.Configuration
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -59,7 +57,6 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 // This is the Preview function of the Teacher Review Control Screen
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview("Light")
 @Preview(
     name = "Dark",
@@ -91,7 +88,6 @@ private fun DefaultPreviewControl() {
  * @param createdBy This is the User who created the Review
  * @param review This is the Review
  */
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ReviewCardItem(
     modifier: Modifier = Modifier,
@@ -99,7 +95,8 @@ fun ReviewCardItem(
     review: String,
     rating: Double = 0.0,
     createdAt: String,
-    currentUserId: String? = ""
+    currentUserId: String? = "",
+    onDelete: () -> Unit = {}
 ) {
     val context = LocalContext.current
     Card(
@@ -120,7 +117,7 @@ fun ReviewCardItem(
             ) {
                 // Profile Photo of the Reviewer
                 AsyncImage(
-                    model = createdBy.pictureUrl,
+                    model = createdBy.photoUrl,
                     placeholder = painterResource(id = R.drawable.profile_photo),
                     contentDescription = stringResource(id = R.string.profile),
                     modifier = Modifier
@@ -135,7 +132,7 @@ fun ReviewCardItem(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = createdBy.name,
+                            text = createdBy.name ?: "Anonymous",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.titleMedium.copy(
@@ -144,8 +141,10 @@ fun ReviewCardItem(
                             color = MaterialTheme.colorScheme.secondary,
                         )
                         if (!currentUserId.isNullOrEmpty()) {
-                            if (currentUserId == createdBy._id) {
-                                ReviewOptionsDropdown()
+                            if (currentUserId == createdBy.id) {
+                                ReviewOptionsDropdown(
+                                    onDelete = onDelete
+                                )
                             }
                         }
                     }
@@ -153,7 +152,7 @@ fun ReviewCardItem(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = rating.toString(),
+                            text = rating.toString().substring(0, 2),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.ExtraBold
                             )
@@ -262,7 +261,6 @@ private fun ActionButton(
 }
 
 // TODO: Use Date Formatter library to format the Date coming from the API correctly
-@RequiresApi(Build.VERSION_CODES.O)
 private fun formatCreatedAt(timestamp: String): String {
     try {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
@@ -286,10 +284,10 @@ private fun formatCreatedAt(timestamp: String): String {
 
 @Composable
 fun ReviewOptionsDropdown(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onDelete: () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val context = LocalContext.current
     Box(modifier = modifier) {
         Icon(
             imageVector = Icons.Default.MoreVert,
@@ -306,32 +304,11 @@ fun ReviewOptionsDropdown(
         ) {
             DropdownMenuItem(text = {
                 Text(
-                    text = "Edit",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }, onClick = {
-                Log.d("ReviewCardItem", "Edit Clicked")
-                Toast.makeText(
-                    context,
-                    "TODO: Implement Edit Functionality",
-                    Toast.LENGTH_SHORT
-                ).show()
-            })
-            DropdownMenuItem(text = {
-                Text(
                     text = "Delete",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(8.dp)
                 )
-            }, onClick = {
-                Log.d("ReviewCardItem", "Delete Clicked")
-                Toast.makeText(
-                    context,
-                    "TODO: Implement Delete Functionality",
-                    Toast.LENGTH_SHORT
-                ).show()
-            })
+            }, onClick = onDelete)
         }
     }
 }

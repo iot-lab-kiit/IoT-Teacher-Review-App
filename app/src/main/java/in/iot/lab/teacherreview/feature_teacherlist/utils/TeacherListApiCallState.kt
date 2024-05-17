@@ -1,7 +1,10 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.utils
 
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.FacultiesData
-import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState.*
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Faculty
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState.Failure
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState.Initialized
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState.Loading
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallState.Success
 
 /**
  * This sealed Class contains all the States of the Teacher List Request of a API
@@ -14,6 +17,6 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.utils.TeacherListApiCallSt
 sealed class TeacherListApiCallState {
     object Initialized : TeacherListApiCallState()
     object Loading : TeacherListApiCallState()
-    class Success(val facultyData: FacultiesData) : TeacherListApiCallState()
+    class Success(val facultyData: List<Faculty>) : TeacherListApiCallState()
     class Failure(val errorMessage: String) : TeacherListApiCallState()
 }

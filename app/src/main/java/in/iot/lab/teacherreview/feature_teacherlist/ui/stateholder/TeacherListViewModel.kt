@@ -9,8 +9,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.teacherreview.core.data.local.UserPreferences
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualReviewData
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Faculty
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Review
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.repository.ReviewRepository
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.repository.TeachersRepository
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.HomeScreenControl
@@ -47,15 +47,15 @@ class TeacherListViewModel @Inject constructor(
     var teacherListApiCallState: TeacherListApiCallState by mutableStateOf(TeacherListApiCallState.Initialized)
         private set
 
-    var selectedTeacher: IndividualFacultyData? = null
+    var selectedTeacher: Faculty? = null
         private set
 
     private val _currentUserId = userPreferences.userId
     val currentUserId: MutableStateFlow<String?> = MutableStateFlow(null)
 
-    private var _pagingFlow: MutableStateFlow<PagingData<IndividualReviewData>> =
+    private var _pagingFlow: MutableStateFlow<PagingData<Review>> =
         MutableStateFlow(value = PagingData.empty())
-    val pagingFlow: StateFlow<PagingData<IndividualReviewData>> = _pagingFlow
+    val pagingFlow: StateFlow<PagingData<Review>> = _pagingFlow
 
     init {
         viewModelScope.launch {
@@ -97,12 +97,12 @@ class TeacherListViewModel @Inject constructor(
     }
 
     // This function initialises the Teacher variable for the next Screen
-    private fun addTeacherForNextScreen(teacher: IndividualFacultyData) {
+    private fun addTeacherForNextScreen(teacher: Faculty) {
         selectedTeacher = teacher
     }
 
     // This function fetches the List of Teachers
-    fun getIndividualTeacherReviews(facultyId: String = selectedTeacher!!._id) {
+    fun getIndividualTeacherReviews(facultyId: String = selectedTeacher!!.id!!) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 // Reset the Paging Flow
@@ -130,6 +130,18 @@ class TeacherListViewModel @Inject constructor(
             is TeacherListAction.GetIndividualTeacherReviews -> getIndividualTeacherReviews(
                 operation.teacherId
             )
+            is TeacherListAction.DeleteReview -> deleteReview(operation.reviewId)
+        }
+    }
+
+    private fun deleteReview(reviewId: String) {
+        viewModelScope.launch {
+            try {
+                reviewRepository.deleteReview(reviewId)
+                getIndividualTeacherReviews()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

@@ -27,7 +27,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.components.PullToRefresh
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualReviewData
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.remote.User
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Review
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.action.HistoryActions
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.ReviewCardItem
 
@@ -85,7 +86,7 @@ private fun DefaultPreviewFailure() {
 fun HistoryScreenControl(
     modifier: Modifier = Modifier,
     historyActions: (HistoryActions) -> Unit,
-    lazyPagingItems: LazyPagingItems<IndividualReviewData>,
+    lazyPagingItems: LazyPagingItems<Review>,
     currentUserId: String?
 ) {
 
@@ -112,7 +113,8 @@ fun HistoryScreenControl(
                 currentUserId = currentUserId,
                 refreshHistory = {
                     historyActions(HistoryActions.GetStudentReviewHistory)
-                }
+                },
+                onDelete = { historyActions(HistoryActions.DeleteReview(it)) }
             )
         }
     }
@@ -121,9 +123,10 @@ fun HistoryScreenControl(
 @Composable
 fun HistoryScreenContent(
     loading: Boolean = false,
-    lazyPagingItems: LazyPagingItems<IndividualReviewData>,
+    lazyPagingItems: LazyPagingItems<Review>,
     currentUserId: String?,
-    refreshHistory: () -> Unit = {}
+    refreshHistory: () -> Unit = {},
+    onDelete: (String) -> Unit
 ) {
     val state: LazyListState = rememberLazyListState()
     PullToRefresh(
@@ -137,18 +140,17 @@ fun HistoryScreenContent(
         }
         items(count = lazyPagingItems.itemCount) { index ->
             lazyPagingItems.get(index = index)?.let { review ->
-                val rating = with(review.rating!!) {
-                    calculateAverageRating()
-                }
+                val rating = review.rating
 
                 ReviewCardItem(
                     modifier = Modifier
                         .padding(end = 16.dp, start = 16.dp),
-                    createdBy = review.createdBy,
-                    review = review.review!!,
+                    createdBy = review.createdBy ?: User(),
+                    review = review.feedback ?: "",
                     rating = rating,
                     createdAt = review.createdAt,
-                    currentUserId = currentUserId
+                    currentUserId = currentUserId,
+                    onDelete = { onDelete(review.id) }
                 )
 
                 // Spacer of Height 16 dp
