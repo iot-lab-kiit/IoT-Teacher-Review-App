@@ -1,8 +1,6 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen
 
 import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,8 +34,9 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.components.PullToRefresh
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualReviewData
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.remote.User
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Faculty
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Review
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.ReviewCardItem
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.TeacherDetailsHeaderCard
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation.TeacherListRoutes
@@ -47,9 +46,9 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.ui.state_action.TeacherLis
 @Composable
 fun IndividualTeacherControl(
     navController: NavController,
-    selectedTeacher: IndividualFacultyData,
+    selectedTeacher: Faculty,
     currentUserId: String?,
-    lazyPagingItems: LazyPagingItems<IndividualReviewData>,
+    lazyPagingItems: LazyPagingItems<Review>,
     action: (TeacherListAction) -> Unit,
 ) {
     val loading by remember {
@@ -88,23 +87,27 @@ fun IndividualTeacherControl(
         },
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
-            IndividualTeacherContent(
-                loading = loading,
+            IndividualTeacherContent(loading = loading,
                 lazyPagingItems = lazyPagingItems,
                 selectedTeacher = selectedTeacher,
-                onBackClick = navController::popBackStack,
                 currentUserId = currentUserId,
+                onBackClick = navController::popBackStack,
                 refreshReviews = {
                     action(
                         TeacherListAction.GetIndividualTeacherReviews(
-                            selectedTeacher._id
+                            selectedTeacher.id!!
                         )
                     )
-                }
-            )
+                },
+                onDelete = {
+                    action(
+                        TeacherListAction.DeleteReview(
+                            reviewId = it
+                        )
+                    )
+                })
         }
     }
 }
@@ -124,11 +127,12 @@ fun IndividualTeacherControl(
 @Composable
 fun IndividualTeacherContent(
     loading: Boolean = false,
-    lazyPagingItems: LazyPagingItems<IndividualReviewData>,
-    selectedTeacher: IndividualFacultyData,
+    lazyPagingItems: LazyPagingItems<Review>,
+    selectedTeacher: Faculty,
     currentUserId: String?,
     onBackClick: () -> Unit = {},
-    refreshReviews: () -> Unit = {}
+    refreshReviews: () -> Unit = {},
+    onDelete: (String) -> Unit,
 ) {
     val state: LazyListState = rememberLazyListState()
     PullToRefresh(
@@ -139,26 +143,23 @@ fun IndividualTeacherContent(
     ) {
         item {
             TeacherDetailsHeaderCard(
-                selectedTeacher = selectedTeacher,
-                onBackPressed = onBackClick
+                selectedTeacher = selectedTeacher, onBackPressed = onBackClick
             )
             Spacer(modifier = Modifier.height(16.dp))
         }
 
         items(count = lazyPagingItems.itemCount) { index ->
             lazyPagingItems.get(index = index)?.let { review ->
-                val rating = with(review.rating!!) {
-                    calculateAverageRating()
-                }
+                val rating = review.rating
 
                 ReviewCardItem(
-                    modifier = Modifier
-                        .padding(end = 16.dp, start = 16.dp),
-                    createdBy = review.createdBy,
-                    review = review.review!!,
+                    modifier = Modifier.padding(end = 16.dp, start = 16.dp),
+                    createdBy = review.createdBy ?: User(),
+                    review = review.feedback ?: "",
                     rating = rating,
                     createdAt = review.createdAt,
-                    currentUserId = currentUserId
+                    currentUserId = currentUserId,
+                    onDelete = { onDelete(review.id) },
                 )
 
                 // Spacer of Height 16 dp
@@ -226,8 +227,7 @@ fun FailedToLoad(
     textToShow: String,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -236,8 +236,7 @@ fun FailedToLoad(
             modifier = Modifier.padding(end = 16.dp, start = 16.dp),
         ) {
             Text(
-                text = textToShow,
-                style = MaterialTheme.typography.titleMedium
+                text = textToShow, style = MaterialTheme.typography.titleMedium
             )
         }
     }

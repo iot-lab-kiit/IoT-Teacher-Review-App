@@ -3,7 +3,7 @@ package `in`.iot.lab.teacherreview.feature_teacherlist.data.repository
 import android.util.Log
 import `in`.iot.lab.teacherreview.feature_authentication.domain.repository.AuthRepository
 import `in`.iot.lab.teacherreview.feature_teacherlist.data.remote.TeachersApi
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.FacultiesData
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Faculty
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.repository.TeachersRepository
 import javax.inject.Inject
 
@@ -16,7 +16,7 @@ class TeacherRepositoryImpl @Inject constructor(
     override suspend fun getAllTeachers(
         limitValue: Int,
         searchQuery: String?
-    ): Result<FacultiesData> {
+    ): Result<List<Faculty>> {
         try {
             val response = teachersApi.getTeacherList(
                 token = getToken(),

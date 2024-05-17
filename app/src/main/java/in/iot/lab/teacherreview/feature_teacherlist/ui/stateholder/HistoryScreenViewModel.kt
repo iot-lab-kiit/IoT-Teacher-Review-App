@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.teacherreview.core.data.local.UserPreferences
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualReviewData
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Review
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.repository.ReviewRepository
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.action.HistoryActions
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.HistoryScreenControl
@@ -32,9 +32,9 @@ class HistoryScreenViewModel @Inject constructor(
     private val userIdFlow = userPreferences.userId
     private var userId = ""
 
-    private var _historyScreenPagingFlow: MutableStateFlow<PagingData<IndividualReviewData>> =
+    private var _historyScreenPagingFlow: MutableStateFlow<PagingData<Review>> =
         MutableStateFlow(value = PagingData.empty())
-    val historyScreenPagingFlow: StateFlow<PagingData<IndividualReviewData>> = _historyScreenPagingFlow
+    val historyScreenPagingFlow: StateFlow<PagingData<Review>> = _historyScreenPagingFlow
 
     init {
         viewModelScope.launch {
@@ -71,6 +71,12 @@ class HistoryScreenViewModel @Inject constructor(
     fun historyAction(historyActions: HistoryActions) {
         when (historyActions) {
             is HistoryActions.GetStudentReviewHistory -> getStudentReviewHistory()
+            is HistoryActions.DeleteReview -> {
+                viewModelScope.launch {
+                    reviewRepository.deleteReview(historyActions.reviewId)
+                    getStudentReviewHistory()
+                }
+            }
         }
     }
     // Testing

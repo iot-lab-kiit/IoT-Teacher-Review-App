@@ -37,7 +37,7 @@ import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.design.theme.redDot
 import `in`.iot.lab.design.theme.yellowDot
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Faculty
 
 // This is the Preview function of the Screen when Loading
 @Preview("Light")
@@ -50,13 +50,9 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Indiv
 private fun DefaultPreviewLoading() {
     CustomAppTheme {
         TeacherDetailsHeaderCard(
-            selectedTeacher = IndividualFacultyData(
-                _id = "",
-                name = "",
-                avgTeachingRating = 3.2,
-                avgMarkingRating = 4.3,
-                avgAttendanceRating = 4.3,
-                code = ""
+            selectedTeacher = Faculty(
+                id = "",
+                name = ""
             )
         )
     }
@@ -71,7 +67,7 @@ private fun DefaultPreviewLoading() {
 @Composable
 fun TeacherDetailsHeaderCard(
     modifier: Modifier = Modifier,
-    selectedTeacher: IndividualFacultyData,
+    selectedTeacher: Faculty,
     onBackPressed: () -> Unit = {}
 ) {
     Column(
@@ -100,7 +96,7 @@ fun TeacherDetailsHeaderCard(
             )
             // Teacher Profile Picture
             AsyncImage(
-                model = selectedTeacher.avatar,
+                model = selectedTeacher.photoUrl,
                 placeholder = painterResource(id = R.drawable.profile_photo),
                 contentDescription = stringResource(id = R.string.profile),
                 modifier = Modifier
@@ -125,7 +121,7 @@ fun TeacherDetailsHeaderCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = selectedTeacher.name,
+                    text = selectedTeacher.name ?: "",
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.headlineLarge,

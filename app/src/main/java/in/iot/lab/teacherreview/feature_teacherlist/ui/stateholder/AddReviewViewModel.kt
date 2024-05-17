@@ -6,11 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.RatingData
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.RatingParameterData
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.ReviewPostData
-import `in`.iot.lab.teacherreview.feature_teacherlist.data.repository.TeacherRepositoryImpl
+import `in`.iot.lab.teacherreview.core.data.local.UserPreferences
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.ReviewPostData
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Faculty
 import `in`.iot.lab.teacherreview.feature_teacherlist.domain.repository.ReviewRepository
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.state_action.AddReviewAction
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.state_action.ReviewState
@@ -23,17 +21,28 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddReviewViewModel @Inject constructor(
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    userPreferences: UserPreferences
 ) : ViewModel() {
+
+    private val _currentUserId: MutableStateFlow<String?> = MutableStateFlow(null)
 
     private val _userInputReview = MutableStateFlow(ReviewState())
     val userInputReview = _userInputReview.asStateFlow()
 
-    private lateinit var selectedTeacherId: IndividualFacultyData
+    private lateinit var selectedTeacherId: Faculty
         private set
 
     var addReviewApiState: AddReviewApiState by mutableStateOf(AddReviewApiState.Initialized)
         private set
+
+    init {
+        viewModelScope.launch {
+            userPreferences.userId.collect{
+                _currentUserId.value = it
+            }
+        }
+    }
 
     /**
      * This function updates the user Input Marking Rating variable
@@ -96,7 +105,7 @@ class AddReviewViewModel @Inject constructor(
         _userInputReview.value = _userInputReview.value.copy(teachingReview = newValue)
     }
 
-    fun setTeacherId(teacherId: IndividualFacultyData) {
+    fun setTeacherId(teacherId: Faculty) {
         selectedTeacherId = teacherId
     }
 
@@ -137,26 +146,16 @@ class AddReviewViewModel @Inject constructor(
         viewModelScope.launch {
 
             // Creating the RatingData model object to be passed to the retrofit for posting
-            val ratingData = RatingData(
-                teachingRating = RatingParameterData(
-                    ratedPoints = _userInputReview.value.teachingRating,
-                    description = _userInputReview.value.teachingReview
-                ),
-                markingRating = RatingParameterData(
-                    ratedPoints = _userInputReview.value.markingRating,
-                    description = _userInputReview.value.markingReview
-                ),
-                attendanceRating = RatingParameterData(
-                    ratedPoints = _userInputReview.value.attendanceRating,
-                    description = _userInputReview.value.attendanceReview
-                )
-            )
+            val ratingData = with(_userInputReview.value) {
+                (teachingRating + markingRating + attendanceRating) / 3
+            }
 
             // The Actual post data that will be sent to the Database
             val postData = ReviewPostData(
-                review = _userInputReview.value.overallReview,
+                createdFor = selectedTeacherId.id!!,
+                createdBy = _currentUserId.value ?: throw IllegalStateException("User Id Not Found"),
+                feedback = _userInputReview.value.overallReview.trim(),
                 rating = ratingData,
-                faculty = selectedTeacherId._id
             )
 
             // CHanging the State of the Api Accordingly
@@ -167,7 +166,7 @@ class AddReviewViewModel @Inject constructor(
                             AddReviewApiState.Failure(it.message ?: "Unknown Error Occurred")
                     }
                     .onSuccess {
-                        addReviewApiState = AddReviewApiState.Success(it)
+                        addReviewApiState = AddReviewApiState.Success(it.message ?: "Review Posted")
                     }
             } catch (_: ConnectException) {
                 addReviewApiState = AddReviewApiState.Failure("No Internet Connection")

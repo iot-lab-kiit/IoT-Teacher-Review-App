@@ -7,7 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Faculty
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.AddRatingScreen
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.AddReviewScreen
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.stateholder.AddReviewViewModel
@@ -24,8 +24,9 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.ui.stateholder.AddReviewVi
 @Composable
 fun AddRatingNavGraph(
     navController: NavHostController,
-    teacherData: IndividualFacultyData,
-    refreshTeacherReviews: () -> Unit
+    teacherData: Faculty,
+    refreshTeacherReviews: () -> Unit,
+    navigateToIndividualTeacher: () -> Unit
 ) {
 
     // Shared View Model which is shared between the add review and add rating Screens
@@ -48,7 +49,7 @@ fun AddRatingNavGraph(
                     AddRatingScreen(
                         navController = navController,
                         action = myViewModel::action,
-                        teacherName = teacherData.name,
+                        teacherName = teacherData.name ?: "",
                         markingRating = state.markingRating,
                         attendanceRating = state.attendanceRating,
                         teachingRating = state.teachingRating
@@ -64,11 +65,12 @@ fun AddRatingNavGraph(
                         refreshTeacherReviews = refreshTeacherReviews,
                         action = myViewModel::action,
                         addReviewApiState = myViewModel.addReviewApiState,
-                        teacherName = teacherData.name,
+                        teacherName = teacherData.name ?: "",
                         overallReview = state.overallReview,
                         markingReview = state.markingReview,
                         attendanceReview = state.attendanceReview,
-                        teachingReview = state.teachingReview
+                        teachingReview = state.teachingReview,
+                        navigateToTeachersScreen = navigateToIndividualTeacher
                     )
                 }
             )

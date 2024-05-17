@@ -75,6 +75,9 @@ fun TeacherListNavGraph(
                         teacherData = teacherData,
                         refreshTeacherReviews = {
                             teacherListViewModel.getIndividualTeacherReviews()
+                        },
+                        navigateToIndividualTeacher = {
+                            navController.navigateUp()
                         }
                     )
                 }

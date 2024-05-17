@@ -1,7 +1,10 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.utils
 
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.ReviewData
-import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState.*
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Review
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState.Failure
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState.Initialized
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState.Loading
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallState.Success
 
 /**
  * This sealed Class contains all the States of the Student Review History Request in a API
@@ -14,6 +17,6 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.utils.GetHistoryApiCallSta
 sealed class GetHistoryApiCallState {
     object Initialized : GetHistoryApiCallState()
     object Loading : GetHistoryApiCallState()
-    class Success(val reviewData: ReviewData) : GetHistoryApiCallState()
+    class Success(val reviewData: List<Review>) : GetHistoryApiCallState()
     class Failure(val errorMessage: String) : GetHistoryApiCallState()
 }

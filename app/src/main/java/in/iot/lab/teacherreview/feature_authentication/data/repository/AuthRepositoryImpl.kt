@@ -81,7 +81,7 @@ class AuthRepositoryImpl @Inject constructor(
                 throw Exception("Failed to post login data")
             }
 
-            val userId = response.body()?.authentication?.payload?.user?._id
+            val userId = response.body()?.id
             if (userId == null) {
                 throw Exception("User id is null")
             }
