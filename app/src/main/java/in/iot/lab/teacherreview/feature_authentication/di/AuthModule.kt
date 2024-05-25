@@ -4,8 +4,6 @@ import android.content.Context
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,8 +21,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 @InstallIn(SingletonComponent::class)
 object AuthModule {
 
-    @Provides
-    fun providesFirebaseAuth() = Firebase.auth
+//    @Provides
+//    fun providesFirebaseAuth() = Firebase.auth
 
     @Provides
     fun providesSignInOption(

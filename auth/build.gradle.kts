@@ -1,6 +1,10 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+
+    // Hilt Dependency Plugin
+    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.androidHilt)
 }
 
 android {
@@ -65,7 +69,21 @@ dependencies {
     // -----------------------------------------------------------------------
 
     implementation(project(":core:design"))
-    
+    implementation(project(":data"))
+    implementation(project(":core:network"))
+
+    // ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+
+    // Hilt Dependencies
+    implementation(libs.com.google.dagger)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation)
+
+
     // Firebase Auth
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
