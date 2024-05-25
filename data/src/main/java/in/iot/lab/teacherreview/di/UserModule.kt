@@ -1,5 +1,6 @@
 package `in`.iot.lab.teacherreview.di
 
+import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,8 +25,8 @@ object UserModule {
 
     @Provides
     @Singleton
-    fun provideUserRepo(api: UserApiService): UserRepo {
-        return UserRepoImpl(api)
+    fun provideUserRepo(api: UserApiService, firebaseAuth: FirebaseAuth): UserRepo {
+        return UserRepoImpl(api, firebaseAuth)
     }
 }
 

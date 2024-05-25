@@ -4,7 +4,7 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.teacherreview.data.remote.AuthApiService
-import `in`.iot.lab.teacherreview.domain.models.auth.PostAuthData
+import `in`.iot.lab.teacherreview.domain.models.common.AccessTokenBody
 import `in`.iot.lab.teacherreview.domain.repository.AuthRepo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -45,10 +45,10 @@ class AuthRepoImpl @Inject constructor(
                 else {
 
                     // Get the token from the user
-                    val accessToken = user.getIdToken(false).await().token
+                    val accessToken = user.getIdToken(false).await().token ?: "Invalid"
 
                     // Response of the post request from the backend
-                    val response = apiService.loginUser(PostAuthData(token = accessToken!!))
+                    val response = apiService.loginUser(AccessTokenBody(accessToken))
 
                     // Check if the response is successful
                     if (response.isSuccessful)

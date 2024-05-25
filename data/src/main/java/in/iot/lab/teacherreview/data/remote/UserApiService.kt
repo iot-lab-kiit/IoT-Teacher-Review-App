@@ -1,11 +1,13 @@
 package `in`.iot.lab.teacherreview.data.remote
 
+import `in`.iot.lab.teacherreview.domain.models.common.AccessTokenBody
 import `in`.iot.lab.teacherreview.utils.Constants
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.DELETE
-import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 
@@ -18,13 +20,11 @@ interface UserApiService {
     /**
      * This function is used to fetch the data of the user.
      *
-     * @param authToken This is the token for the Authorization from the Firebase.
-     * @param userUid This is the user uid for which the data needs to be fetched.
+     * @param accessTokenBody This is the token for the Authorization from the Firebase.
      */
-    @GET(Constants.USER_FETCH_ENDPOINT)
+    @POST(Constants.USER_FETCH_ENDPOINT)
     suspend fun getUserData(
-        @Header("Authorization") authToken: String,
-        @Path("userUid") userUid: String
+        @Body accessTokenBody: AccessTokenBody
     ): Response<RemoteUser>
 
 

@@ -1,6 +1,6 @@
 package `in`.iot.lab.teacherreview.domain.models.user
 
-import com.google.firebase.auth.FirebaseUser
+
 import com.google.gson.annotations.SerializedName
 
 
@@ -27,20 +27,7 @@ data class RemoteUser(
     @SerializedName("photoUrl")
     val photoUrl: String?,
     @SerializedName("role")
-    val role: Int,
+    val role: String,
     @SerializedName("status")
-    val status: Int
+    val status: Boolean
 )
-
-
-fun FirebaseUser.toRemoteUser(): RemoteUser {
-    return RemoteUser(
-        id = "",
-        uid = uid,
-        name = displayName,
-        email = email,
-        photoUrl = photoUrl?.toString(),
-        role = 0,
-        status = 0
-    )
-}
