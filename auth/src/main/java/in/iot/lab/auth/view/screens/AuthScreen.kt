@@ -1,25 +1,25 @@
 package `in`.iot.lab.auth.view.screens
 
+import android.app.Activity
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.iot.lab.auth.view.components.AuthOnBoarding
 import `in`.iot.lab.auth.view.components.GoogleSignInUI
 import `in`.iot.lab.auth.view.events.AuthEvent
 import `in`.iot.lab.design.components.AppFailureScreen
+import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 
@@ -48,36 +48,36 @@ fun AuthScreenControl(
     onSignInSuccess: () -> Unit
 ) {
 
-    Scaffold {
-        Box(modifier = Modifier.padding(it)) {
+    val context = LocalContext.current
 
-            AuthIdleScreen(setEvent)
+    AppScreen {
+        AuthIdleScreen(setEvent)
 
 
-            when (authApiState) {
+        when (authApiState) {
 
-                is UiState.Loading -> {
-                    CircularProgressIndicator()
-                }
+            // Loading State
+            is UiState.Loading -> {
+                CircularProgressIndicator()
+            }
 
-                is UiState.Success -> {
-                    onSignInSuccess()
-                }
+            // Success State
+            is UiState.Success -> {
+                onSignInSuccess()
+            }
 
-                is UiState.Failed -> {
-                    AppFailureScreen(
-                        onCancel = {
+            // failed State
+            is UiState.Failed -> {
+                AppFailureScreen(
+                    text = authApiState.message,
+                    onCancel = { (context as Activity).finish() },
+                    onTryAgain = { setEvent(AuthEvent.ResetAuthApiState) }
+                )
+            }
 
-                        },
-                        onTryAgain = {
-
-                        }
-                    )
-                }
-
-                else -> {
-                    // Do Nothing
-                }
+            // Idle State
+            else -> {
+                // Do Nothing
             }
         }
     }

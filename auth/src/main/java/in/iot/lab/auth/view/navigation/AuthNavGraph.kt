@@ -18,6 +18,7 @@ fun NavGraphBuilder.authNavGraph(onSignedIn: () -> Unit) {
     // Auth Screen
     composable(AUTH_ROUTE) {
 
+        // Auth View Model Instance
         val authViewModel: AuthViewModel = hiltViewModel()
         val authApiState = authViewModel.authApiState.collectAsState().value
 

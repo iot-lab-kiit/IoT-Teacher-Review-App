@@ -19,9 +19,17 @@ class AuthViewModel @Inject constructor(
     private val authRepo: AuthRepo
 ) : ViewModel() {
 
+
+    /**
+     * This variable contains the api state of the Auth Flow.
+     */
     private val _authApiState: MutableStateFlow<UiState<Unit>> = MutableStateFlow(UiState.Idle)
     val authApiState = _authApiState.asStateFlow()
 
+
+    /**
+     * This function logs the user to the App
+     */
     private fun loginUser(authCredential: AuthCredential) {
         viewModelScope.launch {
             authRepo.loginUser(authCredential).collect {
@@ -31,12 +39,19 @@ class AuthViewModel @Inject constructor(
     }
 
 
+    /**
+     * This function checks the events and calls the functions respectively
+     */
     fun uiListener(event: AuthEvent) {
         when (event) {
             is AuthEvent.LoginUser -> loginUser(event.authCredential)
 
             is AuthEvent.ExceptionFound -> {
                 _authApiState.value = UiState.Failed(event.exception.message.toString())
+            }
+
+            is AuthEvent.ResetAuthApiState -> {
+                _authApiState.value = UiState.Idle
             }
         }
     }

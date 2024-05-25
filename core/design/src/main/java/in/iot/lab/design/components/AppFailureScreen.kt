@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,10 +53,13 @@ import `in`.iot.lab.design.theme.CustomAppTheme
 private fun DefaultPreview() {
     CustomAppTheme {
         Scaffold {
-            AppFailureScreen(
-                onCancel = {},
-                onTryAgain = {}
-            )
+            Box(Modifier.padding(it)) {
+                AppFailureScreen(
+                    text = "No Internet connection was found. Check your connection or try again.",
+                    onCancel = {},
+                    onTryAgain = {}
+                )
+            }
         }
     }
 }
@@ -79,7 +83,7 @@ private fun DefaultPreview() {
 fun AppFailureScreen(
     modifier: Modifier = Modifier,
     title: String = "Whoops !!",
-    text: String = "No Internet connection was found. Check your connection or try again.",
+    text: String,
     imageId: Int = R.drawable.error_image,
     onCancel: () -> Unit,
     onTryAgain: () -> Unit

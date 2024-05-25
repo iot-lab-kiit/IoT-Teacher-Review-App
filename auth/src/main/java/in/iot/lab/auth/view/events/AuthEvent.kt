@@ -7,4 +7,5 @@ sealed class AuthEvent {
 
     data class LoginUser(val authCredential: AuthCredential) : AuthEvent()
     data class ExceptionFound(val exception: Exception) : AuthEvent()
+    data object ResetAuthApiState : AuthEvent()
 }
