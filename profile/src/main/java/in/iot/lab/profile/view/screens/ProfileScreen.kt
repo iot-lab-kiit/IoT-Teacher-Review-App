@@ -60,7 +60,10 @@ private fun DefaultPreview1() {
 @Composable
 fun ProfileScreenControl(
     userApiState: UiState<RemoteUser>,
-    setEvent: (ProfileEvents) -> Unit
+    logOutState: UiState<Unit>,
+    deleteAccountState: UiState<Unit>,
+    setEvent: (ProfileEvents) -> Unit,
+    onLogOutClick: () -> Unit
 ) {
 
     AppScreen {
@@ -92,6 +95,44 @@ fun ProfileScreenControl(
                         setEvent(ProfileEvents.FetchUserData)
                     }
                 )
+            }
+        }
+
+        when (logOutState) {
+            is UiState.Success -> {
+                onLogOutClick()
+            }
+
+            is UiState.Loading -> {
+                CircularProgressIndicator()
+            }
+
+            else -> {}
+        }
+
+        when (deleteAccountState) {
+            is UiState.Success -> {
+                onLogOutClick()
+            }
+
+            is UiState.Failed -> {
+                AppFailureScreen(
+                    text = deleteAccountState.message,
+                    onCancel = {
+
+                    },
+                    onTryAgain = {
+                        setEvent(ProfileEvents.FetchUserData)
+                    }
+                )
+            }
+
+            is UiState.Loading -> {
+                CircularProgressIndicator()
+            }
+
+            else -> {
+
             }
         }
     }

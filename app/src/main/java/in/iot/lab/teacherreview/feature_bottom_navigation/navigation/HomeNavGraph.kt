@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import `in`.iot.lab.auth.view.navigation.navigateToAuth
 import `in`.iot.lab.profile.view.navigation.profileNavGraph
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation.TeacherListNavGraph
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.HistoryScreenControl
@@ -76,7 +77,7 @@ fun HomeNavGraph(
 
 
             profileNavGraph {
-
+                navController.navigateToAuth()
             }
         }
     )

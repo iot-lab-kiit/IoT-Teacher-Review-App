@@ -26,21 +26,31 @@ class UserRepoImpl @Inject constructor(
     override suspend fun getUserData(): Flow<ResponseState<RemoteUser>> {
         return withContext(Dispatchers.IO) {
             getResponseState {
-                val tokenResult = auth.currentUser?.getIdToken(false)?.await()
-                val token = tokenResult?.token ?: "Not Valid"
+                val token = getUserToken()
                 apiService.getUserData(AccessTokenBody(token))
             }
         }
     }
 
-    override suspend fun deleteUserData(userUid: String): Flow<ResponseState<Unit>> {
+    override suspend fun deleteUserData(): Flow<ResponseState<Unit>> {
         return withContext(Dispatchers.IO) {
             getResponseState {
+                val token = getUserToken()
+                val userUid = getUserUid()
                 apiService.deleteUserData(
-                    authToken = "",
+                    authToken = token,
                     userUid = userUid
                 )
             }
         }
+    }
+
+
+    override suspend fun getUserUid(): String {
+        return auth.currentUser?.uid ?: "Invalid Uid"
+    }
+
+    override suspend fun getUserToken(): String {
+        return auth.currentUser?.getIdToken(false)?.await()?.token ?: "Invalid Token"
     }
 }

@@ -6,5 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepo {
     suspend fun getUserData(): Flow<ResponseState<RemoteUser>>
-    suspend fun deleteUserData(userUid: String): Flow<ResponseState<Unit>>
+    suspend fun deleteUserData(): Flow<ResponseState<Unit>>
+    suspend fun getUserUid(): String
+    suspend fun getUserToken(): String
 }

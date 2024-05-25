@@ -37,6 +37,6 @@ interface UserApiService {
     @DELETE(Constants.USER_DELETE_ENDPOINT)
     suspend fun deleteUserData(
         @Header("Authorization") authToken: String,
-        @Path("userUid") userUid: String
+        @Path("id") userUid: String
     ): Response<Unit>
 }
