@@ -59,7 +59,7 @@ fun PrimaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shapes: RoundedCornerShape = RoundedCornerShape(percent = 50),
+    shape: RoundedCornerShape = RoundedCornerShape(percent = 50),
     color: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -74,7 +74,7 @@ fun PrimaryButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        shape = shapes,
+        shape = shape,
         colors = color,
         contentPadding = contentPadding,
         content = content
@@ -87,7 +87,7 @@ fun SecondaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shapes: RoundedCornerShape = RoundedCornerShape(percent = 50),
+    shape: RoundedCornerShape = RoundedCornerShape(percent = 50),
     color: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.onPrimary,
         contentColor = MaterialTheme.colorScheme.onBackground,
@@ -101,7 +101,7 @@ fun SecondaryButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        shape = shapes,
+        shape = shape,
         colors = color,
         contentPadding = contentPadding,
         content = content

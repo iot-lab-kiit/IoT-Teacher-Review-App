@@ -1,15 +1,24 @@
 package `in`.iot.lab.teacherreview.data.remote
 
+
+import `in`.iot.lab.teacherreview.domain.models.auth.PostAuthData
 import `in`.iot.lab.teacherreview.utils.Constants
-import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
-import `in`.iot.lab.teacherreview.domain.models.auth.RemoteUserLoginResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 
+
 interface AuthApiService {
+
+
+    /**
+     * This function sends the login access token from firebase to the server for creating a new
+     * user data if the user is not present in the database.
+     *
+     * @param postAuthData This contains the access token from firebase.
+     */
     @POST(Constants.LOGIN_AUTH_ENDPOINT)
     suspend fun loginUser(
-        @Body userData: RemoteUser
-    ): Response<RemoteUserLoginResponse>
+        @Body postAuthData: PostAuthData
+    ): Response<Unit>
 }

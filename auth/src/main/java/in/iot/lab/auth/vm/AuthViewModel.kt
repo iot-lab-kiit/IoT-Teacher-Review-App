@@ -24,9 +24,9 @@ class AuthViewModel @Inject constructor(
 
     private fun loginUser(authCredential: AuthCredential) {
         viewModelScope.launch {
-//            authRepo.loginUser(authCredential).collect {
-//                _authApiState.value = it.toUiState()
-//            }
+            authRepo.loginUser(authCredential).collect {
+                _authApiState.value = it.toUiState()
+            }
         }
     }
 

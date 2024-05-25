@@ -3,7 +3,7 @@ package `in`.iot.lab.teacherreview.utils
 object Constants {
 
     // Authentication Endpoints
-    const val LOGIN_AUTH_ENDPOINT = ""
+    const val LOGIN_AUTH_ENDPOINT = "authenticate"
 
     // User Endpoints
     const val USER_FETCH_ENDPOINT = ""

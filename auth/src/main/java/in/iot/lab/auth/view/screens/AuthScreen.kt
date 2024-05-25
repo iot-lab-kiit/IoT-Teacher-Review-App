@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import `in`.iot.lab.auth.view.components.AuthOnBoarding
 import `in`.iot.lab.auth.view.components.GoogleSignInUI
 import `in`.iot.lab.auth.view.events.AuthEvent
+import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 
@@ -64,7 +65,14 @@ fun AuthScreenControl(
                 }
 
                 is UiState.Failed -> {
-                    TODO(" Failed Dialog Box Needs to be added")
+                    AppFailureScreen(
+                        onCancel = {
+
+                        },
+                        onTryAgain = {
+
+                        }
+                    )
                 }
 
                 else -> {
