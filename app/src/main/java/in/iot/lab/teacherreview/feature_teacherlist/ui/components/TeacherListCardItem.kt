@@ -17,8 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,12 +32,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.design.theme.*
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
+import `in`.iot.lab.teacherreview.R
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Faculty
 
 // This is the Preview function of the Login Screen
 @Preview("Light")
@@ -49,15 +47,10 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Indiv
 private fun DefaultPreview() {
     CustomAppTheme {
         TeacherListCardItem(
-            navController = rememberNavController(),
-            teacher = IndividualFacultyData(
-                _id = "82323dhub21dh181dbd1x",
+            teacher = Faculty(
+                id = "82323dhub21dh181dbd1x",
                 name = "Anirban Basak",
-                code = "Operating System",
-                avatar = "",
-                avgAttendanceRating = 3.1,
-                avgMarkingRating = 3.9,
-                avgTeachingRating = 4.0
+                photoUrl = "",
             ),
         ) {}
     }
@@ -72,8 +65,7 @@ private fun DefaultPreview() {
 @Composable
 fun TeacherListCardItem(
     modifier: Modifier = Modifier,
-    navController: NavController,
-    teacher: IndividualFacultyData,
+    teacher: Faculty,
     onTeacherClick: () -> Unit
 ) {
 
@@ -108,7 +100,7 @@ fun TeacherListCardItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 AsyncImage(
-                    model = teacher.avatar,
+                    model = teacher.photoUrl,
                     placeholder = painterResource(id = R.drawable.profile_photo),
                     contentDescription = stringResource(id = R.string.profile),
                     modifier = Modifier
@@ -128,7 +120,7 @@ fun TeacherListCardItem(
                         verticalArrangement = Arrangement.Top
                     ) {
                         Text(
-                            text = teacher.name,
+                            text = teacher.name ?: "",
                             style = MaterialTheme.typography.titleMedium.copy(
                                 fontWeight = FontWeight.ExtraBold,
                                 fontSize = 20.sp
@@ -136,7 +128,7 @@ fun TeacherListCardItem(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = teacher.code ?: "",
+                            text = teacher.experience ?: "",
                             style = MaterialTheme.typography.bodySmall,
                             color = muted
                         )
@@ -145,7 +137,7 @@ fun TeacherListCardItem(
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Divider(modifier = Modifier.height(1.dp))
+            HorizontalDivider(modifier = Modifier.height(1.dp))
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -166,7 +158,7 @@ fun TeacherListCardItem(
                 )
                 Spacer(modifier = Modifier.width(80.dp))
                 Text(
-                    text = "${teacher.totalReviews} Reviews",
+                    text = "${teacher.totalRatings} Reviews",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -184,8 +176,8 @@ fun RatingDot(rating: Double) {
     }
     Box(
         modifier = Modifier
-            .size(24.dp)
+            .size(16.dp)
             .clip(CircleShape)
-            .background(color)
+            .background(color.copy(alpha = 0.6f))
     )
 }

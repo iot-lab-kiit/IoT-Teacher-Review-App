@@ -2,11 +2,13 @@ package `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation.TeacherListNavGraph
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.HistoryScreenControl
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.ProfileScreen
@@ -24,6 +26,7 @@ fun HomeNavGraph(
 ) {
 
     val currentUserState = profileVm.currentUser.collectAsState().value
+    val currentUserId by profileVm.currentUserId.collectAsState()
     NavHost(
         navController = navController,
         startDestination = BottomNavRoutes.HomeRoute.route,
@@ -45,10 +48,12 @@ fun HomeNavGraph(
             // History Bottom Navigation Option
             composable(
                 BottomNavRoutes.HistoryRoute.route,
-                content = { HistoryScreenControl(
+                content = {
+                    val lazyPagingItems = historyVm.historyScreenPagingFlow.collectAsLazyPagingItems()
+                    HistoryScreenControl(
                     historyActions = historyVm::historyAction,
-                    getHistoryApiCallState = historyVm.getHistoryApiCallState,
-                    userIdFlow = currentUserState?.uid.toString()
+                    lazyPagingItems = lazyPagingItems,
+                    currentUserId = currentUserId
                 ) }
             )
 

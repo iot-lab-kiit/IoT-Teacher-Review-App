@@ -1,7 +1,9 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.utils
 
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.ReviewPostData
-import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState.*
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState.Failure
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState.Initialized
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState.Loading
+import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState.Success
 
 
 /**
@@ -15,6 +17,6 @@ import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState.*
 sealed interface AddReviewApiState {
     data object Initialized : AddReviewApiState
     data object Loading : AddReviewApiState
-    class Success(val reviewData: ReviewPostData) : AddReviewApiState
+    class Success(val message: String) : AddReviewApiState
     class Failure(val errorMessage: String) : AddReviewApiState
 }

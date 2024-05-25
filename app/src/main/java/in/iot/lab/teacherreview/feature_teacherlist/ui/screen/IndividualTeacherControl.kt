@@ -1,302 +1,242 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen
 
-import android.content.res.Configuration
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
+import androidx.compose.material.icons.outlined.RateReview
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import `in`.iot.lab.design.components.PullToRefresh
 import `in`.iot.lab.teacherreview.R
-import `in`.iot.lab.design.theme.*
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.IndividualFacultyData
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.ReviewData
+import `in`.iot.lab.teacherreview.feature_authentication.domain.models.remote.User
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Faculty
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Review
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.ReviewCardItem
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.TeacherDetailsHeaderCard
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation.TeacherListRoutes
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.state_action.TeacherListAction
-import `in`.iot.lab.teacherreview.feature_teacherlist.ui.stateholder.TeacherListViewModel
-import `in`.iot.lab.teacherreview.feature_teacherlist.utils.IndividualTeacherReviewApiCall
 
-// This is the Preview function of the Teacher Review Control Screen
-@Preview("Light")
-@Preview(
-    name = "Dark",
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-private fun DefaultPreviewControl() {
-    CustomAppTheme {
-        IndividualTeacherControl(
-            navController = rememberNavController(),
-            selectedTeacher = IndividualFacultyData(
-                _id = ""
-            ),
-            action = {},
-            individualTeacherReviewApiCall = IndividualTeacherReviewApiCall.Initialized
-
-        )
-    }
-}
-
-// This is the Preview function of the Teacher Review Loading Screen
-@Preview("Light")
-@Preview(
-    name = "Dark",
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-private fun DefaultPreviewLoading() {
-    CustomAppTheme {
-        IndividualTeacherLoading(
-            selectedTeacher = IndividualFacultyData(
-                _id = ""
-            )
-        )
-    }
-}
-
-// This is the Preview function of the Teacher Review Success Screen
-@Preview("Light")
-@Preview(
-    name = "Dark",
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-private fun DefaultPreviewSuccess() {
-    CustomAppTheme {
-        IndividualTeacherSuccess(
-            reviewData = ReviewData(),
-            selectedTeacher = IndividualFacultyData(
-                _id = ""
-            )
-        )
-    }
-}
-
-// This is the Preview function of the Teacher Review Failure Screen
-@Preview("Light")
-@Preview(
-    name = "Dark",
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-private fun DefaultPreviewFailure() {
-    CustomAppTheme {
-        IndividualTeacherFailure(
-            selectedTeacher = IndividualFacultyData(
-                _id = ""
-            ),
-            onClickRetry = {},
-            textToShow = stringResource(R.string.failed_to_load_tap_to_retry)
-        )
-    }
-}
-
-/**
- * Individual Teacher Control for Review Screen
- *
- * @param navController This is kept to navigate to different Screens
- * @param myViewModel This is the [TeacherListViewModel] variable
- */
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun IndividualTeacherControl(
     navController: NavController,
-    selectedTeacher: IndividualFacultyData,
-    individualTeacherReviewApiCall: IndividualTeacherReviewApiCall,
-    action : (TeacherListAction) -> Unit,
+    selectedTeacher: Faculty,
+    currentUserId: String?,
+    lazyPagingItems: LazyPagingItems<Review>,
+    action: (TeacherListAction) -> Unit,
 ) {
-
-    // Checking which state my app is in Currently
-    when (individualTeacherReviewApiCall) {
-        is IndividualTeacherReviewApiCall.Initialized -> {}
-        is IndividualTeacherReviewApiCall.Loading -> {
-
-            // Showing the Loading Screen
-            IndividualTeacherLoading(
-                selectedTeacher = selectedTeacher
-            )
-        }
-        is IndividualTeacherReviewApiCall.Success -> {
-
-            // Taking all the review Data
-            val reviewData = individualTeacherReviewApiCall.reviewData
-
-            //Checking if the review Data is Empty or Not
-            if (reviewData.individualReviewData.isNullOrEmpty()) {
-
-                // Calling the Failed Screen
-                IndividualTeacherFailure(
-                    selectedTeacher = selectedTeacher,
-                    onClickRetry = { action(TeacherListAction.GetIndividualTeacherReviews(selectedTeacher._id)) },
-                    textToShow = stringResource(id = R.string.dont_have_anything_to_show)
-                )
-
-
-            } else {
-                IndividualTeacherSuccess(
-                    reviewData = reviewData,
-                    selectedTeacher = selectedTeacher
-                )
+    val loading by remember {
+        derivedStateOf {
+            val state = lazyPagingItems.loadState
+            when {
+                (state.source.refresh is LoadState.Loading) -> true
+                (state.refresh is LoadState.Loading) -> true
+                else -> false
             }
         }
-        else -> {
-
-            // Showing the Failure Data
-            IndividualTeacherFailure(
-                selectedTeacher = selectedTeacher,
-                onClickRetry = { action(TeacherListAction.GetIndividualTeacherReviews(selectedTeacher._id)) },
-                textToShow = stringResource(R.string.failed_to_load_tap_to_retry)
-            )
-        }
     }
 
-    // Showing the Floating Action Button On the Screen clicking which will redirect to add review Screen
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(end = 24.dp, bottom = 16.dp),
-        contentAlignment = Alignment.BottomEnd
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(TeacherListRoutes.AddRatingRoute.route)
+                },
+                shape = RoundedCornerShape(12.dp),
+                containerColor = MaterialTheme.colorScheme.primary,
+            ) {
+                Row(
+                    modifier = Modifier.padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.RateReview,
+                        contentDescription = stringResource(id = R.string.add),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Text(text = "Add Your Review")
+                }
+            }
+        },
     ) {
-        FloatingActionButton(
-            onClick = {
-                navController.navigate(TeacherListRoutes.AddRatingRoute.route)
-            },
-            shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = stringResource(id = R.string.add),
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-    }
-}
-
-/**
- * This function is Used when the Screen is Loading
- *
- * @param modifier Default kept to let the parent class pass any modifications it needs
- * @param selectedTeacher This is the details of the Selected Teacher
- */
-@Composable
-fun IndividualTeacherLoading(
-    modifier: Modifier = Modifier,
-    selectedTeacher: IndividualFacultyData
-) {
-
-    Column(
-        modifier = modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-    ) {
-
-        // Showing the Teacher Details
-        TeacherDetailsHeaderCard(selectedTeacher = selectedTeacher)
-
-        // Spacer of Height 16 dp
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        // Showing the Progress Bar
         Box(
-            modifier = Modifier
-                .padding(32.dp)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
+            modifier = Modifier.fillMaxSize()
         ) {
-            CircularProgressIndicator()
+            IndividualTeacherContent(loading = loading,
+                lazyPagingItems = lazyPagingItems,
+                selectedTeacher = selectedTeacher,
+                currentUserId = currentUserId,
+                onBackClick = navController::popBackStack,
+                refreshReviews = {
+                    action(
+                        TeacherListAction.GetIndividualTeacherReviews(
+                            selectedTeacher.id!!
+                        )
+                    )
+                },
+                onDelete = {
+                    action(
+                        TeacherListAction.DeleteReview(
+                            reviewId = it
+                        )
+                    )
+                })
         }
     }
 }
 
+
 /**
- * This function is Used when the Screen is Success
+ * Individual Teacher Main Content for Review Screen with Pull to Refresh and Lazy Column
  *
- * @param reviewData This is the review data of the particular review
- * @param selectedTeacher This is the selected Teacher
+ * @param loading This is the Loading State of the Screen
+ * @param lazyPagingItems This is the Lazy Paging Items for the Reviews
+ * @param selectedTeacher This is the Selected Teacher Data
+ * @param currentUserId This is the Current User Id
+ * @param onBackClick This is the Function to Navigate Back
+ * @param refreshReviews This is the Function to Refresh the Reviews
+ *
  */
 @Composable
-fun IndividualTeacherSuccess(
-    reviewData: ReviewData,
-    selectedTeacher: IndividualFacultyData
+fun IndividualTeacherContent(
+    loading: Boolean = false,
+    lazyPagingItems: LazyPagingItems<Review>,
+    selectedTeacher: Faculty,
+    currentUserId: String?,
+    onBackClick: () -> Unit = {},
+    refreshReviews: () -> Unit = {},
+    onDelete: (String) -> Unit,
 ) {
-
-    // Lazy Column to Show the List of Reviews
-    LazyColumn(
-        modifier = Modifier
-            .padding(top = 16.dp, end = 16.dp, start = 16.dp, bottom = 44.dp),
+    val state: LazyListState = rememberLazyListState()
+    PullToRefresh(
+        lazyListState = state,
+        isRefreshing = loading,
+        onRefresh = refreshReviews,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        items(reviewData.individualReviewData!!.size + 1) {
-            val itemCount = it - 1
+        item {
+            TeacherDetailsHeaderCard(
+                selectedTeacher = selectedTeacher, onBackPressed = onBackClick
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
-            // Drawing the Header of the Teacher with his overall stats
-            if (itemCount == -1) {
-                TeacherDetailsHeaderCard(
-                    selectedTeacher = selectedTeacher
-                )
+        items(count = lazyPagingItems.itemCount) { index ->
+            lazyPagingItems.get(index = index)?.let { review ->
+                val rating = review.rating
 
-                // Spacer of Height 16 dp
-                Spacer(modifier = Modifier.height(16.dp))
-            } else {
-                val reviewItem = reviewData.individualReviewData[itemCount]
                 ReviewCardItem(
-                    createdBy = reviewItem.createdBy,
-                    review = reviewItem.review!!
+                    modifier = Modifier.padding(end = 16.dp, start = 16.dp),
+                    createdBy = review.createdBy ?: User(),
+                    review = review.feedback ?: "",
+                    rating = rating,
+                    createdAt = review.createdAt,
+                    currentUserId = currentUserId,
+                    onDelete = { onDelete(review.id) },
                 )
 
                 // Spacer of Height 16 dp
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
+
+        when {
+            lazyPagingItems.loadState.refresh is LoadState.Loading && lazyPagingItems.itemCount == 0 -> {
+                item {
+                    CircularProgressIndicator()
+                }
+            }
+
+            lazyPagingItems.loadState.refresh is LoadState.Loading && lazyPagingItems.itemCount == 0 -> {
+                item {
+                    CircularProgressIndicator()
+                }
+            }
+
+            lazyPagingItems.loadState.refresh is LoadState.Error -> {
+                item {
+                    FailedToLoad(
+                        onClickRetry = {},
+                        textToShow = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
+                            ?: "Error"
+                    )
+                }
+            }
+
+            lazyPagingItems.loadState.append is LoadState.Loading -> {
+                item {
+                    CircularProgressIndicator()
+                }
+            }
+
+            lazyPagingItems.loadState.append is LoadState.Error -> {
+                item {
+                    FailedToLoad(
+                        onClickRetry = {},
+                        textToShow = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
+                            ?: "Error"
+                    )
+                }
+            }
+
+        }
+
+        if (lazyPagingItems.loadState.append.endOfPaginationReached) {
+            item {
+                Text(
+                    text = "No more reviews to show",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
     }
 }
 
-/**
- *  This Screen is used when the Request is a Failure
- *
- * @param modifier Default modifier to pass modifications from the Parent
- * @param selectedTeacher This is the selected Teacher
- * @param onClickRetry This is the function which is run when the teacher clicks retry
- * @param textToShow This text is shown on the Screen
- */
 @Composable
-fun IndividualTeacherFailure(
+fun FailedToLoad(
     modifier: Modifier = Modifier,
-    selectedTeacher: IndividualFacultyData,
     onClickRetry: () -> Unit,
-    textToShow: String
+    textToShow: String,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        // Drawing the Header of the Teacher with his overall stats
-        TeacherDetailsHeaderCard(selectedTeacher = selectedTeacher)
-
-        // Spacer of Height 16 dp
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // This is a text Button which says to Try Again
         TextButton(
-            onClick = { onClickRetry() }
+            onClick = { onClickRetry() },
+            modifier = Modifier.padding(end = 16.dp, start = 16.dp),
         ) {
             Text(
-                text = textToShow,
-                style = MaterialTheme.typography.titleMedium
+                text = textToShow, style = MaterialTheme.typography.titleMedium
             )
         }
     }

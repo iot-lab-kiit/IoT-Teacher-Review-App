@@ -14,9 +14,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.design.theme.*
-import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.FacultiesData
+import `in`.iot.lab.teacherreview.R
+import `in`.iot.lab.teacherreview.feature_teacherlist.domain.models.remote.Faculty
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.TeacherListCardItem
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation.TeacherListRoutes
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.state_action.TeacherListAction
@@ -47,7 +47,7 @@ private fun DefaultPreviewSuccess() {
     CustomAppTheme {
         HomeScreenSuccess(
             navController = rememberNavController(),
-            teacherList = FacultiesData(),
+            teacherList = emptyList(),
             action = {}
         )
     }
@@ -78,22 +78,24 @@ private fun DefaultPreviewFailure() {
 @Composable
 fun HomeScreenControl(
     navController: NavController,
-    action : (TeacherListAction) -> Unit,
-    teacherListApiCallState : TeacherListApiCallState
+    action: (TeacherListAction) -> Unit,
+    teacherListApiCallState: TeacherListApiCallState
 ) {
 
     // Checking which State to Show
     when (teacherListApiCallState) {
         is TeacherListApiCallState.Initialized -> {
-            action(TeacherListAction.GetTeacherList)
+            action(TeacherListAction.GetTeacherList())
         }
+
         is TeacherListApiCallState.Loading -> HomeScreenLoading()
         is TeacherListApiCallState.Success -> HomeScreenSuccess(
             navController = navController,
             teacherList = teacherListApiCallState.facultyData,
             action = action
         )
-        else -> HomeScreenFailure(getTeacherList = { action(TeacherListAction.GetTeacherList)})
+
+        else -> HomeScreenFailure(getTeacherList = { action(TeacherListAction.GetTeacherList()) })
     }
 }
 
@@ -116,7 +118,7 @@ fun HomeScreenLoading(
 fun HomeScreenSuccess(
     modifier: Modifier = Modifier,
     navController: NavController,
-    teacherList: FacultiesData,
+    teacherList: List<Faculty>,
     action: (TeacherListAction) -> Unit
 ) {
 
@@ -124,27 +126,26 @@ fun HomeScreenSuccess(
         modifier = modifier,
     ) {
         // Checking if there is any data inside the Teacher List yet or not
-        if (teacherList.individualFacultyData?.size != null) {
-            LazyColumn {
-                items(teacherList.individualFacultyData.size) {
+        LazyColumn {
+            items(teacherList.size) {
 
-                    // Current Teacher Detail
-                    val teacher = teacherList.individualFacultyData[it]
+                // Current Teacher Detail
+                val teacher = teacherList[it]
 
-                    // This function draws each Teacher Card
-                    TeacherListCardItem(
-                        navController = navController,
-                        teacher = teacher
-                    ) {
-                        // Setting the Current Selected Teacher in the shared ViewModel
-                        action(TeacherListAction.AddTeacherForNextScreen(teacher))
+                // This function draws each Teacher Card
+                TeacherListCardItem(
+                    teacher = teacher
+                ) {
+                    // Setting the Current Selected Teacher in the shared ViewModel
+                    action(TeacherListAction.AddTeacherForNextScreen(teacher))
 
-                        // Fetching the Teacher Reviews
-                        action(TeacherListAction.GetIndividualTeacherReviews(teacher._id))
-
-                        // Navigating to the next Screen
-                        navController.navigate(TeacherListRoutes.IndividualTeacherRoute.route)
+                    // Fetching the Teacher Reviews
+                    if (teacher.id != null) {
+                        action(TeacherListAction.GetIndividualTeacherReviews(teacher.id))
                     }
+
+                    // Navigating to the next Screen
+                    navController.navigate(TeacherListRoutes.IndividualTeacherRoute.route)
                 }
             }
         }

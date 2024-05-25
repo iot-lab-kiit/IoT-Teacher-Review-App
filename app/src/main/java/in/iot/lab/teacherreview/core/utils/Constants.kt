@@ -1,6 +1,9 @@
 package `in`.iot.lab.teacherreview.core.utils
 
 import `in`.iot.lab.teacherreview.BuildConfig
+import `in`.iot.lab.teacherreview.core.utils.Constants.BASE_URL
+import `in`.iot.lab.teacherreview.core.utils.Constants.LOGIN_AUTHENTICATION_ENDPOINT
+import `in`.iot.lab.teacherreview.core.utils.Constants.TEACHER_LIST_ENDPOINT
 
 /**
  * @property Constants is a class which provides all the ENDPOINTS related to the APP and keeps the
@@ -15,7 +18,10 @@ import `in`.iot.lab.teacherreview.BuildConfig
  */
 object Constants {
     const val BASE_URL = BuildConfig.BASE_URL
-    const val LOGIN_AUTHENTICATION_ENDPOINT = "authentication"
+    const val LOGIN_AUTHENTICATION_ENDPOINT = "authenticate"
     const val TEACHER_LIST_ENDPOINT = "faculties"
-    const val POST_TEACHER_REVIEW_ENDPOINT = "reviews"
+    const val REVIEWS_ENDPOINT = "reviews"
+
+    const val ITEMS_PER_PAGE = 10
+    const val PREFETCH_DISTANCE = 3
 }

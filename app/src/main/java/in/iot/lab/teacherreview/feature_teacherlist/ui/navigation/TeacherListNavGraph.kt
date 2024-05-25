@@ -1,11 +1,14 @@
 package `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavRoutes
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.HomeScreenControl
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.screen.IndividualTeacherControl
@@ -43,12 +46,15 @@ fun TeacherListNavGraph(
             composable(
                 TeacherListRoutes.IndividualTeacherRoute.route,
                 content = {
+                    val currentUserId by teacherListViewModel.currentUserId.collectAsStateWithLifecycle()
+                    val lazyPagingItems = teacherListViewModel.pagingFlow.collectAsLazyPagingItems()
+
                     IndividualTeacherControl(
                         navController = navController,
                         selectedTeacher = teacherListViewModel.selectedTeacher!!,
-                        action = teacherListViewModel::action,
-                        individualTeacherReviewApiCall = teacherListViewModel.individualTeacherReviewApiCall
-
+                        currentUserId = currentUserId,
+                        lazyPagingItems = lazyPagingItems,
+                        action = teacherListViewModel::action
                     )
                 }
             )
@@ -69,6 +75,9 @@ fun TeacherListNavGraph(
                         teacherData = teacherData,
                         refreshTeacherReviews = {
                             teacherListViewModel.getIndividualTeacherReviews()
+                        },
+                        navigateToIndividualTeacher = {
+                            navController.navigateUp()
                         }
                     )
                 }

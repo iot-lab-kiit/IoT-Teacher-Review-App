@@ -17,8 +17,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.design.theme.*
+import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.components.AddReviewWithHeadingTitleUI
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.state_action.AddReviewAction
 import `in`.iot.lab.teacherreview.feature_teacherlist.utils.AddReviewApiState
@@ -61,6 +61,7 @@ fun AddReviewScreen(
     addReviewApiState: AddReviewApiState,
     teacherName: String,
     overallReview: String,
+    navigateToTeachersScreen: () -> Unit = {},
     markingReview: String,
     attendanceReview: String,
     teachingReview: String
@@ -95,6 +96,8 @@ fun AddReviewScreen(
 
             //Resetting everything to Default
             action(AddReviewAction.ResetToDefault)
+
+            navigateToTeachersScreen()
         }
         else -> {
 
@@ -183,42 +186,42 @@ fun AddReviewScreen(
                         }
                     )
 
-                    // Spacing of 16 dp
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Marking Review
-                    AddReviewWithHeadingTitleUI(
-                        headingTitle = R.string.marking_review,
-                        userInput = markingReview,
-                        onUserInputChange = {
-                            action(AddReviewAction.UpdateMarkingReview(it))
-                        }
-                    )
-
-                    // Spacing of 16 dp
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Attendance Review
-                    AddReviewWithHeadingTitleUI(
-                        headingTitle = R.string.attendance_review,
-                        userInput = attendanceReview,
-                        onUserInputChange = {
-                            action(AddReviewAction.UpdateAttendanceReview(it))
-                        }
-                    )
-
-                    // Spacing of 16 dp
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Teaching Review
-                    AddReviewWithHeadingTitleUI(
-                        headingTitle = R.string.teaching_review,
-                        userInput = teachingReview,
-                        onUserInputChange = {
-                            action(AddReviewAction.UpdateTeachingReview(it))
-                        }
-                    )
-
+//                    // Spacing of 16 dp
+//                    Spacer(modifier = Modifier.height(16.dp))
+//
+//                    // Marking Review
+//                    AddReviewWithHeadingTitleUI(
+//                        headingTitle = R.string.marking_review,
+//                        userInput = markingReview,
+//                        onUserInputChange = {
+//                            action(AddReviewAction.UpdateMarkingReview(it))
+//                        }
+//                    )
+//
+//                    // Spacing of 16 dp
+//                    Spacer(modifier = Modifier.height(16.dp))
+//
+//                    // Attendance Review
+//                    AddReviewWithHeadingTitleUI(
+//                        headingTitle = R.string.attendance_review,
+//                        userInput = attendanceReview,
+//                        onUserInputChange = {
+//                            action(AddReviewAction.UpdateAttendanceReview(it))
+//                        }
+//                    )
+//
+//                    // Spacing of 16 dp
+//                    Spacer(modifier = Modifier.height(16.dp))
+//
+//                    // Teaching Review
+//                    AddReviewWithHeadingTitleUI(
+//                        headingTitle = R.string.teaching_review,
+//                        userInput = teachingReview,
+//                        onUserInputChange = {
+//                            action(AddReviewAction.UpdateTeachingReview(it))
+//                        }
+//                    )
+//
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // This Button Adds the Review
