@@ -1,5 +1,6 @@
 package `in`.iot.lab.profile.view.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,17 +18,43 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.PrimaryButton
 import `in`.iot.lab.design.components.SecondaryButton
+import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.profile.view.components.ProfileItemUI
-import `in`.iot.lab.profile.view.components.TopBar
 import `in`.iot.lab.profile.view.event.ProfileEvents
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
+
+
+// Preview Function
+@Preview("Light")
+@Preview(
+    name = "Dark",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
+@Composable
+private fun DefaultPreview1() {
+    CustomAppTheme {
+        ProfileSuccessScreen(
+            user = RemoteUser(
+                id = "",
+                uid = "",
+                name = "Anirban Basak",
+                email = "21051880@kiit.ac.in",
+                photoUrl = "",
+                role = "User",
+                status = false
+            )
+        ) { }
+    }
+}
 
 
 @Composable
@@ -36,7 +63,7 @@ fun ProfileScreenControl(
     setEvent: (ProfileEvents) -> Unit
 ) {
 
-    AppScreen(topBar = { TopBar() }) {
+    AppScreen {
 
         when (userApiState) {
 
@@ -59,7 +86,7 @@ fun ProfileScreenControl(
                 AppFailureScreen(
                     text = userApiState.message,
                     onCancel = {
-                        TODO()
+
                     },
                     onTryAgain = {
                         setEvent(ProfileEvents.FetchUserData)
@@ -76,17 +103,25 @@ fun ProfileSuccessScreen(
     user: RemoteUser,
     setEvent: (ProfileEvents) -> Unit
 ) {
+
     Column(
         modifier = Modifier
-            .padding(32.dp)
+            .padding(16.dp)
             .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
 
         Column(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            Text(
+                text = "Profile",
+                style = MaterialTheme.typography.headlineLarge
+            )
 
             // User Profile Picture
             AsyncImage(
@@ -97,6 +132,13 @@ fun ProfileSuccessScreen(
                     .size(72.dp)
                     .clip(shape = RoundedCornerShape(10.dp)),
                 contentScale = ContentScale.Fit
+            )
+
+
+            // User Name
+            Text(
+                text = user.name ?: "Name Not Found",
+                style = MaterialTheme.typography.titleMedium
             )
 
             ProfileItemUI(
@@ -125,9 +167,11 @@ fun ProfileSuccessScreen(
 
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { setEvent(ProfileEvents.SignOutEvent) }
+                onClick = { setEvent(ProfileEvents.SignOutEvent) },
+                shape = RoundedCornerShape(4.dp)
             ) {
                 Text(
+                    modifier = Modifier.padding(16.dp),
                     text = "Log Out",
                     style = MaterialTheme.typography.titleMedium,
                 )
@@ -135,9 +179,11 @@ fun ProfileSuccessScreen(
 
             SecondaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { setEvent(ProfileEvents.DeleteAccountEvent) }
+                onClick = { setEvent(ProfileEvents.DeleteAccountEvent) },
+                shape = RoundedCornerShape(4.dp)
             ) {
                 Text(
+                    modifier = Modifier.padding(16.dp),
                     text = "Delete Account",
                     style = MaterialTheme.typography.titleMedium,
                 )
