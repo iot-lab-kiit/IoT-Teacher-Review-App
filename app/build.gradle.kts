@@ -129,6 +129,7 @@ dependencies {
     //Implementing the design module
     implementation(project(":core:design"))
     implementation(project(":auth"))
+    implementation(project(":profile"))
 
     // Paging 3
     implementation(libs.paging.runtime)

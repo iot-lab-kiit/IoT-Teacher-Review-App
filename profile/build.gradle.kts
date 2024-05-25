@@ -77,4 +77,11 @@ dependencies {
     implementation(libs.com.google.dagger)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation)
+
+    implementation(project(":core:design"))
+    implementation(project(":data"))
+    implementation(project(":core:network"))
+
+    // Coil
+    implementation(libs.coil.kt.compose)
 }

@@ -10,6 +10,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
+import `in`.iot.lab.profile.view.navigation.PROFILE_ROUTE
 import `in`.iot.lab.teacherreview.R
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavOptions.Companion.menuItems
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavOptions.HistoryOption
@@ -82,7 +83,7 @@ sealed class BottomNavOptions(
         unselectedIcon = Icons.Outlined.Person,
         selectedIcon = Icons.Filled.Person,
         onOptionClicked = {
-            it.navigate(BottomNavRoutes.ProfileRoute.route) {
+            it.navigate(PROFILE_ROUTE) {
                 popUpTo(it.graph.startDestinationId)
                 launchSingleTop = true
             }
