@@ -63,4 +63,13 @@ dependencies {
     // Navigation Dependency
     implementation(libs.androidx.navigation)
     // -----------------------------------------------------------------------
+
+    implementation(project(":core:design"))
+    
+    // Firebase Auth
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    // Google Legacy
+    implementation(libs.com.google.android.gms)
+
 }

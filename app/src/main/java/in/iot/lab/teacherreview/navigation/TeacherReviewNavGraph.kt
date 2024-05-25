@@ -5,10 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import `in`.iot.lab.teacherreview.feature_authentication.ui.navigation.LOGIN_ROUTE
-import `in`.iot.lab.teacherreview.feature_authentication.ui.navigation.loginScreen
-import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.HOME_ROOT
-import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.homeNavGraph
+import `in`.iot.lab.auth.view.navigation.AUTH_ROUTE
+import `in`.iot.lab.auth.view.navigation.authNavGraph
 import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.navigateToHome
 
 @Composable
@@ -16,9 +14,9 @@ fun TeacherReviewNavGraph(
     navHostController: NavHostController = rememberNavController(),
     isUserLoggedIn: Boolean,
 ) {
-    val initialRoute =
-        if (isUserLoggedIn) HOME_ROOT
-        else LOGIN_ROUTE
+    val initialRoute = AUTH_ROUTE
+//        if (isUserLoggedIn) HOME_ROOT
+//        else LOGIN_ROUTE
 
 
     NavHost(
@@ -26,18 +24,16 @@ fun TeacherReviewNavGraph(
         startDestination = initialRoute,
     ) {
 
-        loginScreen(
-            onUserSignedIn = {
-                navHostController.navigateToHome(
-                    navOptions = navOptions {
-                        popUpTo(LOGIN_ROUTE) {
-                            inclusive = true
-                        }
+        authNavGraph {
+            navHostController.navigateToHome(
+                navOptions = navOptions {
+                    popUpTo(AUTH_ROUTE) {
+                        inclusive = true
                     }
-                )
-            }
-        )
+                }
+            )
+        }
 
-        homeNavGraph()
+//        homeNavGraph()
     }
 }
