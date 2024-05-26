@@ -8,7 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import `in`.iot.lab.design.theme.*
 import `in`.iot.lab.teacherreview.feature_authentication.domain.repository.AuthRepository
-import `in`.iot.lab.teacherreview.navigation.TeacherReviewNavGraph
+import `in`.iot.lab.teacherreview.navigation.MainNavGraph
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CustomAppTheme {
                 val navController = rememberNavController()
-                TeacherReviewNavGraph(
+                MainNavGraph(
                     isUserLoggedIn = repository.isUserSignedIn(),
                     navHostController = navController
                 )

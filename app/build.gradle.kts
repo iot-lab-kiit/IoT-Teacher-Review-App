@@ -129,6 +129,8 @@ dependencies {
     //Implementing the design module
     implementation(project(":core:design"))
     implementation(project(":auth"))
+    implementation(project(":review"))
+    implementation(project(":history"))
     implementation(project(":profile"))
 
     // Paging 3
