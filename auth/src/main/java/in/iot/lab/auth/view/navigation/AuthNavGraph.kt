@@ -16,13 +16,7 @@ const val AUTH_ROUTE = "auth-base-route"
 
 
 fun NavController.navigateToAuth(navOptions: NavOptions? = null) {
-    this.navigate(AUTH_ROUTE) {
-        navOptions.apply {
-            popUpTo(AUTH_ROUTE) {
-                inclusive = false
-            }
-        }
-    }
+    this.navigate(AUTH_ROUTE, navOptions)
 }
 
 

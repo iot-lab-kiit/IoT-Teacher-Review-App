@@ -8,7 +8,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import androidx.paging.compose.collectAsLazyPagingItems
+import `in`.iot.lab.auth.view.navigation.AUTH_ROUTE
 import `in`.iot.lab.auth.view.navigation.navigateToAuth
 import `in`.iot.lab.profile.view.navigation.profileNavGraph
 import `in`.iot.lab.teacherreview.feature_teacherlist.ui.navigation.TeacherListNavGraph
@@ -77,7 +79,13 @@ fun HomeNavGraph(
 
 
             profileNavGraph {
-                navController.navigateToAuth()
+                navController.navigateToAuth(
+                    navOptions = navOptions {
+                        popUpTo(AUTH_ROUTE) {
+                            inclusive = false
+                        }
+                    }
+                )
             }
         }
     )

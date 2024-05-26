@@ -6,14 +6,11 @@ import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +29,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 import `in`.iot.lab.auth.R
+import `in`.iot.lab.design.components.PrimaryButton
 import `in`.iot.lab.design.theme.CustomAppTheme
 
 
@@ -45,7 +43,7 @@ import `in`.iot.lab.design.theme.CustomAppTheme
 @Composable
 private fun DefaultPreview1() {
     CustomAppTheme {
-        GoogleSignInUI(
+        GoogleLoginButton(
             onAuthCredentialFound = {},
             onExceptionFound = {}
         )
@@ -63,7 +61,7 @@ private fun DefaultPreview1() {
  * the Auth Credentials.
  */
 @Composable
-fun GoogleSignInUI(
+fun GoogleLoginButton(
     modifier: Modifier = Modifier,
     onAuthCredentialFound: (AuthCredential) -> Unit,
     onExceptionFound: (Exception) -> Unit
@@ -120,22 +118,18 @@ fun GoogleSignInUI(
     }
 
     // Sign in with google button
-    ElevatedButton(
-        onClick = signInClick,
-        modifier = modifier.padding(16.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        ),
+    PrimaryButton(
+        modifier = modifier,
+        shape = RoundedCornerShape(4.dp),
         contentPadding = PaddingValues(15.dp),
-        elevation = ButtonDefaults.elevatedButtonElevation(defaultElevation = 4.dp)
-    )  {
+        onClick = signInClick
+    ) {
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+
             Image(
                 painter = painterResource(id = R.drawable.google),
                 contentDescription = "Google Logo",
@@ -144,10 +138,10 @@ fun GoogleSignInUI(
 
             Text(
                 text = "Login With Google",
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.titleLarge.copy(
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center
                 )
             )
         }

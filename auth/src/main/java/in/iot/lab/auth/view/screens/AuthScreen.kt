@@ -3,10 +3,10 @@ package `in`.iot.lab.auth.view.screens
 import android.app.Activity
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -16,7 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.iot.lab.auth.view.components.AuthOnBoarding
-import `in`.iot.lab.auth.view.components.GoogleSignInUI
+import `in`.iot.lab.auth.view.components.GoogleLoginButton
 import `in`.iot.lab.auth.view.events.AuthEvent
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
@@ -86,20 +86,31 @@ fun AuthScreenControl(
 
 @Composable
 fun AuthIdleScreen(setEvent: (AuthEvent) -> Unit) {
+
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(28.dp))
-        AuthOnBoarding()
-        Spacer(modifier = Modifier.height(32.dp))
-        GoogleSignInUI(
+
+        // On Boarding Texts and Image
+        Box(
+            modifier = Modifier.weight(1f),
+            contentAlignment = Alignment.Center
+        ) {
+            AuthOnBoarding()
+        }
+
+        // Log In Option
+        GoogleLoginButton(
             onAuthCredentialFound = {
                 setEvent(AuthEvent.LoginUser(it))
+            },
+            onExceptionFound = {
+                setEvent(AuthEvent.ExceptionFound(it))
             }
-        ) {
-            setEvent(AuthEvent.ExceptionFound(it))
-        }
+        )
     }
 }
