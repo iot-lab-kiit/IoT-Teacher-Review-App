@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/history" />
             <option value="$PROJECT_DIR$/profile" />
+            <option value="$PROJECT_DIR$/review" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
