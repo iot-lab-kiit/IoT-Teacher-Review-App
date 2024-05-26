@@ -1,17 +1,17 @@
-package `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation
+package `in`.iot.lab.teacherreview.components
 
 import android.content.res.Configuration
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.design.theme.*
-import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNavOptions.Companion.menuItems
+import `in`.iot.lab.teacherreview.navigation.BottomNavOptions
+import `in`.iot.lab.teacherreview.navigation.BottomNavOptions.Companion.bottomNavOptions
+
 
 // This is the Preview function of the Bottom Navigation Bar
 @Preview("Light")
@@ -22,9 +22,9 @@ import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.BottomNav
 @Composable
 private fun DefaultPreview() {
     CustomAppTheme {
-        BottomBar(
+        BottomNavBar(
             navController = rememberNavController(),
-            bottomMenu = menuItems
+            bottomMenu = bottomNavOptions
         )
     }
 }
@@ -37,7 +37,7 @@ private fun DefaultPreview() {
  * @param bottomMenu This Menu Contains the Data about the various routes in the Bottom Route
  */
 @Composable
-fun BottomBar(
+fun BottomNavBar(
     modifier: Modifier = Modifier,
     navController: NavController,
     bottomMenu: List<BottomNavOptions>
@@ -72,16 +72,10 @@ fun BottomBar(
 
                     Icon(
                         imageVector = currentIcon,
-                        contentDescription = stringResource(id = menuItem.labelOfIcon)
+                        contentDescription = menuItem.labelOfIcon
                     )
                 },
-                label = {
-                    if (selected) {
-                        Text(
-                            text = stringResource(id = menuItem.labelOfIcon)
-                        )
-                    }
-                },
+                label = { Text(text = menuItem.labelOfIcon) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,

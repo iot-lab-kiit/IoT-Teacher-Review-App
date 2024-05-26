@@ -9,8 +9,7 @@ import androidx.navigation.navOptions
 import `in`.iot.lab.auth.view.navigation.AUTH_ROUTE
 import `in`.iot.lab.auth.view.navigation.authNavGraph
 import `in`.iot.lab.auth.view.navigation.navigateToAuth
-import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.homeNavGraph
-import `in`.iot.lab.teacherreview.feature_bottom_navigation.navigation.navigateToHome
+
 
 @Composable
 fun MainNavGraph(
@@ -51,7 +50,5 @@ fun MainNavGraph(
                 )
             }
         }
-
-        homeNavGraph()
     }
 }

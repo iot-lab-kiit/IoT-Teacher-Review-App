@@ -14,7 +14,7 @@ import `in`.iot.lab.profile.view.navigation.PROFILE_ROUTE
 import `in`.iot.lab.review.view.navigation.REVIEW_ROUTE
 
 
-sealed class NewBottomNavOptions(
+sealed class BottomNavOptions(
     val route: String,
     val labelOfIcon: String,
     val unselectedIcon: ImageVector,
@@ -22,7 +22,7 @@ sealed class NewBottomNavOptions(
     val onOptionClicked: (NavController) -> Unit
 ) {
 
-    data object ReviewOption : NewBottomNavOptions(
+    data object ReviewOption : BottomNavOptions(
         route = REVIEW_ROUTE,
         labelOfIcon = "Home",
         unselectedIcon = Icons.Outlined.Home,
@@ -35,7 +35,7 @@ sealed class NewBottomNavOptions(
         }
     )
 
-    data object HistoryOption : NewBottomNavOptions(
+    data object HistoryOption : BottomNavOptions(
         route = HISTORY_ROUTE,
         labelOfIcon = "History",
         unselectedIcon = Icons.Outlined.History,
@@ -48,7 +48,7 @@ sealed class NewBottomNavOptions(
         }
     )
 
-    data object ProfileOption : NewBottomNavOptions(
+    data object ProfileOption : BottomNavOptions(
         route = PROFILE_ROUTE,
         labelOfIcon = "Profile",
         unselectedIcon = Icons.Outlined.Person,

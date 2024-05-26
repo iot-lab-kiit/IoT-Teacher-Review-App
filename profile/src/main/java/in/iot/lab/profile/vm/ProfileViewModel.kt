@@ -63,6 +63,9 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             profileRepo.deleteUserData().collect {
                 _deleteAccountState.value = it.toUiState()
+
+                if (_deleteAccountState.value is UiState.Success)
+                    signOutUser()
             }
         }
     }
