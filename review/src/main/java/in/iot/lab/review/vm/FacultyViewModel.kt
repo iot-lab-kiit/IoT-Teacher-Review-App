@@ -32,9 +32,17 @@ class FacultyViewModel @Inject constructor(
         }
     }
 
+    var selectedFaculty: String = "Default Value"
+
+    private fun setFaculty(id: String) {
+        selectedFaculty = id
+    }
+
+
     fun uiListener(event: FacultyEvent) {
         when (event) {
             is FacultyEvent.FetchFacultyList -> getFacultyList()
+            is FacultyEvent.FacultySelected -> setFaculty(event.facultyId)
         }
     }
 }

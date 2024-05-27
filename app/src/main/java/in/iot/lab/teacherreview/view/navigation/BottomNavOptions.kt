@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import `in`.iot.lab.history.view.navigation.HISTORY_ROUTE
 import `in`.iot.lab.profile.view.navigation.PROFILE_ROUTE
-import `in`.iot.lab.review.view.navigation.REVIEW_ROUTE
+import `in`.iot.lab.review.view.navigation.FACULTY_ROOT_ROUTE
 
 
 sealed class BottomNavOptions(
@@ -22,13 +22,13 @@ sealed class BottomNavOptions(
     val onOptionClicked: (NavController) -> Unit
 ) {
 
-    data object ReviewOption : BottomNavOptions(
-        route = REVIEW_ROUTE,
-        labelOfIcon = "Home",
+    data object FacultyOption : BottomNavOptions(
+        route = FACULTY_ROOT_ROUTE,
+        labelOfIcon = "Faculty",
         unselectedIcon = Icons.Outlined.Home,
         selectedIcon = Icons.Filled.Home,
         onOptionClicked = {
-            it.navigate(REVIEW_ROUTE) {
+            it.navigate(FACULTY_ROOT_ROUTE) {
                 popUpTo(it.graph.startDestinationId)
                 launchSingleTop = true
             }
@@ -64,7 +64,7 @@ sealed class BottomNavOptions(
 
     companion object {
         val bottomNavOptions = listOf(
-            ReviewOption,
+            FacultyOption,
             HistoryOption,
             ProfileOption
         )
