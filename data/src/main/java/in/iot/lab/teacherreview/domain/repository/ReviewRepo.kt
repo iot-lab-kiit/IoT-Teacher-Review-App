@@ -12,8 +12,5 @@ interface ReviewRepo {
         teacherId: String
     ): Flow<ResponseState<RemoteFacultyReviewResponse>>
 
-    suspend fun getUserReviewHistory(
-        userUid: String
-    ): Flow<ResponseState<List<RemoteReviewHistoryResponse>>>
     suspend fun postUserReview(postData: RemoteReview): Flow<ResponseState<Unit>>
 }

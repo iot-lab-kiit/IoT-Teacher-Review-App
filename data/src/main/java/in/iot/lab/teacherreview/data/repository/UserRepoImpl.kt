@@ -7,6 +7,7 @@ import `in`.iot.lab.network.utils.NetworkUtil.getResponseState
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
 import `in`.iot.lab.teacherreview.data.remote.UserApiService
 import `in`.iot.lab.teacherreview.domain.models.common.AccessTokenBody
+import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -118,5 +119,21 @@ class UserRepoImpl @Inject constructor(
 
     override suspend fun getUserToken(): String {
         return auth.currentUser?.getIdToken(false)?.await()?.token ?: "Invalid Token"
+    }
+
+
+    override suspend fun getReviewHistory(): Flow<ResponseState<List<RemoteReviewHistoryResponse>>> {
+        return withContext(Dispatchers.IO) {
+            getResponseState {
+
+                val authToken = getUserToken()
+                val userUid = getUserUid()
+
+                apiService.getReviewHistory(
+                    authToken = authToken,
+                    userUid = userUid
+                )
+            }
+        }
     }
 }

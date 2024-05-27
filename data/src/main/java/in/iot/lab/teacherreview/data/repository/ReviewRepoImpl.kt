@@ -27,19 +27,6 @@ class ReviewRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserReviewHistory(
-        userUid: String
-    ): Flow<ResponseState<List<RemoteReviewHistoryResponse>>> {
-        return flow {
-            getResponseState {
-                apiService.getUserReviewHistory(
-                    authToken = "",
-                    userUid = userUid
-                )
-            }
-        }
-    }
-
     override suspend fun postUserReview(postData: RemoteReview): Flow<ResponseState<Unit>> {
         return flow {
             getResponseState {
