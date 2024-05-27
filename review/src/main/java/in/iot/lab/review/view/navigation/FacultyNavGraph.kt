@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import `in`.iot.lab.review.view.screens.PostReviewScreenControl
 import `in`.iot.lab.review.view.screens.ReviewDetailScreenControl
 import `in`.iot.lab.review.view.screens.ReviewScreenControl
 import `in`.iot.lab.review.vm.FacultyViewModel
@@ -15,6 +16,7 @@ import `in`.iot.lab.review.vm.FacultyViewModel
 const val FACULTY_ROOT_ROUTE = "review-root-route"
 const val TEACHER_LIST_ROUTE = "teacher-list-route"
 const val TEACHER_DETAIL_ROUTE = "teacher-detail-route"
+const val REVIEW_POST_ROUTE = "review-post-route"
 
 
 @Composable
@@ -43,7 +45,18 @@ fun FacultyNavGraph(
 
         // Teacher Review Detail screen
         composable(TEACHER_DETAIL_ROUTE) {
-            ReviewDetailScreenControl(viewModel.selectedFaculty)
+
+            val facultyData = viewModel.facultyDetails.collectAsState().value
+
+            ReviewDetailScreenControl(
+                faculty = facultyData,
+                setEvent = viewModel::uiListener,
+                navigator = navController::navigate
+            )
+        }
+
+        composable(REVIEW_POST_ROUTE) {
+            PostReviewScreenControl()
         }
     }
 }

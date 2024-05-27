@@ -4,4 +4,5 @@ sealed class FacultyEvent {
 
     data object FetchFacultyList : FacultyEvent()
     data class FacultySelected(val facultyId: String) : FacultyEvent()
+    data object GetFacultyDetails : FacultyEvent()
 }

@@ -7,6 +7,7 @@ import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.network.utils.NetworkUtil.toUiState
 import `in`.iot.lab.review.view.events.FacultyEvent
 import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
+import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReviewResponse
 import `in`.iot.lab.teacherreview.domain.repository.FacultyRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,10 +40,25 @@ class FacultyViewModel @Inject constructor(
     }
 
 
+    private val _facultyDetails: MutableStateFlow<UiState<RemoteFacultyReviewResponse>> =
+        MutableStateFlow(UiState.Idle)
+    val facultyDetails = _facultyDetails.asStateFlow()
+
+
+    private fun getFacultyReview() {
+        viewModelScope.launch {
+            repo.getFacultyReviewData(selectedFaculty).collect {
+                _facultyDetails.value = it.toUiState()
+            }
+        }
+    }
+
+
     fun uiListener(event: FacultyEvent) {
         when (event) {
             is FacultyEvent.FetchFacultyList -> getFacultyList()
             is FacultyEvent.FacultySelected -> setFaculty(event.facultyId)
+            is FacultyEvent.GetFacultyDetails -> getFacultyReview()
         }
     }
 }
