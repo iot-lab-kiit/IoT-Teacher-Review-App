@@ -1,6 +1,8 @@
 package `in`.iot.lab.teacherreview.data.remote
 
 import `in`.iot.lab.teacherreview.domain.models.common.AccessTokenBody
+import `in`.iot.lab.teacherreview.domain.models.review.PostReviewBody
+import `in`.iot.lab.teacherreview.domain.models.review.RemoteReview
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 import `in`.iot.lab.teacherreview.utils.Constants
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
@@ -66,4 +68,11 @@ interface UserApiService {
         @Header("Authorization") authToken: String,
         @Path("id") userUid: String
     ): Response<List<RemoteReviewHistoryResponse>>
+
+
+    @POST(Constants.USER_POST_REVIEW_ENDPOINT)
+    suspend fun postUserReview(
+        @Header("Authorization") authToken: String,
+        @Body postData: PostReviewBody
+    ): Response<Unit>
 }
