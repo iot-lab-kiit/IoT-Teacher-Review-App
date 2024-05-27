@@ -5,16 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import `in`.iot.lab.design.theme.*
-import `in`.iot.lab.teacherreview.feature_authentication.domain.repository.AuthRepository
 import `in`.iot.lab.teacherreview.navigation.MainNavGraph
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @Inject
-    lateinit var repository: AuthRepository
+    lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
             CustomAppTheme {
                 val navController = rememberNavController()
                 MainNavGraph(
-                    isUserLoggedIn = repository.isUserSignedIn(),
+                    isUserLoggedIn = auth.currentUser != null,
                     navHostController = navController
                 )
             }
