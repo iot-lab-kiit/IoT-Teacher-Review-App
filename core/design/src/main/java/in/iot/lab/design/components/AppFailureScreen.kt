@@ -71,10 +71,9 @@ private fun DefaultPreview() {
  *
  *
  * @param modifier This is to pass modifications from the Parent Composable to the Child
- * @param title This is the Heading of the issue/error which would be shown as a Heading below
- * the Image
+
  * @param text This is the description of the Issue/Error which would be shown as a
- * description below the [title]
+ * description
  * @param imageId This is the Image Id which would be shown in the Dialog
  * @param onTryAgain This function would be executed when the retry button would be clicked
  */
@@ -82,7 +81,6 @@ private fun DefaultPreview() {
 @Composable
 fun AppFailureScreen(
     modifier: Modifier = Modifier,
-    title: String = "Whoops !!",
     text: String,
     imageId: Int = R.drawable.error_image,
     onCancel: () -> Unit,
@@ -118,7 +116,6 @@ fun AppFailureScreen(
                 DialogContent(
                     modifier = modifier,
                     imageId = imageId,
-                    title = title,
                     text = text,
                     onTryAgain = onTryAgain
                 ) {
@@ -136,10 +133,8 @@ fun AppFailureScreen(
  * This function provides the Contents inside the [AppFailureScreen] Composable
  *
  * @param modifier This is for the parent function to pass modifications to the child
- * @param title This is the Heading of the issue/error which would be shown as a Heading below
- * the Image
  * @param text This is the description of the Issue/Error which would be shown as a
- * description below the [title]
+ * description.
  * @param imageId This is the Image Id which would be shown in the Dialog
  * @param onTryAgain This function would be executed when the retry button would be clicked
  * @param onDismiss This function would be called when the user hits the dismiss Button and it would
@@ -148,7 +143,6 @@ fun AppFailureScreen(
 @Composable
 private fun DialogContent(
     modifier: Modifier = Modifier,
-    title: String,
     text: String,
     @DrawableRes imageId: Int,
     onTryAgain: () -> Unit,
@@ -166,7 +160,6 @@ private fun DialogContent(
             painter = painterResource(id = imageId),
             contentDescription = null,
             modifier = Modifier
-                .padding(start = 64.dp)
                 .height(180.dp)
                 .fillMaxWidth()
         )
@@ -174,7 +167,7 @@ private fun DialogContent(
 
         // Issues Heading Text
         Text(
-            text = title,
+            text = "Whoops !!",
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Normal

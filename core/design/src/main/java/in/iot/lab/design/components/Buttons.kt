@@ -1,6 +1,7 @@
 package `in`.iot.lab.design.components
 
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
@@ -25,9 +26,9 @@ import `in`.iot.lab.design.theme.CustomAppTheme
 
 @Preview
 @Composable
-private fun ButtonsPreview() {
-    Column {
-        CustomAppTheme {
+fun ButtonPreview() {
+    CustomAppTheme {
+        Column {
             PrimaryButton(onClick = {}) {
                 Text(text = "Button")
             }
@@ -46,37 +47,46 @@ private fun ButtonsPreview() {
             ) {
                 Text(text = "Button")
             }
-            FAB(
-                onClick = {}
-            )
 
+            TertiaryButton(onClick = {}) {
+                Text(text = "Button")
+            }
+
+            TertiaryButton(
+                onClick = {},
+                enabled = false
+            ) {
+                Text(text = "Button")
+            }
+
+            FAB(onClick = { })
         }
     }
 }
+
 
 @Composable
 fun PrimaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: RoundedCornerShape = RoundedCornerShape(percent = 50),
     color: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
         disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
         disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f)
     ),
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
     contentPadding: PaddingValues = PaddingValues(25.dp, 0.dp),
     content: @Composable (RowScope.() -> Unit)
 ) {
-
     Button(
-        onClick = onClick,
         modifier = modifier,
-        enabled = enabled,
-        shape = shape,
-        colors = color,
+        onClick = onClick,
         contentPadding = contentPadding,
+        enabled = enabled,
+        colors = color,
+        shape = shape,
         content = content
     )
 }
@@ -87,13 +97,13 @@ fun SecondaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    shape: RoundedCornerShape = RoundedCornerShape(percent = 50),
     color: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.onPrimary,
-        contentColor = MaterialTheme.colorScheme.onBackground,
+        contentColor = MaterialTheme.colorScheme.background,
         disabledContainerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
-        disabledContentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+        disabledContentColor = MaterialTheme.colorScheme.background.copy(alpha = 0.5f)
     ),
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
     contentPadding: PaddingValues = PaddingValues(25.dp, 0.dp),
     content: @Composable (RowScope.() -> Unit)
 ) {
@@ -108,14 +118,47 @@ fun SecondaryButton(
     )
 }
 
+
+@Composable
+fun TertiaryButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    color: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.tertiary,
+        disabledContainerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.5f),
+        disabledContentColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)
+    ),
+    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
+    border: BorderStroke = BorderStroke(
+        width = 1.5.dp,
+        color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)
+    ),
+    contentPadding: PaddingValues = PaddingValues(25.dp, 0.dp),
+    content: @Composable (RowScope.() -> Unit)
+) {
+    Button(
+        modifier = modifier,
+        onClick = onClick,
+        contentPadding = contentPadding,
+        enabled = enabled,
+        colors = color,
+        shape = shape,
+        content = content,
+        border = border
+    )
+}
+
+
 @Composable
 fun FAB(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     shape: RoundedCornerShape = RoundedCornerShape(percent = 100),
     elevation: FloatingActionButtonElevation = FloatingActionButtonDefaults.elevation(),
-    contentDescription :String = "ADD REVIEW BUTTON",
-    icon:ImageVector=Icons.Filled.Add
+    contentDescription: String = "ADD REVIEW BUTTON",
+    icon: ImageVector = Icons.Filled.Add
 ) {
     FloatingActionButton(
         onClick = onClick,
@@ -124,10 +167,10 @@ fun FAB(
         containerColor = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
         elevation = elevation
-        ) {
+    ) {
         Icon(
             imageVector = icon,
-            contentDescription = contentDescription)
-
+            contentDescription = contentDescription
+        )
     }
 }
