@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.auth.view.events.AuthEvent
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.network.utils.NetworkUtil.toUiState
-import `in`.iot.lab.teacherreview.domain.repository.AuthRepo
+import `in`.iot.lab.teacherreview.domain.repository.UserRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authRepo: AuthRepo
+    private val repo : UserRepo,
 ) : ViewModel() {
 
 
@@ -32,7 +32,7 @@ class AuthViewModel @Inject constructor(
      */
     private fun loginUser(authCredential: AuthCredential) {
         viewModelScope.launch {
-            authRepo.loginUser(authCredential).collect {
+            repo.loginUser(authCredential).collect {
                 _authApiState.value = it.toUiState()
             }
         }
