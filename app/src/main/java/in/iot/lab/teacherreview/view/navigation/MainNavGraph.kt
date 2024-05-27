@@ -1,4 +1,4 @@
-package `in`.iot.lab.teacherreview.navigation
+package `in`.iot.lab.teacherreview.view.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

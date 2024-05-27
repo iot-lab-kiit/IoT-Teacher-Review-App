@@ -8,7 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import `in`.iot.lab.design.theme.*
-import `in`.iot.lab.teacherreview.navigation.MainNavGraph
+import `in`.iot.lab.teacherreview.view.navigation.MainNavGraph
 import javax.inject.Inject
 
 @AndroidEntryPoint

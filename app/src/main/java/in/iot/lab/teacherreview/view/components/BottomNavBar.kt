@@ -1,4 +1,4 @@
-package `in`.iot.lab.teacherreview.components
+package `in`.iot.lab.teacherreview.view.components
 
 import android.content.res.Configuration
 import androidx.compose.material3.*
@@ -9,8 +9,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.design.theme.*
-import `in`.iot.lab.teacherreview.navigation.BottomNavOptions
-import `in`.iot.lab.teacherreview.navigation.BottomNavOptions.Companion.bottomNavOptions
+import `in`.iot.lab.teacherreview.view.navigation.BottomNavOptions
+import `in`.iot.lab.teacherreview.view.navigation.BottomNavOptions.Companion.bottomNavOptions
 
 
 // This is the Preview function of the Bottom Navigation Bar

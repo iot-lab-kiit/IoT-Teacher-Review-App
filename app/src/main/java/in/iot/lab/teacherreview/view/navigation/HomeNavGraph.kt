@@ -1,4 +1,4 @@
-package `in`.iot.lab.teacherreview.navigation
+package `in`.iot.lab.teacherreview.view.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -11,7 +11,7 @@ import `in`.iot.lab.history.view.navigation.historyNavGraph
 import `in`.iot.lab.profile.view.navigation.profileNavGraph
 import `in`.iot.lab.review.view.navigation.REVIEW_ROUTE
 import `in`.iot.lab.review.view.navigation.reviewNavGraph
-import `in`.iot.lab.teacherreview.components.BottomNavBar
+import `in`.iot.lab.teacherreview.view.components.BottomNavBar
 
 
 const val HOME_ROOT_ROUTE = "home-root-route"
