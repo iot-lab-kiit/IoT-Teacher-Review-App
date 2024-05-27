@@ -1,5 +1,7 @@
 package `in`.iot.lab.teacherreview.domain.models.faculty
 
+import com.google.gson.annotations.SerializedName
+
 
 /**
  * This data class is the blueprint for the Faculty Schema.
@@ -12,10 +14,16 @@ package `in`.iot.lab.teacherreview.domain.models.faculty
  * @param totalRating This is the total rating of the Faculty.
  */
 data class RemoteFaculty(
+    @SerializedName("_id")
     val id: String,
+    @SerializedName("name")
     val name: String,
+    @SerializedName("experience")
     val experience: String?,
+    @SerializedName("photoUrl")
     val photoUrl: String?,
+    @SerializedName("avgRating")
     val avgRating: Double?,
+    @SerializedName("totalRatings")
     val totalRating: Int?
 )
