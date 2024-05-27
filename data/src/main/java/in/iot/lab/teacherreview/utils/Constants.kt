@@ -11,7 +11,7 @@ object Constants {
 
     // Faculty Endpoints
     const val FACULTY_FETCH_BY_NAME_ENDPOINT = ""
-    const val FACULTY_FETCH_ALL_ENDPOINT = ""
+    const val FACULTY_FETCH_ALL_ENDPOINT = "faculties"
 
     // Review Endpoints
     const val FACULTY_REVIEW_FETCH_ENDPOINT = ""

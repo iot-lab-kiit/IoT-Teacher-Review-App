@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import `in`.iot.lab.teacherreview.data.remote.FacultyApiService
 import `in`.iot.lab.teacherreview.domain.repository.FacultyRepo
 import `in`.iot.lab.teacherreview.data.repository.FacultyRepoImpl
+import `in`.iot.lab.teacherreview.domain.repository.UserRepo
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
@@ -25,7 +26,7 @@ object FacultyModule {
 
     @Provides
     @Singleton
-    fun provideFacultyRepo(apiService: FacultyApiService): FacultyRepo {
-        return FacultyRepoImpl(apiService)
+    fun provideFacultyRepo(apiService: FacultyApiService, userRepo: UserRepo): FacultyRepo {
+        return FacultyRepoImpl(apiService = apiService, user = userRepo)
     }
 }

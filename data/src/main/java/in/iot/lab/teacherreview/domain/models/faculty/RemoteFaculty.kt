@@ -12,6 +12,9 @@ import com.google.gson.annotations.SerializedName
  * @param photoUrl This is the profile Photo Url String.
  * @param avgRating This is the average rating of the faculty.
  * @param totalRating This is the total rating of the Faculty.
+ * @param createdAt This is the creation date of the Faculty.
+ * @param updatedAt This is the update date of the Faculty.
+ * @param v This is the version of the Faculty.
  */
 data class RemoteFaculty(
     @SerializedName("_id")
@@ -25,5 +28,12 @@ data class RemoteFaculty(
     @SerializedName("avgRating")
     val avgRating: Double?,
     @SerializedName("totalRatings")
-    val totalRating: Int?
+    val totalRating: Int?,
+    @SerializedName("createdAt")
+    val createdAt: String,
+    @SerializedName("updatedAt")
+    val updatedAt: String,
+    @SerializedName("__v")
+    val v: Int
+
 )
