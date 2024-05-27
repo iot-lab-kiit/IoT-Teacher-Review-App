@@ -3,7 +3,7 @@ package `in`.iot.lab.teacherreview.data.remote
 import `in`.iot.lab.teacherreview.utils.Constants
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReview
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReviewResponse
-import `in`.iot.lab.teacherreview.domain.models.review.RemoteUserReviewHistoryResponse
+import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -24,7 +24,7 @@ interface ReviewApiService {
     suspend fun getUserReviewHistory(
         @Header("Authorization") authToken: String,
         @Path("userUid") userUid: String
-    ): Response<List<RemoteUserReviewHistoryResponse>>
+    ): Response<List<RemoteReviewHistoryResponse>>
 
     @POST(Constants.USER_POST_REVIEW_ENDPOINT)
     suspend fun postUserReview(
