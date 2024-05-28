@@ -25,6 +25,7 @@ import `in`.iot.lab.design.components.AppNetworkImage
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.StarUI
 import `in`.iot.lab.design.theme.CustomAppTheme
+import java.text.DecimalFormat
 
 
 // Preview Function
@@ -42,7 +43,7 @@ private fun DefaultPreview1() {
                 FacultyDataUI(
                     name = "Anirban Basak",
                     photoUrl = "",
-                    experience = "3 Years",
+                    experience = 3.0,
                     avgRating = 4.3,
                     totalRating = 21
                 )
@@ -50,7 +51,7 @@ private fun DefaultPreview1() {
                 FacultyDataUI(
                     name = "Anirban Basak",
                     photoUrl = "",
-                    experience = "3 Years",
+                    experience = 2.4444444,
                     avgRating = 2.1,
                     totalRating = 21
                 )
@@ -75,7 +76,7 @@ fun FacultyDataUI(
     modifier: Modifier = Modifier,
     name: String,
     photoUrl: String,
-    experience: String,
+    experience: Double,
     avgRating: Double,
     totalRating: Int
 ) {
@@ -124,7 +125,7 @@ fun FacultyDataUI(
 
                 // Experience of the Faculty
                 Text(
-                    text = experience,
+                    text = "Experience · ${DecimalFormat("#.##").format(experience)} years",
                     style = MaterialTheme.typography.labelLarge
                 )
 
@@ -141,7 +142,7 @@ fun FacultyDataUI(
                     // Description Text
                     Text(
                         modifier = Modifier.weight(1f),
-                        text = "$totalRating Ratings",
+                        text = "· $totalRating Ratings",
                         style = MaterialTheme.typography.labelMedium
                     )
                 }

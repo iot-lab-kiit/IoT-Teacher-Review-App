@@ -83,7 +83,7 @@ fun FacultyListSuccessScreen(
                 modifier = Modifier.clickable { onTeacherSelected(faculty.id) },
                 name = faculty.name,
                 photoUrl = faculty.photoUrl ?: "",
-                experience = "${faculty.experience ?: 0} years",
+                experience = faculty.experience ?: 0.0,
                 avgRating = faculty.avgRating ?: 0.0,
                 totalRating = faculty.totalRating ?: 0,
             )

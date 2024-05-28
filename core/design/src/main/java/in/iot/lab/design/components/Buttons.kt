@@ -1,13 +1,15 @@
 package `in`.iot.lab.design.components
 
-
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.RateReview
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -18,11 +20,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.iot.lab.design.theme.CustomAppTheme
+
 
 @Preview
 @Composable
@@ -59,7 +63,7 @@ fun ButtonPreview() {
                 Text(text = "Button")
             }
 
-            FAB(onClick = { })
+            FAB(onClick = { }, extended = true)
         }
     }
 }
@@ -155,10 +159,11 @@ fun TertiaryButton(
 fun FAB(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    shape: RoundedCornerShape = RoundedCornerShape(percent = 100),
+    shape: RoundedCornerShape = RoundedCornerShape(8.dp),
     elevation: FloatingActionButtonElevation = FloatingActionButtonDefaults.elevation(),
     contentDescription: String = "ADD REVIEW BUTTON",
-    icon: ImageVector = Icons.Filled.Add
+    icon: ImageVector = Icons.Outlined.RateReview,
+    extended: Boolean
 ) {
     FloatingActionButton(
         onClick = onClick,
@@ -168,9 +173,22 @@ fun FAB(
         contentColor = MaterialTheme.colorScheme.onPrimary,
         elevation = elevation
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = contentDescription
-        )
+
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = contentDescription
+            )
+
+            AnimatedVisibility(visible = extended) {
+                Text(
+                    modifier = Modifier.padding(start = 8.dp),
+                    text = "Add your review"
+                )
+            }
+        }
     }
 }

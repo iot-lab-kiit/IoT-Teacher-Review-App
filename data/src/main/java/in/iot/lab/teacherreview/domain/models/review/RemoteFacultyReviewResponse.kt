@@ -1,5 +1,6 @@
 package `in`.iot.lab.teacherreview.domain.models.review
 
+import com.google.gson.annotations.SerializedName
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
 
 /**
@@ -13,12 +14,19 @@ import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
  * @param totalRating This is the total rating of the Faculty.
  */
 data class RemoteFacultyReviewResponse(
+    @SerializedName("_id")
     val id: String,
+    @SerializedName("name")
     val name: String,
-    val experience: String?,
+    @SerializedName("experience")
+    val experience: Double?,
+    @SerializedName("photoUrl")
     val photoUrl: String?,
+    @SerializedName("avgRating")
     val avgRating: Double?,
+    @SerializedName("totalRatings")
     val totalRating: Int?,
+    @SerializedName("reviewList")
     val reviewList: List<RemoteFacultyReview>?
 ) {
 
@@ -32,9 +40,17 @@ data class RemoteFacultyReviewResponse(
      * @param feedback This is the feedback given by the [RemoteUser]
      */
     data class RemoteFacultyReview(
+        @SerializedName("_id")
         val id: String,
+        @SerializedName("createdBy")
         val createdBy: RemoteUser?,
+        @SerializedName("rating")
         val rating: Double?,
-        val feedback: String?
+        @SerializedName("feedback")
+        val feedback: String?,
+        @SerializedName("createdAt")
+        val createdAt: String?,
+        @SerializedName("updatedAt")
+        val updatedAt: String?
     )
 }
