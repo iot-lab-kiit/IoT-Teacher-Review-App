@@ -33,7 +33,7 @@ class FacultyViewModel @Inject constructor(
         }
     }
 
-    var selectedFaculty: String = "Default Value"
+    private var selectedFaculty: String = "Default Value"
 
     private fun setFaculty(id: String) {
         selectedFaculty = id

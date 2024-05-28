@@ -40,7 +40,7 @@ private fun DefaultPreview1() {
                     id = "",
                     name = "Teacher Name",
                     photoUrl = "NaN",
-                    experience = "",
+                    experience = 2.0,
                     avgRating = 0.9,
                     totalRating = 24,
                     createdAt = "",

@@ -22,7 +22,7 @@ data class RemoteFaculty(
     @SerializedName("name")
     val name: String,
     @SerializedName("experience")
-    val experience: String?,
+    val experience: Double?,
     @SerializedName("photoUrl")
     val photoUrl: String?,
     @SerializedName("avgRating")
@@ -35,5 +35,4 @@ data class RemoteFaculty(
     val updatedAt: String,
     @SerializedName("__v")
     val v: Int
-
 )
