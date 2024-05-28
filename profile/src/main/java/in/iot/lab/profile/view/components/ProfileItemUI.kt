@@ -28,9 +28,9 @@ import `in`.iot.lab.design.theme.*
 private fun DefaultPreviewLoading() {
     CustomAppTheme {
         ProfileItemUI(
-            headingTitle = "",
+            title = "Email Id",
             leadingIcon = Icons.Default.Person,
-            fieldValue = "21051880"
+            description = "test@kiit.ac.in"
         )
     }
 }
@@ -40,16 +40,16 @@ private fun DefaultPreviewLoading() {
  * This function draws each Profile Screen UI Cards
  *
  * @param modifier Default to pass modifications from the Parent Class
- * @param headingTitle This is the heading of the type of Data
+ * @param title This is the heading of the type of Data
  * @param leadingIcon This is the leading Icon of the Card
- * @param fieldValue This is the data of the Card
+ * @param description This is the data of the Card
  */
 @Composable
 fun ProfileItemUI(
     modifier: Modifier = Modifier,
-    headingTitle: String,
-    leadingIcon: ImageVector,
-    fieldValue: String
+    title: String,
+    description: String,
+    leadingIcon: ImageVector
 ) {
     Column(
         modifier = modifier,
@@ -58,8 +58,8 @@ fun ProfileItemUI(
 
         // Heading Title to be written
         Text(
-            text = headingTitle,
-            style = MaterialTheme.typography.titleSmall,
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
         )
 
         // Main Card which contains the data
@@ -83,8 +83,8 @@ fun ProfileItemUI(
 
                 // Data to be shown
                 Text(
-                    text = fieldValue,
-                    style = MaterialTheme.typography.titleMedium
+                    text = description,
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }

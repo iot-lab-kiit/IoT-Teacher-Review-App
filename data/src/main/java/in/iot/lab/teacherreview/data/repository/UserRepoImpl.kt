@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -100,14 +101,27 @@ class UserRepoImpl @Inject constructor(
 
 
     override suspend fun deleteUserData(): Flow<ResponseState<Unit>> {
-        return withContext(Dispatchers.IO) {
-            getResponseState {
+        return flow {
+            emit(ResponseState.Loading)
+            try {
+
                 val token = getUserToken()
                 val userUid = getUserUid()
-                apiService.deleteUserData(
+                val response = apiService.deleteUserData(
                     authToken = token,
                     userUid = userUid
                 )
+
+                if (response.isSuccessful) {
+                    auth.signOut()
+                    emit(ResponseState.Success(Unit))
+                } else
+                    emit(ResponseState.NoDataFound)
+
+            } catch (exception: IOException) {
+                emit(ResponseState.NoInternet)
+            } catch (e: Exception) {
+                emit(ResponseState.Error(e))
             }
         }
     }

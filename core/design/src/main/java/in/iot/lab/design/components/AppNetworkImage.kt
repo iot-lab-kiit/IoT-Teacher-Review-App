@@ -38,7 +38,7 @@ fun AppNetworkImage(
     model: Any? = null,
     errorImage: Painter? = painterResource(id = R.drawable.error_image),
     contentDescription: String? = null,
-    contentScale: ContentScale = ContentScale.FillBounds,
+    contentScale: ContentScale = ContentScale.Fit,
     colorFilter: ColorFilter? = null,
     alpha: Float = 1f
 ) {

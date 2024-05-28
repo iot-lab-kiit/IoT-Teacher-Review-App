@@ -51,19 +51,11 @@ class ProfileViewModel @Inject constructor(
     }
 
 
-    private val _deleteAccountState: MutableStateFlow<UiState<Unit>> =
-        MutableStateFlow(UiState.Idle)
-    val deleteAccountState = _deleteAccountState.asStateFlow()
-
-
     private fun deleteAccount() {
 
         viewModelScope.launch {
             repo.deleteUserData().collect {
-                _deleteAccountState.value = it.toUiState()
-
-                if (_deleteAccountState.value is UiState.Success)
-                    signOutUser()
+                _logOutState.value = it.toUiState()
             }
         }
     }

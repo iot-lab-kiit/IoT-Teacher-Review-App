@@ -16,13 +16,11 @@ fun NavGraphBuilder.profileNavGraph(onSignOutClick: () -> Unit) {
 
         val viewModel: ProfileViewModel = hiltViewModel()
         val profile = viewModel.profile.collectAsState().value
-        val deleteState = viewModel.deleteAccountState.collectAsState().value
         val signOutState = viewModel.logOutState.collectAsState().value
 
         ProfileScreenControl(
             userApiState = profile,
             logOutState = signOutState,
-            deleteAccountState = deleteState,
             setEvent = viewModel::uiListener,
             onLogOutClick = onSignOutClick
         )

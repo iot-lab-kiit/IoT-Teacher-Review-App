@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -17,14 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import `in`.iot.lab.design.components.AppFailureScreen
+import `in`.iot.lab.design.components.AppNetworkImage
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.PrimaryButton
-import `in`.iot.lab.design.components.SecondaryButton
+import `in`.iot.lab.design.components.TertiaryButton
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.profile.view.components.ProfileItemUI
@@ -57,11 +57,29 @@ private fun DefaultPreview1() {
 }
 
 
+@Preview("Light")
+@Preview(
+    name = "Dark",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
+@Composable
+private fun DefaultPreview2() {
+    CustomAppTheme {
+        ProfileScreenControl(
+            userApiState = UiState.Failed("Can't Fetch user data due to Firebase Issue."),
+            logOutState = UiState.Idle,
+            setEvent = {},
+            onLogOutClick = {}
+        )
+    }
+}
+
+
 @Composable
 fun ProfileScreenControl(
     userApiState: UiState<RemoteUser>,
     logOutState: UiState<Unit>,
-    deleteAccountState: UiState<Unit>,
     setEvent: (ProfileEvents) -> Unit,
     onLogOutClick: () -> Unit
 ) {
@@ -109,32 +127,6 @@ fun ProfileScreenControl(
 
             else -> {}
         }
-
-        when (deleteAccountState) {
-            is UiState.Success -> {
-                onLogOutClick()
-            }
-
-            is UiState.Failed -> {
-                AppFailureScreen(
-                    text = deleteAccountState.message,
-                    onCancel = {
-
-                    },
-                    onTryAgain = {
-                        setEvent(ProfileEvents.FetchUserData)
-                    }
-                )
-            }
-
-            is UiState.Loading -> {
-                CircularProgressIndicator()
-            }
-
-            else -> {
-
-            }
-        }
     }
 }
 
@@ -159,48 +151,33 @@ fun ProfileSuccessScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Text(
-                text = "Profile",
-                style = MaterialTheme.typography.headlineLarge
-            )
-
             // User Profile Picture
-            AsyncImage(
-                model = user.photoUrl,
-//                placeholder = painterResource(id = R.drawable.profile_photo),
-                contentDescription = "Profile Photo",
+            AppNetworkImage(
                 modifier = Modifier
-                    .size(72.dp)
-                    .clip(shape = RoundedCornerShape(10.dp)),
-                contentScale = ContentScale.Fit
+                    .clip(CircleShape)
+                    .size(120.dp),
+                model = user.photoUrl,
+                contentDescription = "Profile Photo"
             )
 
 
             // User Name
             Text(
                 text = user.name ?: "Name Not Found",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleLarge
             )
 
-            ProfileItemUI(
-                headingTitle = "Roll Number",
-                leadingIcon = Icons.Default.Person,
-                fieldValue = user.email?.substringBefore("@") ?: "Not Found"
-            )
-
-            // This is the Email ID UI
-            ProfileItemUI(
-                headingTitle = "Email Id",
-                leadingIcon = Icons.Default.Person,
-                fieldValue = user.email ?: "Not Found"
-            )
-
-            // This is Semester UI
-            ProfileItemUI(
-                headingTitle = "Semester",
-                leadingIcon = Icons.Default.Person,
-                fieldValue = "Semester"
-            )
+            listOf(
+                Pair("Roll Number", user.email?.substringBefore("@")),
+                Pair("Email Id", user.email),
+                Pair("Semester", null)
+            ).forEach {
+                ProfileItemUI(
+                    title = it.first,
+                    leadingIcon = Icons.Default.Person,
+                    description = it.second ?: "Not Found"
+                )
+            }
         }
 
 
@@ -218,7 +195,7 @@ fun ProfileSuccessScreen(
                 )
             }
 
-            SecondaryButton(
+            TertiaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { setEvent(ProfileEvents.DeleteAccountEvent) },
                 shape = RoundedCornerShape(4.dp)
