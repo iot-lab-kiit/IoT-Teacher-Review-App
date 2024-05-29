@@ -82,6 +82,11 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":core:network"))
 
+
+    // Paging 3
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
+
     // Coil
     implementation(libs.coil.kt.compose)
 }

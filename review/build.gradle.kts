@@ -84,4 +84,11 @@ dependencies {
 
     // Coil
     implementation(libs.coil.kt.compose)
+
+    // Paging 3
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
+
+    // App Rating Bar
+    implementation(libs.compose.ratingbar)
 }

@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import `in`.iot.lab.review.view.screens.PostReviewScreenControl
 import `in`.iot.lab.review.view.screens.ReviewDetailScreenControl
 import `in`.iot.lab.review.view.screens.FacultyListScreenControl
@@ -34,10 +35,10 @@ fun FacultyNavGraph(
 
         // Teacher List Route
         composable(FACULTY_LIST_ROUTE) {
-            val facultyList = viewModel.facultyList.collectAsState().value
+            val facultyList = viewModel.facultyList.collectAsLazyPagingItems()
 
             FacultyListScreenControl(
-                facultyListState = facultyList,
+                facultyList = facultyList,
                 setEvent = viewModel::uiListener,
                 navigator = navController::navigate
             )
@@ -55,8 +56,16 @@ fun FacultyNavGraph(
             )
         }
 
+        // Review Post Screen
         composable(REVIEW_POST_ROUTE) {
-            PostReviewScreenControl()
+
+            val submitState = viewModel.reviewSubmitState.collectAsState().value
+
+            PostReviewScreenControl(
+                submitState = submitState,
+                setEvent = viewModel::uiListener,
+                goBack = navController::popBackStack
+            )
         }
     }
 }
