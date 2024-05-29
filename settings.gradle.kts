@@ -12,6 +12,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven("https://jitpack.io")
     }
 }
 rootProject.name = "IoT Teacher Review"
@@ -19,3 +20,7 @@ include(":app")
 include(":core:network")
 include(":data")
 include(":core:design")
+include(":history")
+include(":profile")
+include(":auth")
+include(":review")

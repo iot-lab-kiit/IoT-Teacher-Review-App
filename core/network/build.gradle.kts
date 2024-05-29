@@ -84,6 +84,10 @@ dependencies {
     // Firebase Auth
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+
+    // Paging 3
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
 }
 fun getBaseUrlInCIEnvironment(): String {
     val propFile = rootProject.file("./local.properties")
