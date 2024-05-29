@@ -84,4 +84,7 @@ dependencies {
 
     // Coil
     implementation(libs.coil.kt.compose)
+
+    // App Rating Bar
+    implementation(libs.compose.ratingbar)
 }

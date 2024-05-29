@@ -55,8 +55,12 @@ fun FacultyNavGraph(
             )
         }
 
+        // Review Post Screen
         composable(REVIEW_POST_ROUTE) {
-            PostReviewScreenControl()
+            PostReviewScreenControl(
+                setEvent = viewModel::uiListener,
+                onDiscardClick = navController::popBackStack
+            )
         }
     }
 }

@@ -54,11 +54,16 @@ class FacultyViewModel @Inject constructor(
     }
 
 
+    private fun submitReview(rating: Double, feedback: String) {
+
+    }
+
     fun uiListener(event: FacultyEvent) {
         when (event) {
             is FacultyEvent.FetchFacultyList -> getFacultyList()
             is FacultyEvent.FacultySelected -> setFaculty(event.facultyId)
             is FacultyEvent.GetFacultyDetails -> getFacultyReview()
+            is FacultyEvent.SubmitReview -> submitReview(event.rating, event.feedback)
         }
     }
 }
