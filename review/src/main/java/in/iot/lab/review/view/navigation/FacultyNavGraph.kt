@@ -7,16 +7,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import `in`.iot.lab.review.view.screens.PostReviewScreenControl
 import `in`.iot.lab.review.view.screens.ReviewDetailScreenControl
-import `in`.iot.lab.review.view.screens.ReviewScreenControl
+import `in`.iot.lab.review.view.screens.FacultyListScreenControl
 import `in`.iot.lab.review.vm.FacultyViewModel
 
 
 const val FACULTY_ROOT_ROUTE = "review-root-route"
-const val TEACHER_LIST_ROUTE = "teacher-list-route"
-const val TEACHER_DETAIL_ROUTE = "teacher-detail-route"
-const val REVIEW_POST_ROUTE = "review-post-route"
+internal const val FACULTY_LIST_ROUTE = "teacher-list-route"
+internal const val FACULTY_DETAIL_ROUTE = "teacher-detail-route"
+internal const val REVIEW_POST_ROUTE = "review-post-route"
 
 
 @Composable
@@ -29,22 +30,22 @@ fun FacultyNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = TEACHER_LIST_ROUTE
+        startDestination = FACULTY_LIST_ROUTE
     ) {
 
         // Teacher List Route
-        composable(TEACHER_LIST_ROUTE) {
-            val facultyList = viewModel.facultyList.collectAsState().value
+        composable(FACULTY_LIST_ROUTE) {
+            val facultyList = viewModel.facultyList.collectAsLazyPagingItems()
 
-            ReviewScreenControl(
-                facultyListState = facultyList,
+            FacultyListScreenControl(
+                facultyList = facultyList,
                 setEvent = viewModel::uiListener,
                 navigator = navController::navigate
             )
         }
 
         // Teacher Review Detail screen
-        composable(TEACHER_DETAIL_ROUTE) {
+        composable(FACULTY_DETAIL_ROUTE) {
 
             val facultyData = viewModel.facultyDetails.collectAsState().value
 
@@ -55,8 +56,16 @@ fun FacultyNavGraph(
             )
         }
 
+        // Review Post Screen
         composable(REVIEW_POST_ROUTE) {
-            PostReviewScreenControl()
+
+            val submitState = viewModel.reviewSubmitState.collectAsState().value
+
+            PostReviewScreenControl(
+                submitState = submitState,
+                setEvent = viewModel::uiListener,
+                goBack = navController::popBackStack
+            )
         }
     }
 }

@@ -2,6 +2,8 @@ package `in`.iot.lab.teacherreview.utils
 
 object Constants {
 
+    const val PAGE_LIMIT = 10
+
     // Authentication Endpoints
     const val LOGIN_AUTH_ENDPOINT = "authenticate"
 

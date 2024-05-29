@@ -1,24 +1,22 @@
 package `in`.iot.lab.teacherreview.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.map
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
+import `in`.iot.lab.network.paging.AppPagingSource
+import `in`.iot.lab.network.paging.providePager
 import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.network.utils.NetworkUtil.getResponseState
-import `in`.iot.lab.teacherreview.data.paging_source.ReviewHistoryPagingSource
 import `in`.iot.lab.teacherreview.data.remote.UserApiService
 import `in`.iot.lab.teacherreview.domain.models.common.AccessTokenBody
 import `in`.iot.lab.teacherreview.domain.models.review.PostReviewBody
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
+import `in`.iot.lab.teacherreview.utils.Constants.PAGE_LIMIT
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -141,25 +139,22 @@ class UserRepoImpl @Inject constructor(
     override suspend fun getUserToken(): String {
         return auth.currentUser?.getIdToken(false)?.await()?.token ?: "Invalid Token"
     }
-    override suspend fun getReviewHistory(): Flow<ResponseState<PagingData<List<RemoteReviewHistoryResponse>>>> {
+
+    override suspend fun getReviewHistory(): Flow<PagingData<RemoteReviewHistoryResponse>> {
         val authToken = getUserToken()
         val userUid = getUserUid()
-
-        val pager = Pager(
-            config = PagingConfig(
-                pageSize = 10,
-                prefetchDistance = 5, // change this according to the requirement after changing the page size
-            ),
-            pagingSourceFactory = { ReviewHistoryPagingSource(userUid, authToken, apiService) }
+        return providePager(
+            pagingSourceFactory = AppPagingSource(
+                request = {
+                    apiService.getReviewHistory(
+                        authToken = authToken,
+                        userUid = userUid,
+                        limit = PAGE_LIMIT,
+                        skip = (it.key ?: 0) * 10
+                    )
+                }
+            )
         ).flow
-
-        return pager.map { pagingData ->
-            val mappedPagingData = pagingData.map { response ->
-                listOf(response)
-            }
-            ResponseState.Success(mappedPagingData)
-        }
-
     }
 
     override suspend fun postUserReview(postData: PostReviewBody): Flow<ResponseState<Unit>> {
@@ -169,7 +164,7 @@ class UserRepoImpl @Inject constructor(
                 val token = getUserToken()
                 apiService.postUserReview(
                     authToken = token,
-                    postData = postData.copy(createdBy = getUserUid())
+                    postData = postData
                 )
             }
         }

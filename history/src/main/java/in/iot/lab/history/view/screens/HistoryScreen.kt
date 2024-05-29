@@ -1,6 +1,5 @@
 package `in`.iot.lab.history.view.screens
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,61 +8,19 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
-import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.history.view.components.ReviewDataUI
 import `in`.iot.lab.history.view.event.HistoryEvent
-import `in`.iot.lab.network.state.UiState
-import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
-
-
-// Preview Function
-@Preview("Light")
-@Preview(
-    name = "Dark",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    showBackground = true
-)
-@Composable
-private fun DefaultPreview1() {
-    CustomAppTheme {
-        AppScreen {
-
-            val review = RemoteReviewHistoryResponse(
-                id = "",
-                createdBy = "",
-                createdFor = RemoteFaculty(
-                    id = "",
-                    name = "Teacher Name",
-                    photoUrl = "NaN",
-                    experience = "",
-                    avgRating = 0.9,
-                    totalRating = 24,
-                    createdAt = "",
-                    updatedAt = "",
-                    v = 0
-                ),
-                rating = 4.0,
-                feedback = "",
-                createdAt = "",
-                updatedAt = "",
-                v = 0,
-                status = ""
-            )
-
-            HistorySuccessScreen(listOf(review, review, review, review))
-        }
-    }
-}
 
 
 @Composable
 fun HistoryScreenControl(
-    historyState: UiState<List<RemoteReviewHistoryResponse>>,
+    historyList: LazyPagingItems<RemoteReviewHistoryResponse>,
     setEvent: (HistoryEvent) -> Unit
 ) {
 
@@ -72,25 +29,28 @@ fun HistoryScreenControl(
     }
 
     AppScreen {
-        when (historyState) {
 
-            is UiState.Idle -> {
-                setEvent(HistoryEvent.FetchHistory)
-            }
+        // History Review Data UI
+        HistorySuccessScreen(historyList = historyList)
 
-            is UiState.Loading -> {
+        when {
+
+            // Refresh
+            historyList.loadState.refresh is LoadState.Loading -> {
                 CircularProgressIndicator()
             }
 
-            is UiState.Success -> {
-                HistorySuccessScreen(history = historyState.data)
+            // Append
+            historyList.loadState.append is LoadState.Loading -> {
+                CircularProgressIndicator()
             }
 
-            is UiState.Failed -> {
+            // Refresh error
+            historyList.loadState.refresh is LoadState.Error -> {
                 AppFailureScreen(
-                    text = historyState.message,
-                    onCancel = { },
-                    onTryAgain = { setEvent(HistoryEvent.FetchHistory) }
+                    text = (historyList.loadState.refresh as LoadState.Error).error.message.toString(),
+                    onCancel = {},
+                    onTryAgain = historyList::refresh
                 )
             }
         }
@@ -99,20 +59,23 @@ fun HistoryScreenControl(
 
 
 @Composable
-fun HistorySuccessScreen(history: List<RemoteReviewHistoryResponse>) {
+fun HistorySuccessScreen(historyList: LazyPagingItems<RemoteReviewHistoryResponse>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(history.size) {
-            ReviewDataUI(
-                title = history[it].createdFor.name,
-                rating = history[it].rating,
-                description = history[it].feedback,
-                photoUrl = history[it].createdFor.photoUrl ?: ""
-            )
+        items(historyList.itemCount) {
+
+            historyList[it]?.let { history ->
+                ReviewDataUI(
+                    title = history.createdFor.name,
+                    rating = history.rating,
+                    description = history.feedback,
+                    photoUrl = history.createdFor.photoUrl ?: ""
+                )
+            }
         }
     }
 }

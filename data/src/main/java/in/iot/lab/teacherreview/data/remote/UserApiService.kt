@@ -2,7 +2,6 @@ package `in`.iot.lab.teacherreview.data.remote
 
 import `in`.iot.lab.teacherreview.domain.models.common.AccessTokenBody
 import `in`.iot.lab.teacherreview.domain.models.review.PostReviewBody
-import `in`.iot.lab.teacherreview.domain.models.review.RemoteReview
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 import `in`.iot.lab.teacherreview.utils.Constants
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
@@ -13,6 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 /**
@@ -62,11 +62,15 @@ interface UserApiService {
      *
      * @param authToken This is the token for the Authorization from the Firebase.
      * @param userUid This is the user's Uid for which the review history will be fetched.
+     * @param limit This is the limit for the number of reviews to be fetched.
+     * @param skip This is the skip for the number of reviews to be skipped.
      */
     @GET(Constants.USER_REVIEW_HISTORY_ENDPOINT)
     suspend fun getReviewHistory(
         @Header("Authorization") authToken: String,
-        @Path("id") userUid: String
+        @Path("id") userUid: String,
+        @Query("limit") limit: Int,
+        @Query("skip") skip: Int
     ): Response<List<RemoteReviewHistoryResponse>>
 
 

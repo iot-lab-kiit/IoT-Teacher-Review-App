@@ -7,6 +7,7 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 /**
@@ -28,7 +29,9 @@ interface FacultyApiService {
 
     @GET(Constants.FACULTY_FETCH_ALL_ENDPOINT)
     suspend fun getFacultyList(
-        @Header("authorization") authToken: String
+        @Header("authorization") authToken: String,
+        @Query("limit") limit: Int,
+        @Query("skip") skip: Int
     ): Response<List<RemoteFaculty>>
 
 
