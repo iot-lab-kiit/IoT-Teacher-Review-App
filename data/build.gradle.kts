@@ -87,4 +87,8 @@ dependencies {
 
     // Data Module Dependency
     implementation(project(":core:network"))
+
+    // Paging 3
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
 }
