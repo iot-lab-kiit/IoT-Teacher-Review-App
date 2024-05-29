@@ -16,6 +16,6 @@ interface UserRepo {
     suspend fun deleteUserData(): Flow<ResponseState<Unit>>
     suspend fun getUserUid(): String
     suspend fun getUserToken(): String
-    suspend fun getReviewHistory(): Flow<ResponseState<PagingData<List<RemoteReviewHistoryResponse>>>>
+    suspend fun getReviewHistory(): Flow<PagingData<RemoteReviewHistoryResponse>>
     suspend fun postUserReview(postData: PostReviewBody): Flow<ResponseState<Unit>>
 }
