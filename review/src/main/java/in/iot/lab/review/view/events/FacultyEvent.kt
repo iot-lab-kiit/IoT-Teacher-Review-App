@@ -6,4 +6,5 @@ sealed class FacultyEvent {
     data class FacultySelected(val facultyId: String) : FacultyEvent()
     data object GetFacultyDetails : FacultyEvent()
     data class SubmitReview(val rating: Double, val feedback: String) : FacultyEvent()
+    data object ResetSubmitState : FacultyEvent()
 }

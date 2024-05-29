@@ -164,7 +164,7 @@ class UserRepoImpl @Inject constructor(
                 val token = getUserToken()
                 apiService.postUserReview(
                     authToken = token,
-                    postData = postData.copy(createdBy = getUserUid())
+                    postData = postData
                 )
             }
         }

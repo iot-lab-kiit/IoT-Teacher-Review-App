@@ -58,9 +58,13 @@ fun FacultyNavGraph(
 
         // Review Post Screen
         composable(REVIEW_POST_ROUTE) {
+
+            val submitState = viewModel.reviewSubmitState.collectAsState().value
+
             PostReviewScreenControl(
+                submitState = submitState,
                 setEvent = viewModel::uiListener,
-                onDiscardClick = navController::popBackStack
+                goBack = navController::popBackStack
             )
         }
     }
