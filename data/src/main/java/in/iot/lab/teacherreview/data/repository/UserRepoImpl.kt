@@ -1,11 +1,10 @@
 package `in`.iot.lab.teacherreview.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import `in`.iot.lab.network.paging.AppPagingSource
+import `in`.iot.lab.network.paging.providePager
 import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.network.utils.NetworkUtil.getResponseState
 import `in`.iot.lab.teacherreview.data.remote.UserApiService
@@ -143,23 +142,17 @@ class UserRepoImpl @Inject constructor(
     override suspend fun getReviewHistory(): Flow<PagingData<RemoteReviewHistoryResponse>> {
         val authToken = getUserToken()
         val userUid = getUserUid()
-        return Pager(
-            config = PagingConfig(
-                pageSize = PAGE_SIZE,
-                prefetchDistance = PREFETCH_PAGE_NUMBER
-            ),
-            pagingSourceFactory = {
-                AppPagingSource(
-                    request = {
-                        apiService.getReviewHistory(
-                            authToken = authToken,
-                            userUid = userUid,
-                            limit = PAGE_LIMIT,
-                            skip = (it.key ?: 0) * 10
-                        )
-                    }
-                )
-            }
+        return providePager(
+            pagingSourceFactory = AppPagingSource(
+                request = {
+                    apiService.getReviewHistory(
+                        authToken = authToken,
+                        userUid = userUid,
+                        limit = PAGE_LIMIT,
+                        skip = (it.key ?: 0) * 10
+                    )
+                }
+            )
         ).flow
     }
 
@@ -177,8 +170,6 @@ class UserRepoImpl @Inject constructor(
     }
 
     companion object {
-        const val PAGE_SIZE = 10
         const val PAGE_LIMIT = 10
-        const val PREFETCH_PAGE_NUMBER = 5
     }
 }
