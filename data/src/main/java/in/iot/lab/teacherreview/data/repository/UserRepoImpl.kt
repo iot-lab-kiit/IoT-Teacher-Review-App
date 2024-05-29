@@ -13,6 +13,7 @@ import `in`.iot.lab.teacherreview.domain.models.review.PostReviewBody
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
+import `in`.iot.lab.teacherreview.utils.Constants.PAGE_LIMIT
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -167,9 +168,5 @@ class UserRepoImpl @Inject constructor(
                 )
             }
         }
-    }
-
-    companion object {
-        const val PAGE_LIMIT = 10
     }
 }

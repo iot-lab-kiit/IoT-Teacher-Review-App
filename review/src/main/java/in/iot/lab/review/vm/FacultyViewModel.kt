@@ -2,6 +2,8 @@ package `in`.iot.lab.review.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.network.utils.NetworkUtil.toUiState
@@ -20,15 +22,17 @@ class FacultyViewModel @Inject constructor(
     private val repo: FacultyRepo
 ) : ViewModel() {
 
-    private val _facultyList: MutableStateFlow<UiState<List<RemoteFaculty>>> =
-        MutableStateFlow(UiState.Idle)
+    private val _facultyList: MutableStateFlow<PagingData<RemoteFaculty>> =
+        MutableStateFlow(PagingData.empty())
     val facultyList = _facultyList.asStateFlow()
 
 
     private fun getFacultyList() {
         viewModelScope.launch {
-            repo.getTeacherList().collect {
-                _facultyList.value = it.toUiState()
+            repo.getTeacherList()
+                .cachedIn(viewModelScope)
+                .collect {
+                _facultyList.value = it
             }
         }
     }
