@@ -65,4 +65,7 @@ dependencies {
 
     // Material Extended Icons Dependency
     implementation(libs.material.icons.extended)
+
+    // Coil
+    implementation(libs.coil.kt.compose)
 }
