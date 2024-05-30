@@ -1,6 +1,3 @@
-import java.io.FileInputStream
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -28,7 +25,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "BASE_URL", getBaseUrlInCIEnvironment())
     }
 
     buildTypes {
@@ -83,64 +79,31 @@ dependencies {
     // Material 3 Dependency
     implementation(libs.androidx.material3)
     implementation(libs.material.icons.extended)
+
     // Navigation Dependency
     implementation(libs.androidx.navigation)
     // -----------------------------------------------------------------------
-
-    // ViewModel
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-
-
-    // Material 3 Dependencies
-    implementation(libs.androidx.material3)
-
-    // Navigation Dependencies
-    implementation(libs.androidx.navigation)
 
     // Hilt Dependencies
     implementation(libs.com.google.dagger)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation)
 
-    //Retrofit 2.0 Dependency
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
-
-    // Firebase Auth
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth)
-    // Google Legacy
-    implementation(libs.com.google.android.gms)
-
-
-    // Coil
-    implementation(libs.coil.kt.compose)
-
-    // Datastore
-    implementation(libs.androidx.datastore.preferences)
-
-    // okHttp Dependency
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging.interceptor)
-
-    //Implementing the design module
+    // Dependency of the design module
     implementation(project(":core:design"))
+
+    // Dependency of the data module
+    implementation(project(":data"))
+
+    // Dependency of the auth module
     implementation(project(":auth"))
+
+    // Dependency of the review module
     implementation(project(":review"))
+
+    // Dependency of the history module
     implementation(project(":history"))
+
+    // Dependency of the profile module
     implementation(project(":profile"))
-
-    // Paging 3
-    implementation(libs.paging.runtime)
-    implementation(libs.paging.compose)
-}
-
-fun getBaseUrlInCIEnvironment(): String {
-    val propFile = rootProject.file("./local.properties")
-    val properties = Properties()
-    properties.load(FileInputStream(propFile))
-    return properties.getProperty("BASE_URL")
 }
