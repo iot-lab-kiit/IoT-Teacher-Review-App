@@ -15,7 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import `in`.iot.lab.design.components.AppFailureScreen
-import `in`.iot.lab.design.components.AppScreen
+import `in`.iot.lab.design.components.AppScaffold
 import `in`.iot.lab.design.components.FAB
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.FacultyDataUI
@@ -39,7 +39,7 @@ fun ReviewDetailScreenControl(
 
     val lazyListState = rememberLazyListState()
 
-    AppScreen(
+    AppScaffold(
         floatingActionButton = {
             FAB(
                 onClick = { navigator(REVIEW_POST_ROUTE) },

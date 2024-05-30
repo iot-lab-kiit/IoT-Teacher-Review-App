@@ -7,7 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import `in`.iot.lab.design.components.AppScreen
+import `in`.iot.lab.design.components.AppScaffold
 import `in`.iot.lab.history.view.navigation.historyNavGraph
 import `in`.iot.lab.profile.view.navigation.profileNavGraph
 import `in`.iot.lab.review.view.navigation.FACULTY_ROOT_ROUTE
@@ -28,7 +28,7 @@ fun HomeNavGraph(onLogOut: () -> Unit) {
 
     val navController = rememberNavController()
 
-    AppScreen(
+    AppScaffold(
         contentAlignment = Alignment.TopStart,
         bottomBar = {
             BottomNavBar(
