@@ -1,5 +1,6 @@
-package `in`.iot.lab.review.view.components
+package `in`.iot.lab.design.components
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,9 +21,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import `in`.iot.lab.design.components.AppNetworkImage
-import `in`.iot.lab.design.components.StarUI
 import `in`.iot.lab.design.theme.CustomAppTheme
+import java.text.SimpleDateFormat
+import java.util.TimeZone
 
 
 // Preview Function
@@ -42,19 +43,22 @@ private fun DefaultPreview1() {
                     "industry. Lorem Ipsum has been the industry's standard dummy text ever " +
                     "since the 1500s, when an unknown printer took a galley of type and " +
                     "scrambled it to make a type specimen book.",
-            photoUrl = ""
+            photoUrl = "",
+            createdAt = "2024-05-29T11:50:22.446Z"
         )
     }
 }
 
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun ReviewDataUI(
     modifier: Modifier = Modifier,
     title: String,
     rating: Double,
     description: String,
-    photoUrl: String
+    photoUrl: String,
+    createdAt: String
 ) {
 
     ElevatedCard(
@@ -101,9 +105,15 @@ fun ReviewDataUI(
                         // This function shows the Star UI
                         StarUI(rating = rating)
 
+                        // Formatting the Date
+                        val formatReceived = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:SS.sss'Z'")
+                        formatReceived.timeZone = TimeZone.getTimeZone("GMT+5.30")
+                        val date = formatReceived.parse(createdAt) ?: "No Date"
+                        val desiredFormat = SimpleDateFormat("dd-MM-yyyy").format(date)
+
                         // Creation Date Text
                         Text(
-                            text = "TODO : 28-09-2024",
+                            text = desiredFormat,
                             style = MaterialTheme.typography.labelMedium
                         )
                     }

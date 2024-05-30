@@ -19,7 +19,7 @@ import `in`.iot.lab.design.components.AppScaffold
 import `in`.iot.lab.design.components.FAB
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.FacultyDataUI
-import `in`.iot.lab.review.view.components.ReviewDataUI
+import `in`.iot.lab.design.components.ReviewDataUI
 import `in`.iot.lab.review.view.components.isScrollingUp
 import `in`.iot.lab.review.view.events.FacultyEvent
 import `in`.iot.lab.review.view.navigation.REVIEW_POST_ROUTE
@@ -125,7 +125,8 @@ fun ReviewDetailSuccessScreen(
                     title = review.createdBy?.name ?: "Reviewer Name",
                     rating = review.rating ?: 0.0,
                     description = review.feedback ?: "Alas! The reviewer gave no feedback ",
-                    photoUrl = review.createdBy?.photoUrl ?: ""
+                    photoUrl = review.createdBy?.photoUrl ?: "",
+                    createdAt = review.createdAt ?: ""
                 )
             }
         }
