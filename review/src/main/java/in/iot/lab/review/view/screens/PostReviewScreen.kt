@@ -26,6 +26,7 @@ import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.PrimaryButton
 import `in`.iot.lab.design.components.ReviewPostedAnim
 import `in`.iot.lab.design.components.TertiaryButton
+import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.AppRatingBar
 import `in`.iot.lab.review.view.components.FeedbackTextField
@@ -42,15 +43,17 @@ import kotlinx.coroutines.delay
 )
 @Composable
 private fun DefaultPreview1() {
-    AppScreen {
-        PostReviewIdleScreen(
-            rating = 1.0,
-            feedback = "",
-            onRatingChange = { },
-            onFeedbackChange = { },
-            onSubmitClick = { },
-            onDiscardClick = {}
-        )
+    CustomAppTheme {
+        AppScreen {
+            PostReviewIdleScreen(
+                rating = 1.0,
+                feedback = "",
+                onRatingChange = { },
+                onFeedbackChange = { },
+                onSubmitClick = { },
+                onDiscardClick = {}
+            )
+        }
     }
 }
 

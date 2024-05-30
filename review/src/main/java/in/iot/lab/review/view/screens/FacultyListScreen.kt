@@ -3,12 +3,22 @@ package `in`.iot.lab.review.view.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -38,6 +48,9 @@ fun FacultyListScreenControl(
             onTeacherSelected = {
                 setEvent(FacultyEvent.FacultySelected(it))
                 navigator(FACULTY_DETAIL_ROUTE)
+            },
+            onSearchClick = {
+                setEvent(FacultyEvent.FetchFacultyByName(it))
             }
         )
 
@@ -70,15 +83,36 @@ fun FacultyListScreenControl(
 @Composable
 fun FacultyListSuccessScreen(
     faculties: LazyPagingItems<RemoteFaculty>,
-    onTeacherSelected: (String) -> Unit
+    onTeacherSelected: (String) -> Unit,
+    onSearchClick: (String) -> Unit
 ) {
+
+    var search by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
 
     LazyColumn(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
+            .padding(16.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+
+        item {
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = search,
+                onValueChange = { search = it },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        focusManager.clearFocus()
+                        onSearchClick(search)
+                    }
+                )
+            )
+        }
 
         items(faculties.itemCount) {
             faculties[it]?.let { faculty ->
