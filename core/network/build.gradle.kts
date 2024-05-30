@@ -89,6 +89,7 @@ dependencies {
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
 }
+
 fun getBaseUrlInCIEnvironment(): String {
     val propFile = rootProject.file("./local.properties")
     val properties = Properties()

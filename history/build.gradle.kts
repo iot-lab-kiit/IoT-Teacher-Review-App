@@ -78,15 +78,17 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation)
 
+    // Dependency for Design Module
     implementation(project(":core:design"))
+
+    // Dependency for Data Module
     implementation(project(":data"))
+
+    // Dependency for Network Module
     implementation(project(":core:network"))
 
 
     // Paging 3
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
-
-    // Coil
-    implementation(libs.coil.kt.compose)
 }

@@ -32,6 +32,8 @@ class UserRepoImpl @Inject constructor(
     private val auth: FirebaseAuth
 ) : UserRepo {
 
+    override fun isUserLoggedIn(): Boolean = auth.currentUser != null
+
 
     /**
      * This function logs in the user using the [FirebaseAuth] token or creates a User in the
