@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "in.iot.lab.teacherreview"
+    namespace = "in.iot.lab.data"
     compileSdk = 34
 
     defaultConfig {
