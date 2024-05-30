@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import `in`.iot.lab.auth.R
 import `in`.iot.lab.design.components.AppScreen
+import `in`.iot.lab.design.components.LoginAnim
 import `in`.iot.lab.design.theme.CustomAppTheme
 
 
@@ -49,20 +51,9 @@ fun AuthOnBoarding(modifier: Modifier = Modifier) {
 
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        // Onboarding Image
-        Image(
-            painter = painterResource(id = R.drawable.feedback),
-            contentDescription = "On Boarding Image",
-            modifier = modifier
-                .fillMaxWidth()
-                .height(320.dp)
-        )
-
-
         // Title Text
         Text(
             text = "Find the right college professor for you",
@@ -83,5 +74,9 @@ fun AuthOnBoarding(modifier: Modifier = Modifier) {
             ),
             textAlign = TextAlign.Center
         )
+
+        // Onboarding Image
+        LoginAnim()
+
     }
 }

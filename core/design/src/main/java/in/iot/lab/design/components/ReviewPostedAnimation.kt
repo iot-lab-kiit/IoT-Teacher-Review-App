@@ -28,6 +28,10 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import `in`.iot.lab.design.R
 
+/**
+ * This composable function is used to show the review posted animation when any review is posted.
+ */
+
 @Composable
 fun ReviewPostedAnim() {
 
