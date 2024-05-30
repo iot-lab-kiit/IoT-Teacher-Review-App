@@ -20,6 +20,7 @@ import `in`.iot.lab.auth.view.components.GoogleLoginButton
 import `in`.iot.lab.auth.view.events.AuthEvent
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
+import `in`.iot.lab.design.components.LoginAnim
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 
@@ -100,7 +101,7 @@ fun AuthIdleScreen(setEvent: (AuthEvent) -> Unit) {
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.Center
         ) {
-            AuthOnBoarding()
+            LoginAnim()
         }
 
         // Log In Option
