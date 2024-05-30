@@ -12,7 +12,7 @@ object Constants {
     const val USER_DELETE_ENDPOINT = "authenticate/{id}"
 
     // Faculty Endpoints
-    const val FACULTY_FETCH_BY_NAME_ENDPOINT = ""
+    const val FACULTY_FETCH_BY_NAME_ENDPOINT = "faculties/"
     const val FACULTY_FETCH_ALL_ENDPOINT = "faculties"
 
     // Review Endpoints
