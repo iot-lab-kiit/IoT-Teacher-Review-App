@@ -1,6 +1,3 @@
-import java.io.FileInputStream
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -28,7 +25,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("String", "BASE_URL", getBaseUrlInCIEnvironment())
     }
 
     buildTypes {
@@ -110,11 +106,4 @@ dependencies {
 
     // Dependency of the profile module
     implementation(project(":profile"))
-}
-
-fun getBaseUrlInCIEnvironment(): String {
-    val propFile = rootProject.file("./local.properties")
-    val properties = Properties()
-    properties.load(FileInputStream(propFile))
-    return properties.getProperty("BASE_URL")
 }

@@ -63,7 +63,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
+    // ------------------------------------------------------------------------
 
     // Hilt Dependencies
     implementation(libs.com.google.dagger)
@@ -82,13 +82,10 @@ dependencies {
     // Google Legacy
     implementation(libs.com.google.android.gms)
 
-    // Datastore
-    implementation(libs.androidx.datastore.preferences)
-
-    // Data Module Dependency
-    implementation(project(":core:network"))
-
     // Paging 3
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
+
+    // Network Module Dependency
+    implementation(project(":core:network"))
 }
