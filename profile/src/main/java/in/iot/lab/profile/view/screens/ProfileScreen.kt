@@ -42,17 +42,19 @@ import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
 @Composable
 private fun DefaultPreview1() {
     CustomAppTheme {
-        ProfileSuccessScreen(
-            user = RemoteUser(
-                id = "",
-                uid = "",
-                name = "Anirban Basak",
-                email = "21051880@kiit.ac.in",
-                photoUrl = "",
-                role = "User",
-                status = false
-            )
-        ) { }
+        AppScreen {
+            ProfileSuccessScreen(
+                user = RemoteUser(
+                    id = "",
+                    uid = "",
+                    name = "Anirban Basak",
+                    email = "21051880@kiit.ac.in",
+                    photoUrl = "",
+                    role = "User",
+                    status = false
+                )
+            ) { }
+        }
     }
 }
 
@@ -66,12 +68,14 @@ private fun DefaultPreview1() {
 @Composable
 private fun DefaultPreview2() {
     CustomAppTheme {
-        ProfileScreenControl(
-            userApiState = UiState.Failed("Can't Fetch user data due to Firebase Issue."),
-            logOutState = UiState.Idle,
-            setEvent = {},
-            onLogOutClick = {}
-        )
+        AppScreen {
+            ProfileScreenControl(
+                userApiState = UiState.Failed("Can't Fetch user data due to Firebase Issue."),
+                logOutState = UiState.Idle,
+                setEvent = {},
+                onLogOutClick = {}
+            )
+        }
     }
 }
 

@@ -23,7 +23,9 @@ interface FacultyApiService {
     @GET(Constants.FACULTY_FETCH_BY_NAME_ENDPOINT)
     suspend fun getTeacherByName(
         @Header("authorization") authToken: String,
-        @Path("teacherName") teacherName: String
+        @Query("name") teacherName: String,
+        @Query("limit") limit: Int,
+        @Query("skip") skip: Int
     ): Response<List<RemoteFaculty>>
 
 
