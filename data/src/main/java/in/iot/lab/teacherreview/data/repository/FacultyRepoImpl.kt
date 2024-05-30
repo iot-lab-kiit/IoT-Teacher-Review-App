@@ -37,16 +37,20 @@ class FacultyRepoImpl @Inject constructor(
         ).flow
     }
 
-    override suspend fun getTeacherByName(teacherName: String): Flow<ResponseState<List<RemoteFaculty>>> {
-        return withContext(Dispatchers.IO) {
-            getResponseState {
-                val token = user.getUserToken()
-                apiService.getTeacherByName(
-                    authToken = token,
-                    teacherName = teacherName
-                )
-            }
-        }
+    override suspend fun getTeacherByName(teacherName: String): Flow<PagingData<RemoteFaculty>> {
+        val token = user.getUserToken()
+        return providePager(
+            pagingSourceFactory = AppPagingSource(
+                request = {
+                    apiService.getTeacherByName(
+                        authToken = token,
+                        teacherName = teacherName,
+                        limit = PAGE_LIMIT,
+                        skip = (it.key ?: 0) * 10
+                    )
+                }
+            )
+        ).flow
     }
 
     override suspend fun getFacultyReviewData(
