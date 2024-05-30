@@ -40,6 +40,18 @@ class FacultyViewModel @Inject constructor(
         }
     }
 
+
+    private fun getFacultyByName(name: String) {
+        viewModelScope.launch {
+            facultyRepo.getTeacherByName(name)
+                .cachedIn(viewModelScope)
+                .collect {
+                    _facultyList.value = it
+                }
+        }
+    }
+
+
     private var selectedFaculty: String = "Default Value"
 
     private fun setFaculty(id: String) {
@@ -85,6 +97,7 @@ class FacultyViewModel @Inject constructor(
     fun uiListener(event: FacultyEvent) {
         when (event) {
             is FacultyEvent.FetchFacultyList -> getFacultyList()
+            is FacultyEvent.FetchFacultyByName -> getFacultyByName(event.name)
             is FacultyEvent.FacultySelected -> setFaculty(event.facultyId)
             is FacultyEvent.GetFacultyDetails -> getFacultyReview()
             is FacultyEvent.SubmitReview -> submitReview(event.rating, event.feedback)
