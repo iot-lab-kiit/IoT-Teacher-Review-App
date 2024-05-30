@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
@@ -18,12 +21,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
+import `in`.iot.lab.design.components.SearchBar
 import `in`.iot.lab.review.view.components.FacultyDataUI
 import `in`.iot.lab.review.view.events.FacultyEvent
 import `in`.iot.lab.review.view.navigation.FACULTY_DETAIL_ROUTE
@@ -89,6 +94,7 @@ fun FacultyListSuccessScreen(
 
     var search by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LazyColumn(
         modifier = Modifier
@@ -98,19 +104,21 @@ fun FacultyListSuccessScreen(
     ) {
 
         item {
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
+            SearchBar(
                 value = search,
                 onValueChange = { search = it },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Search
-                ),
+                label = "Search a faculty...",
                 keyboardActions = KeyboardActions(
                     onSearch = {
                         focusManager.clearFocus()
                         onSearchClick(search)
+                        keyboardController?.hide()
                     }
-                )
+                ),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                leadingIcon = Icons.Outlined.Search
             )
         }
 

@@ -5,17 +5,22 @@ import android.app.Activity
 import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -38,7 +43,8 @@ import `in`.iot.lab.design.theme.CustomAppTheme
 @Preview(
     name = "Dark",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    showBackground = true
+    showBackground = true,
+    showSystemUi = true
 )
 @Composable
 private fun DefaultPreview1() {
@@ -60,6 +66,7 @@ private fun DefaultPreview1() {
  * @param onExceptionFound This is the exception found if any during showing the Intent or fetching
  * the Auth Credentials.
  */
+
 @Composable
 fun GoogleLoginButton(
     modifier: Modifier = Modifier,
@@ -118,11 +125,16 @@ fun GoogleLoginButton(
     }
 
     // Sign in with google button
-    PrimaryButton(
+    Button(
         modifier = modifier,
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(100.dp),
         contentPadding = PaddingValues(15.dp),
-        onClick = signInClick
+        onClick = signInClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Black,
+            contentColor = Color.White
+        ),
+        border = BorderStroke(2.dp,Color.White)
     ) {
 
         Row(

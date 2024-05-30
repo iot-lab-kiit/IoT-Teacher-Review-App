@@ -21,38 +21,38 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import `in`.iot.lab.design.R
 
-
-/**
- * This composable function is used to show the login animation in the app.
- */
-
-@Composable
-fun LoginAnim() {
-
-    val compositionTick by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.login_anim))
-
-    Column(modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp, horizontal = 10.dp)
-            .clip(CircleShape),
-            contentAlignment = Alignment.Center){
-            LottieAnimation(
-                composition = compositionTick,
-                modifier = Modifier.size(350.dp),
-                iterations = LottieConstants.IterateForever
-            )
-        }
-    }
-
-
-}
-
-
 @Preview
 @Composable
 private fun Preview() {
-    LoginAnim()
+    Loading()
+}
+
+/**
+ * This composable is used to show the loading animation in the app.
+ */
+
+@Composable
+fun Loading() {
+    val compositionTick by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp, horizontal = 10.dp)
+                .clip(CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            LottieAnimation(
+                composition = compositionTick,
+                modifier = Modifier.size(150.dp),
+                iterations = LottieConstants.IterateForever
+            )
+        }
+
+    }
 }

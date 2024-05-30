@@ -21,6 +21,7 @@ import `in`.iot.lab.auth.view.events.AuthEvent
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.LoginAnim
 import `in`.iot.lab.design.components.AppScaffold
+import `in`.iot.lab.design.components.Loading
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 
@@ -59,7 +60,7 @@ fun AuthScreenControl(
 
             // Loading State
             is UiState.Loading -> {
-                CircularProgressIndicator()
+                Loading()
             }
 
             // Success State
@@ -92,7 +93,7 @@ fun AuthIdleScreen(setEvent: (AuthEvent) -> Unit) {
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -101,7 +102,7 @@ fun AuthIdleScreen(setEvent: (AuthEvent) -> Unit) {
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.Center
         ) {
-            LoginAnim()
+            AuthOnBoarding()
         }
 
         // Log In Option
