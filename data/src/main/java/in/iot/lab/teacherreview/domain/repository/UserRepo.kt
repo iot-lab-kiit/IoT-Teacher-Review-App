@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface UserRepo {
+    fun isUserLoggedIn(): Boolean
     suspend fun loginUser(authCredential: AuthCredential): Flow<ResponseState<Unit>>
     suspend fun logOutUser(): Flow<ResponseState<Unit>>
     suspend fun getUserData(): Flow<ResponseState<RemoteUser>>
