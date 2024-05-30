@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface FacultyRepo {
     suspend fun getTeacherList(): Flow<PagingData<RemoteFaculty>>
-    suspend fun getTeacherByName(teacherName: String): Flow<ResponseState<List<RemoteFaculty>>>
+    suspend fun getTeacherByName(teacherName: String): Flow<PagingData<RemoteFaculty>>
     suspend fun getFacultyReviewData(
         teacherId: String
     ): Flow<ResponseState<RemoteFacultyReviewResponse>>

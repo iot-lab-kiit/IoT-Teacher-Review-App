@@ -13,7 +13,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
-import `in`.iot.lab.history.view.components.ReviewDataUI
+import `in`.iot.lab.design.components.ReviewDataUI
 import `in`.iot.lab.history.view.event.HistoryEvent
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 
@@ -63,7 +63,7 @@ fun HistorySuccessScreen(historyList: LazyPagingItems<RemoteReviewHistoryRespons
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(historyList.itemCount) {
@@ -73,7 +73,8 @@ fun HistorySuccessScreen(historyList: LazyPagingItems<RemoteReviewHistoryRespons
                     title = history.createdFor.name,
                     rating = history.rating,
                     description = history.feedback,
-                    photoUrl = history.createdFor.photoUrl ?: ""
+                    photoUrl = history.createdFor.photoUrl ?: "",
+                    createdAt = history.createdAt
                 )
             }
         }

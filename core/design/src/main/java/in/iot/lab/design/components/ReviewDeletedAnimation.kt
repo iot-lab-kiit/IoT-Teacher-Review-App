@@ -28,8 +28,12 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import `in`.iot.lab.design.R
 
+/**
+ * This composable function is used to show the delete animation when any review is deleted.
+ */
+
 @Composable
-fun DeleteAnim() {
+fun ReviewDeletedAnim() {
     val compositionTick by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.delete_anim))
 
     val textAlpha = remember { Animatable(0f) }
@@ -64,10 +68,4 @@ fun DeleteAnim() {
             color = Color.White.copy(alpha = textAlpha.value),
             fontSize = (24.sp * textScale.value))
     }
-}
-
-@Preview
-@Composable
-private fun Preview() {
-    DeleteAnim()
 }

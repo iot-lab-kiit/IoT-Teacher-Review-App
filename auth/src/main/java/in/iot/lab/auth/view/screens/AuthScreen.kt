@@ -19,7 +19,9 @@ import `in`.iot.lab.auth.view.components.AuthOnBoarding
 import `in`.iot.lab.auth.view.components.GoogleLoginButton
 import `in`.iot.lab.auth.view.events.AuthEvent
 import `in`.iot.lab.design.components.AppFailureScreen
-import `in`.iot.lab.design.components.AppScreen
+import `in`.iot.lab.design.components.LoginAnim
+import `in`.iot.lab.design.components.AppScaffold
+import `in`.iot.lab.design.components.Loading
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 
@@ -50,7 +52,7 @@ fun AuthScreenControl(
 
     val context = LocalContext.current
 
-    AppScreen {
+    AppScaffold {
         AuthIdleScreen(setEvent)
 
 
@@ -58,7 +60,7 @@ fun AuthScreenControl(
 
             // Loading State
             is UiState.Loading -> {
-                CircularProgressIndicator()
+                Loading()
             }
 
             // Success State
@@ -91,7 +93,7 @@ fun AuthIdleScreen(setEvent: (AuthEvent) -> Unit) {
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
