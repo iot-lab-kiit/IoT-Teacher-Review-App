@@ -1,18 +1,13 @@
 package `in`.iot.lab.design.components
 
-import androidx.compose.foundation.layout.Arrangement
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
@@ -20,39 +15,44 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import `in`.iot.lab.design.R
+import `in`.iot.lab.design.theme.CustomAppTheme
+
+
+// Preview Function
+@Preview("Light")
+@Preview(
+    name = "Dark",
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true
+)
+@Composable
+private fun DefaultPreview1() {
+    CustomAppTheme {
+        AppScreen {
+            LoginAnim()
+        }
+    }
+}
 
 
 /**
  * This composable function is used to show the login animation in the app.
  */
-
 @Composable
-fun LoginAnim() {
+fun LoginAnim(
+    modifier: Modifier = Modifier
+) {
 
     val compositionTick by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.login_anim))
 
-    Column(modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp, horizontal = 10.dp)
-            .clip(CircleShape),
-            contentAlignment = Alignment.Center){
-            LottieAnimation(
-                composition = compositionTick,
-                modifier = Modifier.size(350.dp),
-                iterations = LottieConstants.IterateForever
-            )
-        }
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        LottieAnimation(
+            modifier = Modifier.size(350.dp),
+            composition = compositionTick,
+            iterations = LottieConstants.IterateForever
+        )
     }
-
-
-}
-
-
-@Preview
-@Composable
-private fun Preview() {
-    LoginAnim()
 }
