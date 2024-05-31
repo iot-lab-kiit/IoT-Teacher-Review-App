@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -15,6 +19,7 @@ import `in`.iot.lab.design.animations.DeleteAnimation
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.ReviewDataUI
+import `in`.iot.lab.history.view.component.CustomDeleteDialog
 import `in`.iot.lab.history.view.event.HistoryEvent
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
@@ -93,6 +98,10 @@ fun HistorySuccessScreen(
     historyList: LazyPagingItems<RemoteReviewHistoryResponse>,
     onDeletePress: (String) -> Unit
 ) {
+
+    var deletePress by remember { mutableStateOf(false) }
+    var deleteId by remember { mutableStateOf("") }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -108,9 +117,21 @@ fun HistorySuccessScreen(
                     description = history.feedback,
                     photoUrl = history.createdFor.photoUrl ?: "",
                     createdAt = history.createdAt,
-                    onDeletePress = { onDeletePress(history.id) }
+                    onDeletePress = {
+                        deleteId = history.id
+                        deletePress = true
+                    }
                 )
             }
         }
     }
+
+    CustomDeleteDialog(
+        deletePress = deletePress,
+        onDismiss = { deletePress = false },
+        onConfirm = {
+            deletePress = false
+            onDeletePress(deleteId)
+        }
+    )
 }
