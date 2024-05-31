@@ -23,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -148,10 +147,8 @@ fun GoogleLoginButton(
             Text(
                 text = "Login With Google",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
-                )
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
             )
         }
     }

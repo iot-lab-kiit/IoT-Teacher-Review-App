@@ -8,11 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.animations.OnBoardingAnimation
 import `in`.iot.lab.design.theme.CustomAppTheme
@@ -52,10 +50,7 @@ fun AuthOnBoarding(modifier: Modifier = Modifier) {
         // Title Text
         Text(
             text = "Find the right college professor for you",
-            style = MaterialTheme.typography.headlineLarge.copy(
-                fontWeight = FontWeight.Bold,
-                lineHeight = 32.sp,
-            ),
+            style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center
         )
 
@@ -63,10 +58,7 @@ fun AuthOnBoarding(modifier: Modifier = Modifier) {
         Text(
             text = "Explore and share your experiences with teachers at our college to help " +
                     "others make informed decisions.",
-            style = MaterialTheme.typography.bodyLarge.copy(
-                lineHeight = 18.sp,
-                fontWeight = FontWeight.SemiBold
-            ),
+            style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
 

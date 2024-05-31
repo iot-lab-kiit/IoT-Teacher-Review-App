@@ -18,10 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import `in`.iot.lab.design.components.PrimaryButton
 import `in`.iot.lab.design.components.SecondaryButton
@@ -88,10 +85,7 @@ fun CustomDeleteDialog(
                         ) {
                             Text(
                                 text = "Cancel",
-                                style = TextStyle(
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
 
@@ -102,10 +96,7 @@ fun CustomDeleteDialog(
                         ) {
                             Text(
                                 text = "Confirm",
-                                style = TextStyle(
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
+                                style = MaterialTheme.typography.bodyMedium
                             )
                         }
                     }

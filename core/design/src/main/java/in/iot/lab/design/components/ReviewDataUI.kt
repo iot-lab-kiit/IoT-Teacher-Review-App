@@ -118,8 +118,8 @@ fun ReviewDataUI(
 
                         // Creation Date Text
                         Text(
-                            text = desiredFormat,
-                            style = MaterialTheme.typography.labelMedium
+                            text = "·  $desiredFormat",
+                            style = MaterialTheme.typography.labelLarge
                         )
                     }
                 }

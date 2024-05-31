@@ -208,13 +208,12 @@ fun ProfileSuccessScreen(
 
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { setEvent(ProfileEvents.SignOutEvent) },
-//                shape = RoundedCornerShape(4.dp)
+                onClick = { setEvent(ProfileEvents.SignOutEvent) }
             ) {
                 Text(
                     modifier = Modifier.padding(16.dp),
                     text = "Log Out",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
 
@@ -225,7 +224,7 @@ fun ProfileSuccessScreen(
                 Text(
                     modifier = Modifier.padding(16.dp),
                     text = "Delete Account",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
         }
