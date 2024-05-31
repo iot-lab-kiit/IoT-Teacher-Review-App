@@ -37,22 +37,22 @@ import kotlinx.coroutines.delay
 private fun DefaultPreview1() {
     CustomAppTheme {
         AppScreen {
-            DeleteAnimation()
+            PostAnimation()
         }
     }
 }
 
 
 /**
- * This composable function is used to show the delete animation when any review is deleted.
+ * This composable function is used to show the review posted animation when any review is posted.
  */
 @Composable
-fun DeleteAnimation(
+fun PostAnimation(
     modifier: Modifier = Modifier,
     onAnimationComplete: (() -> Unit)? = null
 ) {
 
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.delete_anim))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.tick_anim))
     val progress by animateLottieCompositionAsState(composition)
 
     // This variable says if the dialog is Visible or not
@@ -84,7 +84,7 @@ fun DeleteAnimation(
             enter = fadeIn() + expandVertically()
         ) {
             Text(
-                text = "Deleted",
+                text = "Post Successful",
                 style = MaterialTheme.typography.titleLarge
             )
         }
