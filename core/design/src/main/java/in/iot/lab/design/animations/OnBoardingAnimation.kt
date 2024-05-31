@@ -44,7 +44,7 @@ fun OnBoardingAnimation(
     modifier: Modifier = Modifier
 ) {
 
-    val compositionTick by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.login_anim))
+    val compositionTick by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.on_boarding_animation))
 
     Box(
         modifier = modifier.fillMaxWidth(),

@@ -2,7 +2,6 @@ package `in`.iot.lab.design.animations
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.layout.Arrangement
@@ -13,11 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +25,6 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import `in`.iot.lab.design.R
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.theme.CustomAppTheme
-import kotlinx.coroutines.delay
 
 
 // Preview Function
@@ -59,7 +53,7 @@ fun EmptyListAnimation(
     message: String = "Look's like you haven't posted any review yet.",
     onAnimationComplete: (() -> Unit)? = null
 ) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.no_data_animation))
     val progress by animateLottieCompositionAsState(composition)
 
     Column(

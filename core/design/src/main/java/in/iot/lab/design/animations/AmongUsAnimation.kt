@@ -44,7 +44,7 @@ fun AmongUsAnimation(
 ) {
 
     // Animation Composition
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.among_us_animation))
     val progress by animateLottieCompositionAsState(composition)
 
     LottieAnimation(
