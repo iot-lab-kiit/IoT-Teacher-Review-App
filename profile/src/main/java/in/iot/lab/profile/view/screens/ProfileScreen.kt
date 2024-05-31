@@ -1,6 +1,8 @@
 package `in`.iot.lab.profile.view.screens
 
 import android.content.res.Configuration
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +12,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Numbers
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,10 +33,12 @@ import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.profile.view.components.ProfileItemUI
 import `in`.iot.lab.profile.view.event.ProfileEvents
+import `in`.iot.lab.profile.view.util.findSemester
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
 
 
 // Preview Function
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview("Light")
 @Preview(
     name = "Dark",
@@ -59,6 +65,7 @@ private fun DefaultPreview1() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview("Light")
 @Preview(
     name = "Dark",
@@ -80,6 +87,7 @@ private fun DefaultPreview2() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProfileScreenControl(
     userApiState: UiState<RemoteUser>,
@@ -135,6 +143,7 @@ fun ProfileScreenControl(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ProfileSuccessScreen(
     user: RemoteUser,
@@ -171,17 +180,28 @@ fun ProfileSuccessScreen(
                 style = MaterialTheme.typography.titleLarge
             )
 
-            listOf(
-                Pair("Roll Number", user.email?.substringBefore("@")),
-                Pair("Email Id", user.email),
-                Pair("Semester", null)
-            ).forEach {
-                ProfileItemUI(
-                    title = it.first,
-                    leadingIcon = Icons.Default.Person,
-                    description = it.second ?: "Not Found"
-                )
-            }
+            val rollNumber = if (user.email != null && user.email!!.contains("kiit.ac.in"))
+                user.email!!.substringBefore("@")
+            else
+                null
+
+            ProfileItemUI(
+                title = "Email ID",
+                leadingIcon = Icons.Default.Email,
+                description = user.email ?: "Not Found"
+            )
+
+            ProfileItemUI(
+                title = "Roll Number",
+                leadingIcon = Icons.Default.Numbers,
+                description = rollNumber ?: "Not Found"
+            )
+
+            ProfileItemUI(
+                title = "Semester",
+                description = findSemester(rollNumber) ?: "Not Found",
+                leadingIcon = Icons.Default.School
+            )
         }
 
 

@@ -108,8 +108,9 @@ fun GoogleLoginButton(
         // Creating the Google Sign In Options
         val options = GoogleSignInOptions
             .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(googleClientId)
             .requestId()
+            .requestIdToken(googleClientId)
+            .requestEmail()
             .requestProfile()
             .build()
 
