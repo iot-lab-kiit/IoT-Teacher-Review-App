@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.history.view.event.HistoryEvent
 import `in`.iot.lab.network.state.UiState
@@ -12,6 +13,7 @@ import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryRespon
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -49,7 +51,9 @@ class HistoryViewModel @Inject constructor(
                 _deleteReviewState.value = it.toUiState()
 
                 if (_deleteReviewState.value is UiState.Success)
-                    getHistory()
+                    _history.value = _history.value.filter { review ->
+                        review.id != reviewId
+                    }
             }
         }
     }
