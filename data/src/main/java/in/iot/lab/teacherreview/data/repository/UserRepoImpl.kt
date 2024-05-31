@@ -152,7 +152,7 @@ class UserRepoImpl @Inject constructor(
                         authToken = authToken,
                         userUid = userUid,
                         limit = PAGE_LIMIT,
-                        skip = (it.key ?: 0) * 10
+                        skip = it.key ?: 0
                     )
                 }
             )

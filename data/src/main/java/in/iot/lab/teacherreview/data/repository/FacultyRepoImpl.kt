@@ -30,7 +30,7 @@ class FacultyRepoImpl @Inject constructor(
                     apiService.getFacultyList(
                         authToken = token,
                         limit = PAGE_LIMIT,
-                        skip = (it.key ?: 0) * 10
+                        skip = it.key ?: 0
                     )
                 }
             )
@@ -46,7 +46,7 @@ class FacultyRepoImpl @Inject constructor(
                         authToken = token,
                         teacherName = teacherName,
                         limit = PAGE_LIMIT,
-                        skip = (it.key ?: 0) * 10
+                        skip = it.key ?: 0
                     )
                 }
             )

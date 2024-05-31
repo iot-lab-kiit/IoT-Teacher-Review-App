@@ -70,7 +70,7 @@ interface UserApiService {
         @Header("Authorization") authToken: String,
         @Path("id") userUid: String,
         @Query("limit") limit: Int,
-        @Query("skip") skip: Int
+        @Query("page") skip: Int
     ): Response<List<RemoteReviewHistoryResponse>>
 
 
