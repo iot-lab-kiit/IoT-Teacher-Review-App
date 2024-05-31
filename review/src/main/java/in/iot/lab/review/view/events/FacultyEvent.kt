@@ -1,6 +1,5 @@
 package `in`.iot.lab.review.view.events
 
-import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
 
 sealed class FacultyEvent {
 
