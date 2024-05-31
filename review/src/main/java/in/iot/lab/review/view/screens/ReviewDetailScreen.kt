@@ -12,11 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.animations.AmongUsAnimation
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScaffold
 import `in`.iot.lab.design.components.FAB
-import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.FacultyDataUI
 import `in`.iot.lab.design.components.ReviewDataUI
 import `in`.iot.lab.review.view.components.isScrollingUp
@@ -29,7 +30,7 @@ import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
 @Composable
 fun ReviewDetailScreenControl(
     faculty: RemoteFaculty,
-    reviewList: UiState<List<RemoteFacultyReview>>,
+    reviewList: LazyPagingItems<RemoteFacultyReview>,
     navigator: (String) -> Unit,
     setEvent: (FacultyEvent) -> Unit
 ) {
@@ -48,33 +49,33 @@ fun ReviewDetailScreenControl(
             )
         }
     ) {
-        when (reviewList) {
 
-            is UiState.Idle -> {
-                setEvent(FacultyEvent.GetFacultyDetails)
-            }
+        ReviewDetailSuccessScreen(
+            faculty = faculty,
+            reviewList = reviewList,
+            lazyListState = lazyListState
+        )
 
-            is UiState.Loading -> {
+        when {
+
+
+            // Refresh
+            reviewList.loadState.refresh is LoadState.Loading -> {
                 AmongUsAnimation()
             }
 
-            is UiState.Success -> {
-                ReviewDetailSuccessScreen(
-                    faculty = faculty,
-                    reviewList = reviewList.data,
-                    lazyListState = lazyListState
-                )
+
+            // Append
+            reviewList.loadState.append is LoadState.Loading -> {
+                AmongUsAnimation()
             }
 
-            is UiState.Failed -> {
+            // Refresh error
+            reviewList.loadState.refresh is LoadState.Error -> {
                 AppFailureScreen(
-                    text = reviewList.message,
-                    onCancel = {
-
-                    },
-                    onTryAgain = {
-                        setEvent(FacultyEvent.GetFacultyDetails)
-                    }
+                    text = (reviewList.loadState.refresh as LoadState.Error).error.message.toString(),
+                    onCancel = {},
+                    onTryAgain = reviewList::refresh
                 )
             }
         }
@@ -85,7 +86,7 @@ fun ReviewDetailScreenControl(
 @Composable
 fun ReviewDetailSuccessScreen(
     faculty: RemoteFaculty,
-    reviewList: List<RemoteFacultyReview>,
+    reviewList: LazyPagingItems<RemoteFacultyReview>,
     lazyListState: LazyListState
 ) {
 
@@ -117,15 +118,16 @@ fun ReviewDetailSuccessScreen(
         }
 
         // Review List
-        items(reviewList.size) {
-            val review = reviewList[it]
-            ReviewDataUI(
-                title = review.createdBy?.name ?: "Reviewer Name",
-                rating = review.rating ?: 0.0,
-                description = review.feedback ?: "Alas! The reviewer gave no feedback ",
-                photoUrl = review.createdBy?.photoUrl ?: "",
-                createdAt = review.createdAt ?: ""
-            )
+        items(reviewList.itemCount) {
+            reviewList[it]?.let { review ->
+                ReviewDataUI(
+                    title = review.createdBy?.name ?: "Reviewer Name",
+                    rating = review.rating ?: 0.0,
+                    description = review.feedback ?: "Alas! The reviewer gave no feedback ",
+                    photoUrl = review.createdBy?.photoUrl ?: "",
+                    createdAt = review.createdAt ?: ""
+                )
+            }
         }
     }
 }

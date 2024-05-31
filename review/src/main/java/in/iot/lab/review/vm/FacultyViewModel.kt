@@ -73,15 +73,15 @@ class FacultyViewModel @Inject constructor(
     }
 
 
-    private val _reviewList: MutableStateFlow<UiState<List<RemoteFacultyReview>>> =
-        MutableStateFlow(UiState.Idle)
+    private val _reviewList: MutableStateFlow<PagingData<RemoteFacultyReview>> =
+        MutableStateFlow(PagingData.empty())
     val reviewList = _reviewList.asStateFlow()
 
 
     private fun getFacultyReview() {
         viewModelScope.launch {
             facultyRepo.getFacultyReviewData(_selectedFaculty.value.id).collect {
-                _reviewList.value = it.toUiState()
+                _reviewList.value = it
             }
         }
     }

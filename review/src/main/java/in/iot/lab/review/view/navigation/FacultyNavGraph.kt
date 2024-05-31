@@ -47,7 +47,7 @@ fun FacultyNavGraph(
         // Teacher Review Detail screen
         composable(FACULTY_DETAIL_ROUTE) {
 
-            val reviewList = viewModel.reviewList.collectAsState().value
+            val reviewList = viewModel.reviewList.collectAsLazyPagingItems()
             val selectedFaculty = viewModel.selectedFaculty.collectAsState().value
 
             ReviewDetailScreenControl(

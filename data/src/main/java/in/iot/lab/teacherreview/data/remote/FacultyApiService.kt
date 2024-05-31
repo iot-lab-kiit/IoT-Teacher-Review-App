@@ -40,6 +40,8 @@ interface FacultyApiService {
     @GET(Constants.FACULTY_REVIEW_FETCH_ENDPOINT)
     suspend fun getFacultyReviewData(
         @Header("Authorization") authToken: String,
-        @Path("id") facultyId: String
+        @Path("id") facultyId: String,
+        @Query("limit") limit: Int,
+        @Query("page") skip: Int
     ): Response<List<RemoteFacultyReview>>
 }
