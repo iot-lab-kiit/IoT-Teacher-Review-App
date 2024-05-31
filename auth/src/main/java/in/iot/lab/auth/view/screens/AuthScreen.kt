@@ -19,7 +19,7 @@ import `in`.iot.lab.auth.view.components.GoogleLoginButton
 import `in`.iot.lab.auth.view.events.AuthEvent
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScaffold
-import `in`.iot.lab.design.components.Loading
+import `in`.iot.lab.design.animations.AmongUsAnimation
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 
@@ -58,7 +58,7 @@ fun AuthScreenControl(
 
             // Loading State
             is UiState.Loading -> {
-                Loading()
+                AmongUsAnimation()
             }
 
             // Success State

@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import `in`.iot.lab.design.animations.AmongUsAnimation
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppNetworkImage
 import `in`.iot.lab.design.components.AppScreen
@@ -97,7 +97,7 @@ fun ProfileScreenControl(
             }
 
             is UiState.Loading -> {
-                CircularProgressIndicator()
+                AmongUsAnimation()
             }
 
             is UiState.Success -> {
@@ -126,7 +126,7 @@ fun ProfileScreenControl(
             }
 
             is UiState.Loading -> {
-                CircularProgressIndicator()
+                AmongUsAnimation()
             }
 
             else -> {}

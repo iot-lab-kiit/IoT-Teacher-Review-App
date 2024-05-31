@@ -1,19 +1,19 @@
-package `in`.iot.lab.design.components
+package `in`.iot.lab.design.animations
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import `in`.iot.lab.design.R
+import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.theme.CustomAppTheme
 
 
@@ -28,7 +28,7 @@ import `in`.iot.lab.design.theme.CustomAppTheme
 private fun DefaultPreview1() {
     CustomAppTheme {
         AppScreen {
-            Loading()
+            AmongUsAnimation()
         }
     }
 }
@@ -38,19 +38,22 @@ private fun DefaultPreview1() {
  * This composable is used to show the loading animation in the app.
  */
 @Composable
-fun Loading(
-    modifier: Modifier = Modifier
+fun AmongUsAnimation(
+    modifier: Modifier = Modifier,
+    onAnimationComplete: (() -> Unit)? = null
 ) {
-    val compositionTick by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
 
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        LottieAnimation(
-            composition = compositionTick,
-            modifier = Modifier.size(150.dp),
-            iterations = LottieConstants.IterateForever
-        )
+    // Animation Composition
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
+    val progress by animateLottieCompositionAsState(composition)
+
+    LottieAnimation(
+        composition = composition,
+        modifier = modifier.size(160.dp),
+        iterations = LottieConstants.IterateForever
+    )
+
+    onAnimationComplete?.let {
+        if (progress == 1.0f) it()
     }
 }

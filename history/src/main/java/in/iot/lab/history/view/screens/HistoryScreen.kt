@@ -4,13 +4,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import `in`.iot.lab.design.animations.AmongUsAnimation
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.ReviewDataUI
@@ -40,11 +40,10 @@ fun HistoryScreenControl(
 
         when (deleteState) {
             is UiState.Loading -> {
-                CircularProgressIndicator()
+                AmongUsAnimation()
             }
 
             is UiState.Success -> {
-//                historyList.refresh()
                 setEvent(HistoryEvent.ResetRemoveState)
             }
 
@@ -65,12 +64,12 @@ fun HistoryScreenControl(
 
             // Refresh
             historyList.loadState.refresh is LoadState.Loading -> {
-                CircularProgressIndicator()
+                AmongUsAnimation()
             }
 
             // Append
             historyList.loadState.append is LoadState.Loading -> {
-                CircularProgressIndicator()
+                AmongUsAnimation()
             }
 
             // Refresh error
