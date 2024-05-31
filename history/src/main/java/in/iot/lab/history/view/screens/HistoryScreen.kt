@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.animations.AmongUsAnimation
+import `in`.iot.lab.design.animations.DeleteAnimation
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.ReviewDataUI
@@ -44,7 +45,9 @@ fun HistoryScreenControl(
             }
 
             is UiState.Success -> {
-                setEvent(HistoryEvent.ResetRemoveState)
+                DeleteAnimation {
+                    setEvent(HistoryEvent.ResetRemoveState)
+                }
             }
 
             is UiState.Failed -> {
