@@ -1,10 +1,22 @@
 package `in`.iot.lab.network.utils
 
+import `in`.iot.lab.network.data.CustomResponse
 import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.network.state.UiState
+import `in`.iot.lab.network.utils.NetworkStatusCodes.CREATED
+import `in`.iot.lab.network.utils.NetworkStatusCodes.DELETED
+import `in`.iot.lab.network.utils.NetworkStatusCodes.FACULTY_NOT_FOUND
+import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNAL_SERVER_ERROR
+import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_REQUEST
+import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_TOKEN
+import `in`.iot.lab.network.utils.NetworkStatusCodes.REVIEW_NOT_FOUND
+import `in`.iot.lab.network.utils.NetworkStatusCodes.SUCCESSFUL
+import `in`.iot.lab.network.utils.NetworkStatusCodes.TOKEN_REQUIRED
+import `in`.iot.lab.network.utils.NetworkStatusCodes.UNAUTHORIZED
+import `in`.iot.lab.network.utils.NetworkStatusCodes.UPDATED
+import `in`.iot.lab.network.utils.NetworkStatusCodes.USER_NOT_FOUND
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.Response
 import java.io.IOException
 
 object NetworkUtil {
@@ -17,7 +29,7 @@ object NetworkUtil {
     suspend fun <T> getResponseState(
         onSuccess: suspend () -> Unit = {},
         onFailure: suspend (Exception) -> Unit = {},
-        request: suspend () -> Response<T>
+        request: suspend () -> CustomResponse<T>
     ): Flow<ResponseState<T>> {
 
         return flow {
@@ -26,13 +38,9 @@ object NetworkUtil {
 
                 // Response from the Retrofit Api call
                 val response = request()
+                onSuccess()
 
-                if (response.isSuccessful) {
-                    onSuccess()
-                    emit(ResponseState.Success(response.body()!!))
-                } else
-                    emit(ResponseState.NoDataFound)
-
+                emit(response.checkApiResponseStatusCode())
             } catch (exception: IOException) {
                 emit(ResponseState.NoInternet)
             } catch (e: Exception) {
@@ -41,6 +49,20 @@ object NetworkUtil {
                 onFailure(e)
                 emit(ResponseState.Error(e))
             }
+        }
+    }
+
+
+    fun <T> CustomResponse<T>.checkApiResponseStatusCode(): ResponseState<T> {
+        return when (status) {
+            SUCCESSFUL, CREATED, DELETED, UPDATED -> ResponseState.Success(data = data!!)
+            USER_NOT_FOUND, REVIEW_NOT_FOUND, FACULTY_NOT_FOUND -> ResponseState.NoDataFound
+            INVALID_REQUEST -> ResponseState.InvalidRequest
+            TOKEN_REQUIRED -> ResponseState.TokenRequired
+            INVALID_TOKEN -> ResponseState.InvalidToken
+            UNAUTHORIZED -> ResponseState.UnAuthorized
+            INTERNAL_SERVER_ERROR -> ResponseState.ServerError
+            else -> ResponseState.UnKnownError
         }
     }
 
@@ -71,6 +93,11 @@ object NetworkUtil {
 
             is ResponseState.Error -> {
                 UiState.Failed(this.exception.message.toString())
+            }
+
+            // TODO: Handle other cases
+            else -> {
+                UiState.Failed("")
             }
         }
     }

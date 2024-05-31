@@ -71,4 +71,7 @@ dependencies {
 
     //Lottie
     implementation(libs.lottie.compose)
+
+    // Network Dependency
+    implementation(project(":core:network"))
 }

@@ -1,9 +1,9 @@
 package `in`.iot.lab.teacherreview.data.remote
 
+import `in`.iot.lab.network.data.CustomResponse
 import `in`.iot.lab.teacherreview.utils.Constants
 import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
@@ -26,7 +26,7 @@ interface FacultyApiService {
         @Query("name") teacherName: String,
         @Query("limit") limit: Int,
         @Query("page") skip: Int
-    ): Response<List<RemoteFaculty>>
+    ): CustomResponse<List<RemoteFaculty>>
 
 
     @GET(Constants.FACULTY_FETCH_ALL_ENDPOINT)
@@ -34,7 +34,7 @@ interface FacultyApiService {
         @Header("authorization") authToken: String,
         @Query("limit") limit: Int,
         @Query("page") skip: Int
-    ): Response<List<RemoteFaculty>>
+    ): CustomResponse<List<RemoteFaculty>>
 
 
     @GET(Constants.FACULTY_REVIEW_FETCH_ENDPOINT)
@@ -43,12 +43,12 @@ interface FacultyApiService {
         @Path("id") facultyId: String,
         @Query("limit") limit: Int,
         @Query("page") skip: Int
-    ): Response<List<RemoteFacultyReview>>
+    ): CustomResponse<List<RemoteFacultyReview>>
 
 
     @GET(Constants.FACULTY_FETCH_BY_ID_ENDPOINT)
     suspend fun getFacultyById(
         @Header("Authorization") authToken: String,
         @Path("id") facultyId: String
-    ): Response<RemoteFaculty>
+    ): CustomResponse<RemoteFaculty>
 }

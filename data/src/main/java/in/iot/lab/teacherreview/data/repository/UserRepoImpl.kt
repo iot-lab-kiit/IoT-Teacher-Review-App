@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import `in`.iot.lab.network.paging.AppPagingSource
 import `in`.iot.lab.network.paging.providePager
 import `in`.iot.lab.network.state.ResponseState
+import `in`.iot.lab.network.utils.NetworkUtil.checkApiResponseStatusCode
 import `in`.iot.lab.network.utils.NetworkUtil.getResponseState
 import `in`.iot.lab.teacherreview.data.remote.UserApiService
 import `in`.iot.lab.teacherreview.domain.models.common.AccessTokenBody
@@ -62,11 +63,11 @@ class UserRepoImpl @Inject constructor(
                     val response = apiService.loginUser(AccessTokenBody(accessToken))
 
                     // Check if the response is successful
-                    if (response.isSuccessful)
+                    if (response.checkApiResponseStatusCode() is ResponseState.Success)
                         emit(ResponseState.Success(Unit))
                     else {
                         auth.signOut()
-                        emit(ResponseState.ServerError)
+                        emit(response.checkApiResponseStatusCode())
                     }
                 }
             } catch (e: Exception) {
@@ -118,11 +119,11 @@ class UserRepoImpl @Inject constructor(
                     userUid = userUid
                 )
 
-                if (response.isSuccessful) {
+                if (response.checkApiResponseStatusCode() is ResponseState.Success) {
                     auth.signOut()
                     emit(ResponseState.Success(Unit))
                 } else
-                    emit(ResponseState.NoDataFound)
+                    emit(response.checkApiResponseStatusCode())
 
             } catch (exception: IOException) {
                 emit(ResponseState.NoInternet)

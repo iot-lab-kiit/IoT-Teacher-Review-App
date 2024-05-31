@@ -1,11 +1,11 @@
 package `in`.iot.lab.teacherreview.data.remote
 
+import `in`.iot.lab.network.data.CustomResponse
 import `in`.iot.lab.teacherreview.domain.models.common.AccessTokenBody
 import `in`.iot.lab.teacherreview.domain.models.review.PostReviewBody
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 import `in`.iot.lab.teacherreview.utils.Constants
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -30,7 +30,7 @@ interface UserApiService {
     @POST(Constants.LOGIN_AUTH_ENDPOINT)
     suspend fun loginUser(
         @Body accessTokenBody: AccessTokenBody
-    ): Response<Unit>
+    ): CustomResponse<Unit>
 
 
     /**
@@ -41,7 +41,7 @@ interface UserApiService {
     @POST(Constants.USER_FETCH_ENDPOINT)
     suspend fun getUserData(
         @Body accessTokenBody: AccessTokenBody
-    ): Response<RemoteUser>
+    ): CustomResponse<RemoteUser>
 
 
     /**
@@ -54,7 +54,7 @@ interface UserApiService {
     suspend fun deleteUserData(
         @Header("Authorization") authToken: String,
         @Path("id") userUid: String
-    ): Response<Unit>
+    ): CustomResponse<Unit>
 
 
     /**
@@ -71,19 +71,19 @@ interface UserApiService {
         @Path("id") userUid: String,
         @Query("limit") limit: Int,
         @Query("page") skip: Int
-    ): Response<List<RemoteReviewHistoryResponse>>
+    ): CustomResponse<List<RemoteReviewHistoryResponse>>
 
 
     @POST(Constants.USER_POST_REVIEW_ENDPOINT)
     suspend fun postUserReview(
         @Header("Authorization") authToken: String,
         @Body postData: PostReviewBody
-    ): Response<Unit>
+    ): CustomResponse<Unit>
 
 
     @DELETE(Constants.USER_DELETE_REVIEW_ENDPOINT)
     suspend fun deleteUserReview(
         @Header("Authorization") authToken: String,
         @Path("id") reviewId: String
-    ): Response<Unit>
+    ): CustomResponse<Unit>
 }
