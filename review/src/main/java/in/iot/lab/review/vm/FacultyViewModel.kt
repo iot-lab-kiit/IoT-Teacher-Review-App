@@ -51,25 +51,23 @@ class FacultyViewModel @Inject constructor(
         }
     }
 
+    private var selectedFacultyId: String = "Default Faculty Id"
 
-    private var _selectedFaculty: MutableStateFlow<RemoteFaculty> = MutableStateFlow(
-        RemoteFaculty(
-            id = "",
-            name = "",
-            experience = 0.0,
-            photoUrl = "",
-            avgRating = 0.0,
-            totalRating = 0,
-            createdAt = "",
-            updatedAt = "",
-            v = 0
-        )
-    )
-    var selectedFaculty = _selectedFaculty.asStateFlow()
+    private fun setFaculty(id: String) {
+        selectedFacultyId = id
+    }
 
 
-    private fun setFaculty(id: RemoteFaculty) {
-        _selectedFaculty.value = id
+    private val _facultyData: MutableStateFlow<UiState<RemoteFaculty>> =
+        MutableStateFlow(UiState.Idle)
+    val facultyData = _facultyData.asStateFlow()
+
+    private fun getFacultyData() {
+        viewModelScope.launch {
+            facultyRepo.getFacultyById(selectedFacultyId).collect {
+                _facultyData.value = it.toUiState()
+            }
+        }
     }
 
 
@@ -80,7 +78,7 @@ class FacultyViewModel @Inject constructor(
 
     private fun getFacultyReview() {
         viewModelScope.launch {
-            facultyRepo.getFacultyReviewData(_selectedFaculty.value.id).collect {
+            facultyRepo.getFacultyReviewData(selectedFacultyId).collect {
                 _reviewList.value = it
             }
         }
@@ -97,7 +95,7 @@ class FacultyViewModel @Inject constructor(
 
             val postBody = PostReviewBody(
                 createdBy = userRepo.getUserUid(),
-                createdFor = _selectedFaculty.value.id,
+                createdFor = selectedFacultyId,
                 rating = rating,
                 feedback = feedback
             )
@@ -112,8 +110,12 @@ class FacultyViewModel @Inject constructor(
         when (event) {
             is FacultyEvent.FetchFacultyList -> getFacultyList()
             is FacultyEvent.FetchFacultyByName -> getFacultyByName(event.name)
-            is FacultyEvent.FacultySelected -> setFaculty(event.faculty)
-            is FacultyEvent.GetFacultyDetails -> getFacultyReview()
+            is FacultyEvent.FacultySelected -> setFaculty(event.facultyId)
+            is FacultyEvent.GetFacultyDetails -> {
+                getFacultyData()
+                getFacultyReview()
+            }
+
             is FacultyEvent.SubmitReview -> submitReview(event.rating, event.feedback)
             is FacultyEvent.ResetSubmitState -> _reviewSubmitState.value = UiState.Idle
         }

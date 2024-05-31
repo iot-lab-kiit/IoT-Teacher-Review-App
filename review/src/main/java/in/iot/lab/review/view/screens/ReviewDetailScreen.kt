@@ -20,6 +20,7 @@ import `in`.iot.lab.design.components.AppScaffold
 import `in`.iot.lab.design.components.FAB
 import `in`.iot.lab.review.view.components.FacultyDataUI
 import `in`.iot.lab.design.components.ReviewDataUI
+import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.isScrollingUp
 import `in`.iot.lab.review.view.events.FacultyEvent
 import `in`.iot.lab.review.view.navigation.REVIEW_POST_ROUTE
@@ -29,7 +30,7 @@ import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
 
 @Composable
 fun ReviewDetailScreenControl(
-    faculty: RemoteFaculty,
+    facultyData: UiState<RemoteFaculty>,
     reviewList: LazyPagingItems<RemoteFacultyReview>,
     navigator: (String) -> Unit,
     setEvent: (FacultyEvent) -> Unit
@@ -50,32 +51,54 @@ fun ReviewDetailScreenControl(
         }
     ) {
 
-        ReviewDetailSuccessScreen(
-            faculty = faculty,
-            reviewList = reviewList,
-            lazyListState = lazyListState
-        )
+        when (facultyData) {
+            is UiState.Idle -> {
+                // Do Nothing
+            }
 
-        when {
-
-
-            // Refresh
-            reviewList.loadState.refresh is LoadState.Loading -> {
+            is UiState.Loading -> {
                 AmongUsAnimation()
             }
 
+            is UiState.Success -> {
+                ReviewDetailSuccessScreen(
+                    faculty = facultyData.data,
+                    reviewList = reviewList,
+                    lazyListState = lazyListState
+                )
 
-            // Append
-            reviewList.loadState.append is LoadState.Loading -> {
-                AmongUsAnimation()
+                when {
+
+
+                    // Refresh
+                    reviewList.loadState.refresh is LoadState.Loading -> {
+                        AmongUsAnimation()
+                    }
+
+
+                    // Append
+                    reviewList.loadState.append is LoadState.Loading -> {
+                        AmongUsAnimation()
+                    }
+
+                    // Refresh error
+                    reviewList.loadState.refresh is LoadState.Error -> {
+                        AppFailureScreen(
+                            text = (reviewList.loadState.refresh as LoadState.Error).error.message.toString(),
+                            onCancel = {},
+                            onTryAgain = reviewList::refresh
+                        )
+                    }
+                }
             }
 
-            // Refresh error
-            reviewList.loadState.refresh is LoadState.Error -> {
+            is UiState.Failed -> {
                 AppFailureScreen(
-                    text = (reviewList.loadState.refresh as LoadState.Error).error.message.toString(),
+                    text = facultyData.message,
                     onCancel = {},
-                    onTryAgain = reviewList::refresh
+                    onTryAgain = {
+                        setEvent(FacultyEvent.GetFacultyDetails)
+                    }
                 )
             }
         }

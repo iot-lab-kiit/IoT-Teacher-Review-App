@@ -48,10 +48,10 @@ fun FacultyNavGraph(
         composable(FACULTY_DETAIL_ROUTE) {
 
             val reviewList = viewModel.reviewList.collectAsLazyPagingItems()
-            val selectedFaculty = viewModel.selectedFaculty.collectAsState().value
+            val facultyData = viewModel.facultyData.collectAsState().value
 
             ReviewDetailScreenControl(
-                faculty = selectedFaculty,
+                facultyData = facultyData,
                 reviewList = reviewList,
                 setEvent = viewModel::uiListener,
                 navigator = navController::navigate

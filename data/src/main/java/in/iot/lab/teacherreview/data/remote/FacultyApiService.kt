@@ -44,4 +44,11 @@ interface FacultyApiService {
         @Query("limit") limit: Int,
         @Query("page") skip: Int
     ): Response<List<RemoteFacultyReview>>
+
+
+    @GET(Constants.FACULTY_FETCH_BY_ID_ENDPOINT)
+    suspend fun getFacultyById(
+        @Header("Authorization") authToken: String,
+        @Path("id") facultyId: String
+    ): Response<RemoteFaculty>
 }
