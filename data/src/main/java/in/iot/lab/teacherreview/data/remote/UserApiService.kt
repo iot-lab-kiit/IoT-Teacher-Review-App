@@ -79,4 +79,11 @@ interface UserApiService {
         @Header("Authorization") authToken: String,
         @Body postData: PostReviewBody
     ): Response<Unit>
+
+
+    @DELETE(Constants.USER_DELETE_REVIEW_ENDPOINT)
+    suspend fun deleteUserReview(
+        @Header("Authorization") authToken: String,
+        @Path("id") reviewId: String
+    ): Response<Unit>
 }

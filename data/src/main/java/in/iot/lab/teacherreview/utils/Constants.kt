@@ -19,4 +19,5 @@ object Constants {
     const val FACULTY_REVIEW_FETCH_ENDPOINT = "reviews/{id}"
     const val USER_REVIEW_HISTORY_ENDPOINT = "reviews/{id}/history"
     const val USER_POST_REVIEW_ENDPOINT = "reviews"
+    const val USER_DELETE_REVIEW_ENDPOINT = "reviews/{id}"
 }

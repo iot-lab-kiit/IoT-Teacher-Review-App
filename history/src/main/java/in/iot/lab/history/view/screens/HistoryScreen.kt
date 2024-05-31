@@ -15,12 +15,14 @@ import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.ReviewDataUI
 import `in`.iot.lab.history.view.event.HistoryEvent
+import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 
 
 @Composable
 fun HistoryScreenControl(
     historyList: LazyPagingItems<RemoteReviewHistoryResponse>,
+    deleteState: UiState<Unit>,
     setEvent: (HistoryEvent) -> Unit
 ) {
 
@@ -31,7 +33,33 @@ fun HistoryScreenControl(
     AppScreen {
 
         // History Review Data UI
-        HistorySuccessScreen(historyList = historyList)
+        HistorySuccessScreen(
+            historyList = historyList,
+            onDeletePress = { setEvent(HistoryEvent.RemoveReview(it)) }
+        )
+
+        when (deleteState) {
+            is UiState.Loading -> {
+                CircularProgressIndicator()
+            }
+
+            is UiState.Success -> {
+//                historyList.refresh()
+                setEvent(HistoryEvent.ResetRemoveState)
+            }
+
+            is UiState.Failed -> {
+                AppFailureScreen(
+                    text = deleteState.message,
+                    onCancel = {},
+                    onTryAgain = { setEvent(HistoryEvent.FetchHistory) }
+                )
+            }
+
+            else -> {
+                // Do Nothing
+            }
+        }
 
         when {
 
@@ -59,7 +87,10 @@ fun HistoryScreenControl(
 
 
 @Composable
-fun HistorySuccessScreen(historyList: LazyPagingItems<RemoteReviewHistoryResponse>) {
+fun HistorySuccessScreen(
+    historyList: LazyPagingItems<RemoteReviewHistoryResponse>,
+    onDeletePress: (String) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -74,7 +105,8 @@ fun HistorySuccessScreen(historyList: LazyPagingItems<RemoteReviewHistoryRespons
                     rating = history.rating,
                     description = history.feedback,
                     photoUrl = history.createdFor.photoUrl ?: "",
-                    createdAt = history.createdAt
+                    createdAt = history.createdAt,
+                    onDeletePress = { onDeletePress(history.id) }
                 )
             }
         }
