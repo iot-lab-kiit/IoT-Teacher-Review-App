@@ -65,7 +65,7 @@ fun ProfileItemUI(
         // Main Card which contains the data
         Card(
             modifier = modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(4.dp),
+            shape = RoundedCornerShape(12.dp),
         ) {
 
             // Contains the Leading Icon and Data

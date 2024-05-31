@@ -1,6 +1,5 @@
 package `in`.iot.lab.review.view.screens
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -97,10 +96,6 @@ fun ReviewDetailSuccessScreen(
         // User Profile Data
         item {
             FacultyDataUI(
-                modifier = Modifier.border(
-                    width = 2.dp,
-                    color = MaterialTheme.colorScheme.primary
-                ),
                 name = faculty.name,
                 photoUrl = faculty.photoUrl ?: "",
                 experience = faculty.experience ?: 0.0,
@@ -112,7 +107,7 @@ fun ReviewDetailSuccessScreen(
         // Review Text with count
         item {
             Text(
-                text = "· Reviews - ${faculty.reviewList?.size ?: 0}",
+                text = "· Reviews - ${faculty.totalRating ?: 0}",
                 style = MaterialTheme.typography.titleLarge
             )
         }

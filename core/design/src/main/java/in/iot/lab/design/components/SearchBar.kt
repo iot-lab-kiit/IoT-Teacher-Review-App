@@ -2,6 +2,7 @@ package `in`.iot.lab.design.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -95,7 +96,9 @@ fun SearchBar(
             Icon(
                 imageVector = leadingIcon,
                 contentDescription = "leading_icon",
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .size(32.dp)
             )
         },
         trailingIcon = {

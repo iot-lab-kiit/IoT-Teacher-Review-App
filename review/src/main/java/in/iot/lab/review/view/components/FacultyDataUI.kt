@@ -92,7 +92,7 @@ fun FacultyDataUI(
 
     ElevatedCard(
         modifier = modifier,
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = cardColor,
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
