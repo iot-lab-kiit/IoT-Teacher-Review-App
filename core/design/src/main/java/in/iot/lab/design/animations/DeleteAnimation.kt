@@ -52,7 +52,7 @@ fun DeleteAnimation(
     onAnimationComplete: (() -> Unit)? = null
 ) {
 
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.delete_anim))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.delete_animation))
     val progress by animateLottieCompositionAsState(composition)
 
     // This variable says if the dialog is Visible or not

@@ -198,8 +198,7 @@ private fun DialogContent(
             // Cancel Button
             SecondaryButton(
                 onClick = onDismiss,
-                modifier = Modifier.weight(1F),
-                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.weight(1F)
             ) {
                 Text(
                     text = "Cancel",
@@ -213,8 +212,7 @@ private fun DialogContent(
 
             PrimaryButton(
                 onClick = onTryAgain,
-                modifier = Modifier.weight(1F),
-                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier.weight(1F)
             ) {
                 Text(
                     text = "Try Again",

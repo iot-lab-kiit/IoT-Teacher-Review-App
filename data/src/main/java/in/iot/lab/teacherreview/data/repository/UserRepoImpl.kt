@@ -139,7 +139,7 @@ class UserRepoImpl @Inject constructor(
 
 
     override suspend fun getUserToken(): String {
-        return auth.currentUser?.getIdToken(false)?.await()?.token ?: "Invalid Token"
+        return "Bearer ${auth.currentUser?.getIdToken(false)?.await()?.token}"
     }
 
     override suspend fun getReviewHistory(): Flow<PagingData<RemoteReviewHistoryResponse>> {

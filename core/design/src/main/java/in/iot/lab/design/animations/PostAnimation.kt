@@ -52,7 +52,7 @@ fun PostAnimation(
     onAnimationComplete: (() -> Unit)? = null
 ) {
 
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.tick_anim))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.post_animation))
     val progress by animateLottieCompositionAsState(composition)
 
     // This variable says if the dialog is Visible or not

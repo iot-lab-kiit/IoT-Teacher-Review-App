@@ -68,7 +68,7 @@ fun ReviewDataUI(
 
     ElevatedCard(
         modifier = modifier,
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors()
     ) {
 

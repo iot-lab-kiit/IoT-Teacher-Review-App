@@ -80,7 +80,7 @@ fun PrimaryButton(
         disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
         disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f)
     ),
-    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
+    shape: RoundedCornerShape = RoundedCornerShape(12.dp),
     contentPadding: PaddingValues = PaddingValues(25.dp, 0.dp),
     content: @Composable (RowScope.() -> Unit)
 ) {
@@ -107,7 +107,7 @@ fun SecondaryButton(
         disabledContainerColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
         disabledContentColor = MaterialTheme.colorScheme.background.copy(alpha = 0.5f)
     ),
-    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
+    shape: RoundedCornerShape = RoundedCornerShape(12.dp),
     contentPadding: PaddingValues = PaddingValues(25.dp, 0.dp),
     content: @Composable (RowScope.() -> Unit)
 ) {
@@ -134,7 +134,7 @@ fun TertiaryButton(
         disabledContainerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.5f),
         disabledContentColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)
     ),
-    shape: RoundedCornerShape = RoundedCornerShape(4.dp),
+    shape: RoundedCornerShape = RoundedCornerShape(12.dp),
     border: BorderStroke = BorderStroke(
         width = 1.5.dp,
         color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.5f)
@@ -159,7 +159,7 @@ fun TertiaryButton(
 fun FAB(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    shape: RoundedCornerShape = RoundedCornerShape(8.dp),
+    shape: RoundedCornerShape = RoundedCornerShape(12.dp),
     elevation: FloatingActionButtonElevation = FloatingActionButtonDefaults.elevation(),
     contentDescription: String = "ADD REVIEW BUTTON",
     icon: ImageVector = Icons.Outlined.RateReview,

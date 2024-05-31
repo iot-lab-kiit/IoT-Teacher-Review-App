@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Numbers
@@ -210,7 +209,7 @@ fun ProfileSuccessScreen(
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { setEvent(ProfileEvents.SignOutEvent) },
-                shape = RoundedCornerShape(4.dp)
+//                shape = RoundedCornerShape(4.dp)
             ) {
                 Text(
                     modifier = Modifier.padding(16.dp),
@@ -221,8 +220,7 @@ fun ProfileSuccessScreen(
 
             TertiaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { setEvent(ProfileEvents.DeleteAccountEvent) },
-                shape = RoundedCornerShape(4.dp)
+                onClick = { setEvent(ProfileEvents.DeleteAccountEvent) }
             ) {
                 Text(
                     modifier = Modifier.padding(16.dp),

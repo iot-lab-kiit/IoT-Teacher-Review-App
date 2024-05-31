@@ -43,7 +43,7 @@ fun FeedbackTextField(
         ),
         minLines = 4,
         maxLines = 4,
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(16.dp),
         supportingText = {
             Box(
                 modifier = Modifier.fillMaxWidth(),
