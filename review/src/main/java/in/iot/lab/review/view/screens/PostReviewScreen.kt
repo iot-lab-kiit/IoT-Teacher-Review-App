@@ -1,6 +1,7 @@
 package `in`.iot.lab.review.view.screens
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.iot.lab.design.animations.AmongUsAnimation
@@ -142,11 +144,21 @@ fun PostReviewIdleScreen(
         }
 
 
+        val context = LocalContext.current
+
         // Submit Button
         PrimaryButton(
-            onClick = { onSubmitClick() },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = feedback.isNotEmpty()
+            onClick = {
+                if (feedback.isNotEmpty())
+                    onSubmitClick()
+                else
+                    Toast.makeText(
+                        context,
+                        "Please enter your feedback",
+                        Toast.LENGTH_SHORT
+                    ).show()
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
 
             Text(
