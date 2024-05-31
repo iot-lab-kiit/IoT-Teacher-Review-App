@@ -12,13 +12,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import `in`.iot.lab.design.animations.AmongUsAnimation
 import `in`.iot.lab.design.animations.DeleteAnimation
-import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.ReviewDataUI
+import `in`.iot.lab.design.state.HandlePagingData
 import `in`.iot.lab.design.state.HandleUiState
 import `in`.iot.lab.history.view.component.CustomDeleteDialog
 import `in`.iot.lab.history.view.event.HistoryEvent
@@ -39,41 +37,21 @@ fun HistoryScreenControl(
 
     AppScreen {
 
-        // History Review Data UI
-        HistorySuccessScreen(
-            historyList = historyList,
-            onDeletePress = { setEvent(HistoryEvent.RemoveReview(it)) }
-        )
-
-
         deleteState.HandleUiState(
             onTryAgain = { setEvent(HistoryEvent.FetchHistory) }
-        ){
+        ) {
             DeleteAnimation {
                 setEvent(HistoryEvent.ResetRemoveState)
             }
         }
 
-        when {
+        historyList.HandlePagingData { pagingData ->
 
-            // Refresh
-            historyList.loadState.refresh is LoadState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            // Append
-            historyList.loadState.append is LoadState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            // Refresh error
-            historyList.loadState.refresh is LoadState.Error -> {
-                AppFailureScreen(
-                    text = (historyList.loadState.refresh as LoadState.Error).error.message.toString(),
-                    onCancel = {},
-                    onTryAgain = historyList::refresh
-                )
-            }
+            // History Review Data UI
+            HistorySuccessScreen(
+                historyList = pagingData,
+                onDeletePress = { setEvent(HistoryEvent.RemoveReview(it)) }
+            )
         }
     }
 }

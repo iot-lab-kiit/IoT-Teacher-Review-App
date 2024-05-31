@@ -12,14 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import `in`.iot.lab.design.animations.AmongUsAnimation
-import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScaffold
 import `in`.iot.lab.design.components.FAB
 import `in`.iot.lab.review.view.components.FacultyDataUI
 import `in`.iot.lab.design.components.ReviewDataUI
+import `in`.iot.lab.design.state.HandlePagingData
 import `in`.iot.lab.design.state.HandleUiState
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.isScrollingUp
@@ -56,35 +54,14 @@ fun ReviewDetailScreenControl(
             onTryAgain = {
                 setEvent(FacultyEvent.GetFacultyDetails)
             }
-        ) {
-            ReviewDetailSuccessScreen(
-                faculty = it,
-                reviewList = reviewList,
-                lazyListState = lazyListState
-            )
+        ) { faculty ->
 
-            when {
-
-
-                // Refresh
-                reviewList.loadState.refresh is LoadState.Loading -> {
-                    AmongUsAnimation()
-                }
-
-
-                // Append
-                reviewList.loadState.append is LoadState.Loading -> {
-                    AmongUsAnimation()
-                }
-
-                // Refresh error
-                reviewList.loadState.refresh is LoadState.Error -> {
-                    AppFailureScreen(
-                        text = (reviewList.loadState.refresh as LoadState.Error).error.message.toString(),
-                        onCancel = {},
-                        onTryAgain = reviewList::refresh
-                    )
-                }
+            reviewList.HandlePagingData {
+                ReviewDetailSuccessScreen(
+                    faculty = faculty,
+                    reviewList = reviewList,
+                    lazyListState = lazyListState
+                )
             }
         }
     }

@@ -28,7 +28,7 @@ class AppPagingSource<T : Any>(
             } else
                 LoadResult.Error(Throwable(message = response.status.toString() + " " + response.message))
         } catch (exception: IOException) {
-            LoadResult.Error(Throwable("Oh no! Internet error! Try again~"))
+            LoadResult.Error(Throwable(message = "405"))
         } catch (e: Exception) {
             LoadResult.Error(e)
         }

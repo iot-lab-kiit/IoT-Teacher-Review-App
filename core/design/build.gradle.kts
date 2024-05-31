@@ -72,6 +72,10 @@ dependencies {
     //Lottie
     implementation(libs.lottie.compose)
 
+    // Paging 3
+    implementation(libs.paging.runtime)
+    implementation(libs.paging.compose)
+
     // Network Dependency
     implementation(project(":core:network"))
 }
