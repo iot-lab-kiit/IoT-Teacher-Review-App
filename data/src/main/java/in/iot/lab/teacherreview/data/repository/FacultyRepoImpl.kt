@@ -7,7 +7,7 @@ import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.network.utils.NetworkUtil.getResponseState
 import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
 import `in`.iot.lab.teacherreview.data.remote.FacultyApiService
-import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReviewResponse
+import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
 import `in`.iot.lab.teacherreview.domain.repository.FacultyRepo
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
 import `in`.iot.lab.teacherreview.utils.Constants.PAGE_LIMIT
@@ -55,7 +55,7 @@ class FacultyRepoImpl @Inject constructor(
 
     override suspend fun getFacultyReviewData(
         teacherId: String
-    ): Flow<ResponseState<RemoteFacultyReviewResponse>> {
+    ): Flow<ResponseState<List<RemoteFacultyReview>>> {
         return withContext(Dispatchers.IO) {
             getResponseState {
 

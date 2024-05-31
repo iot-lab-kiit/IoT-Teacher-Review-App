@@ -36,7 +36,7 @@ fun FacultyListScreenControl(
 
         FacultyListSuccessScreen(
             faculties = facultyList,
-            onTeacherSelected = {
+            onFacultySelected = {
                 setEvent(FacultyEvent.FacultySelected(it))
                 navigator(FACULTY_DETAIL_ROUTE)
             },
@@ -77,7 +77,7 @@ fun FacultyListScreenControl(
 @Composable
 fun FacultyListSuccessScreen(
     faculties: LazyPagingItems<RemoteFaculty>,
-    onTeacherSelected: (String) -> Unit,
+    onFacultySelected: (RemoteFaculty) -> Unit,
     onClearClick: () -> Unit,
     onSearchClick: (String) -> Unit
 ) {
@@ -100,7 +100,7 @@ fun FacultyListSuccessScreen(
         items(faculties.itemCount) {
             faculties[it]?.let { faculty ->
                 FacultyDataUI(
-                    modifier = Modifier.clickable { onTeacherSelected(faculty.id) },
+                    modifier = Modifier.clickable { onFacultySelected(faculty) },
                     name = faculty.name,
                     photoUrl = faculty.photoUrl ?: "",
                     experience = faculty.experience ?: 0.0,

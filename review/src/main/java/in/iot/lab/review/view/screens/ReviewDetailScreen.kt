@@ -22,12 +22,14 @@ import `in`.iot.lab.design.components.ReviewDataUI
 import `in`.iot.lab.review.view.components.isScrollingUp
 import `in`.iot.lab.review.view.events.FacultyEvent
 import `in`.iot.lab.review.view.navigation.REVIEW_POST_ROUTE
-import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReviewResponse
+import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
+import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
 
 
 @Composable
 fun ReviewDetailScreenControl(
-    faculty: UiState<RemoteFacultyReviewResponse>,
+    faculty: RemoteFaculty,
+    reviewList: UiState<List<RemoteFacultyReview>>,
     navigator: (String) -> Unit,
     setEvent: (FacultyEvent) -> Unit
 ) {
@@ -46,7 +48,7 @@ fun ReviewDetailScreenControl(
             )
         }
     ) {
-        when (faculty) {
+        when (reviewList) {
 
             is UiState.Idle -> {
                 setEvent(FacultyEvent.GetFacultyDetails)
@@ -58,14 +60,15 @@ fun ReviewDetailScreenControl(
 
             is UiState.Success -> {
                 ReviewDetailSuccessScreen(
-                    faculty = faculty.data,
+                    faculty = faculty,
+                    reviewList = reviewList.data,
                     lazyListState = lazyListState
                 )
             }
 
             is UiState.Failed -> {
                 AppFailureScreen(
-                    text = faculty.message,
+                    text = reviewList.message,
                     onCancel = {
 
                     },
@@ -81,7 +84,8 @@ fun ReviewDetailScreenControl(
 
 @Composable
 fun ReviewDetailSuccessScreen(
-    faculty: RemoteFacultyReviewResponse,
+    faculty: RemoteFaculty,
+    reviewList: List<RemoteFacultyReview>,
     lazyListState: LazyListState
 ) {
 
@@ -113,17 +117,15 @@ fun ReviewDetailSuccessScreen(
         }
 
         // Review List
-        faculty.reviewList?.let { reviews ->
-            items(reviews.size) {
-                val review = reviews[it]
-                ReviewDataUI(
-                    title = review.createdBy?.name ?: "Reviewer Name",
-                    rating = review.rating ?: 0.0,
-                    description = review.feedback ?: "Alas! The reviewer gave no feedback ",
-                    photoUrl = review.createdBy?.photoUrl ?: "",
-                    createdAt = review.createdAt ?: ""
-                )
-            }
+        items(reviewList.size) {
+            val review = reviewList[it]
+            ReviewDataUI(
+                title = review.createdBy?.name ?: "Reviewer Name",
+                rating = review.rating ?: 0.0,
+                description = review.feedback ?: "Alas! The reviewer gave no feedback ",
+                photoUrl = review.createdBy?.photoUrl ?: "",
+                createdAt = review.createdAt ?: ""
+            )
         }
     }
 }

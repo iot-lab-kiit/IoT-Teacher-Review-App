@@ -47,10 +47,12 @@ fun FacultyNavGraph(
         // Teacher Review Detail screen
         composable(FACULTY_DETAIL_ROUTE) {
 
-            val facultyData = viewModel.facultyDetails.collectAsState().value
+            val reviewList = viewModel.reviewList.collectAsState().value
+            val selectedFaculty = viewModel.selectedFaculty.collectAsState().value
 
             ReviewDetailScreenControl(
-                faculty = facultyData,
+                faculty = selectedFaculty,
+                reviewList = reviewList,
                 setEvent = viewModel::uiListener,
                 navigator = navController::navigate
             )

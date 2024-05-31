@@ -10,7 +10,7 @@ import `in`.iot.lab.network.utils.NetworkUtil.toUiState
 import `in`.iot.lab.review.view.events.FacultyEvent
 import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
 import `in`.iot.lab.teacherreview.domain.models.review.PostReviewBody
-import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReviewResponse
+import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
 import `in`.iot.lab.teacherreview.domain.repository.FacultyRepo
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,22 +52,36 @@ class FacultyViewModel @Inject constructor(
     }
 
 
-    private var selectedFaculty: String = "Default Value"
+    private var _selectedFaculty: MutableStateFlow<RemoteFaculty> = MutableStateFlow(
+        RemoteFaculty(
+            id = "",
+            name = "",
+            experience = 0.0,
+            photoUrl = "",
+            avgRating = 0.0,
+            totalRating = 0,
+            createdAt = "",
+            updatedAt = "",
+            v = 0
+        )
+    )
+    var selectedFaculty = _selectedFaculty.asStateFlow()
 
-    private fun setFaculty(id: String) {
-        selectedFaculty = id
+
+    private fun setFaculty(id: RemoteFaculty) {
+        _selectedFaculty.value = id
     }
 
 
-    private val _facultyDetails: MutableStateFlow<UiState<RemoteFacultyReviewResponse>> =
+    private val _reviewList: MutableStateFlow<UiState<List<RemoteFacultyReview>>> =
         MutableStateFlow(UiState.Idle)
-    val facultyDetails = _facultyDetails.asStateFlow()
+    val reviewList = _reviewList.asStateFlow()
 
 
     private fun getFacultyReview() {
         viewModelScope.launch {
-            facultyRepo.getFacultyReviewData(selectedFaculty).collect {
-                _facultyDetails.value = it.toUiState()
+            facultyRepo.getFacultyReviewData(_selectedFaculty.value.id).collect {
+                _reviewList.value = it.toUiState()
             }
         }
     }
@@ -83,7 +97,7 @@ class FacultyViewModel @Inject constructor(
 
             val postBody = PostReviewBody(
                 createdBy = userRepo.getUserUid(),
-                createdFor = selectedFaculty,
+                createdFor = _selectedFaculty.value.id,
                 rating = rating,
                 feedback = feedback
             )
@@ -98,7 +112,7 @@ class FacultyViewModel @Inject constructor(
         when (event) {
             is FacultyEvent.FetchFacultyList -> getFacultyList()
             is FacultyEvent.FetchFacultyByName -> getFacultyByName(event.name)
-            is FacultyEvent.FacultySelected -> setFaculty(event.facultyId)
+            is FacultyEvent.FacultySelected -> setFaculty(event.faculty)
             is FacultyEvent.GetFacultyDetails -> getFacultyReview()
             is FacultyEvent.SubmitReview -> submitReview(event.rating, event.feedback)
             is FacultyEvent.ResetSubmitState -> _reviewSubmitState.value = UiState.Idle
