@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import `in`.iot.lab.design.components.AppScreen
-import `in`.iot.lab.design.components.LoginAnim
+import `in`.iot.lab.design.animations.OnBoardingAnimation
 import `in`.iot.lab.design.theme.CustomAppTheme
 
 
@@ -71,6 +71,6 @@ fun AuthOnBoarding(modifier: Modifier = Modifier) {
         )
 
         // OnBoarding Animation
-        LoginAnim()
+        OnBoardingAnimation()
     }
 }

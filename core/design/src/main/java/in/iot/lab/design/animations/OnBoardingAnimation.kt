@@ -1,4 +1,4 @@
-package `in`.iot.lab.design.components
+package `in`.iot.lab.design.animations
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
@@ -15,6 +15,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import `in`.iot.lab.design.R
+import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.theme.CustomAppTheme
 
 
@@ -29,7 +30,7 @@ import `in`.iot.lab.design.theme.CustomAppTheme
 private fun DefaultPreview1() {
     CustomAppTheme {
         AppScreen {
-            LoginAnim()
+            OnBoardingAnimation()
         }
     }
 }
@@ -39,7 +40,7 @@ private fun DefaultPreview1() {
  * This composable function is used to show the login animation in the app.
  */
 @Composable
-fun LoginAnim(
+fun OnBoardingAnimation(
     modifier: Modifier = Modifier
 ) {
 
