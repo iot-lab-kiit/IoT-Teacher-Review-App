@@ -145,7 +145,8 @@ fun PostReviewIdleScreen(
         // Submit Button
         PrimaryButton(
             onClick = { onSubmitClick() },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = feedback.isNotEmpty()
         ) {
 
             Text(
