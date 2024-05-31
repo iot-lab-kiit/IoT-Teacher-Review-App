@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import `in`.iot.lab.design.animations.AmongUsAnimation
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScaffold
 import `in`.iot.lab.design.components.FAB
@@ -54,7 +54,7 @@ fun ReviewDetailScreenControl(
             }
 
             is UiState.Loading -> {
-                CircularProgressIndicator()
+                AmongUsAnimation()
             }
 
             is UiState.Success -> {

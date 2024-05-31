@@ -171,4 +171,16 @@ class UserRepoImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun deleteUserReview(reviewId: String): Flow<ResponseState<Unit>> {
+        return withContext(Dispatchers.IO) {
+            getResponseState {
+                val token = getUserToken()
+                apiService.deleteUserReview(
+                    authToken = token,
+                    reviewId = reviewId
+                )
+            }
+        }
+    }
 }
