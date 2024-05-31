@@ -17,17 +17,17 @@ import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import `in`.iot.lab.design.animations.AmongUsAnimation
-import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppNetworkImage
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.PrimaryButton
 import `in`.iot.lab.design.components.TertiaryButton
+import `in`.iot.lab.design.state.HandleUiState
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.profile.view.components.ProfileItemUI
@@ -95,48 +95,26 @@ fun ProfileScreenControl(
     onLogOutClick: () -> Unit
 ) {
 
+    LaunchedEffect(Unit) {
+        setEvent(ProfileEvents.FetchUserData)
+    }
+
     AppScreen {
 
-        when (userApiState) {
-
-            is UiState.Idle -> {
-                setEvent(ProfileEvents.FetchUserData)
-            }
-
-            is UiState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            is UiState.Success -> {
-                ProfileSuccessScreen(
-                    user = userApiState.data,
-                    setEvent = setEvent
-                )
-            }
-
-            is UiState.Failed -> {
-                AppFailureScreen(
-                    text = userApiState.message,
-                    onCancel = {
-
-                    },
-                    onTryAgain = {
-                        setEvent(ProfileEvents.FetchUserData)
-                    }
-                )
-            }
+        userApiState.HandleUiState(
+            onTryAgain = { setEvent(ProfileEvents.FetchUserData) }
+        ) {
+            ProfileSuccessScreen(
+                user = it,
+                setEvent = setEvent
+            )
         }
 
-        when (logOutState) {
-            is UiState.Success -> {
-                onLogOutClick()
-            }
 
-            is UiState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            else -> {}
+        logOutState.HandleUiState(
+            onTryAgain = { setEvent(ProfileEvents.ResetLogOutState) }
+        ){
+            onLogOutClick()
         }
     }
 }

@@ -19,6 +19,7 @@ import `in`.iot.lab.design.animations.DeleteAnimation
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.ReviewDataUI
+import `in`.iot.lab.design.state.HandleUiState
 import `in`.iot.lab.history.view.component.CustomDeleteDialog
 import `in`.iot.lab.history.view.event.HistoryEvent
 import `in`.iot.lab.network.state.UiState
@@ -44,27 +45,12 @@ fun HistoryScreenControl(
             onDeletePress = { setEvent(HistoryEvent.RemoveReview(it)) }
         )
 
-        when (deleteState) {
-            is UiState.Loading -> {
-                AmongUsAnimation()
-            }
 
-            is UiState.Success -> {
-                DeleteAnimation {
-                    setEvent(HistoryEvent.ResetRemoveState)
-                }
-            }
-
-            is UiState.Failed -> {
-                AppFailureScreen(
-                    text = deleteState.message,
-                    onCancel = {},
-                    onTryAgain = { setEvent(HistoryEvent.FetchHistory) }
-                )
-            }
-
-            else -> {
-                // Do Nothing
+        deleteState.HandleUiState(
+            onTryAgain = { setEvent(HistoryEvent.FetchHistory) }
+        ){
+            DeleteAnimation {
+                setEvent(HistoryEvent.ResetRemoveState)
             }
         }
 

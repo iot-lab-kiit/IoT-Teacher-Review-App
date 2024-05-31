@@ -2,6 +2,9 @@ package `in`.iot.lab.design.state
 
 import androidx.compose.runtime.Composable
 import `in`.iot.lab.design.animations.AmongUsAnimation
+import `in`.iot.lab.design.animations.EmptyListAnimation
+import `in`.iot.lab.design.animations.InternetErrorAnimation
+import `in`.iot.lab.design.animations.ServerErrorAnimation
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.network.state.UiState
 
@@ -10,7 +13,7 @@ import `in`.iot.lab.network.state.UiState
 fun <T> UiState<T>.HandleUiState(
     idleBlock: @Composable (() -> Unit)? = null,
     loadingBlock: @Composable () -> Unit = { AmongUsAnimation() },
-    onCancel: () -> Unit,
+    onCancel: (() -> Unit)? = null,
     onTryAgain: () -> Unit,
     successBlock: @Composable ((T) -> Unit)? = null
 ) {
@@ -30,9 +33,21 @@ fun <T> UiState<T>.HandleUiState(
         is UiState.Failed -> {
             AppFailureScreen(
                 text = this.message,
-                onCancel = onCancel,
+                onCancel = onCancel ?: {},
                 onTryAgain = onTryAgain
             )
+        }
+
+        is UiState.NoDataFound -> {
+            EmptyListAnimation()
+        }
+
+        is UiState.InternetError -> {
+            InternetErrorAnimation()
+        }
+
+        is UiState.ServerError -> {
+            ServerErrorAnimation()
         }
     }
 }

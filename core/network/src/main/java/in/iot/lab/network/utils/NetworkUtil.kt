@@ -74,18 +74,38 @@ object NetworkUtil {
     fun <T> ResponseState<T>.toUiState(): UiState<T> {
         return when (this) {
             is ResponseState.NoInternet -> {
-                UiState.Failed("Oh no! Internet error! Try again~")
+                UiState.InternetError
             }
 
             is ResponseState.NoDataFound -> {
-                UiState.Failed("There are no records in the database! Try again later")
+                UiState.NoDataFound
             }
 
             is ResponseState.ServerError -> {
-                UiState.Failed("Oh shoot! Servers are down! Try again in a bit!")
+                UiState.ServerError
             }
 
             is ResponseState.Loading -> UiState.Loading
+
+            is ResponseState.InvalidRequest -> {
+                UiState.Failed("The api request is invalid and cannot be processed.")
+            }
+
+            is ResponseState.TokenRequired -> {
+                UiState.Failed("Token missing!! Restart the app")
+            }
+
+            is ResponseState.InvalidToken -> {
+                UiState.Failed("Token invalid!! Restart the app or clear data.")
+            }
+
+            is ResponseState.UnAuthorized -> {
+                UiState.Failed("User not authorized")
+            }
+
+            is ResponseState.UnKnownError -> {
+                UiState.Failed("Unknown error occurred!")
+            }
 
             is ResponseState.Success -> {
                 UiState.Success(this.data)
@@ -93,11 +113,6 @@ object NetworkUtil {
 
             is ResponseState.Error -> {
                 UiState.Failed(this.exception.message.toString())
-            }
-
-            // TODO: Handle other cases
-            else -> {
-                UiState.Failed("")
             }
         }
     }
