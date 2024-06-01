@@ -1,6 +1,5 @@
 package `in`.iot.lab.teacherreview.data.repository
 
-import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -13,6 +12,7 @@ import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
 import `in`.iot.lab.teacherreview.domain.repository.FacultyRepo
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
 import `in`.iot.lab.teacherreview.utils.Constants.PAGE_LIMIT
+import `in`.iot.lab.teacherreview.utils.Constants.PAGE_SIZE
 import `in`.iot.lab.teacherreview.utils.Constants.PREFETCH_DISTANCE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -38,7 +38,7 @@ class FacultyRepoImpl @Inject constructor(
                         apiService.getFacultyList(
                             authToken = token,
                             limit = PAGE_LIMIT,
-                            skip = it.key ?: 0
+                            page = it.key ?: 0
                         )
                     }
                 )
@@ -60,7 +60,7 @@ class FacultyRepoImpl @Inject constructor(
                             authToken = token,
                             teacherName = teacherName,
                             limit = PAGE_LIMIT,
-                            skip = it.key ?: 0
+                            page = it.key ?: 0
                         )
                     }
                 )
@@ -84,7 +84,7 @@ class FacultyRepoImpl @Inject constructor(
                             authToken = token,
                             facultyId = teacherId,
                             limit = PAGE_LIMIT,
-                            skip = it.key ?: 0
+                            page = it.key ?: 0
                         )
                     }
                 )

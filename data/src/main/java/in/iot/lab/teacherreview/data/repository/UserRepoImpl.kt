@@ -1,6 +1,5 @@
 package `in`.iot.lab.teacherreview.data.repository
 
-import android.nfc.tech.MifareUltralight
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -18,6 +17,7 @@ import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
 import `in`.iot.lab.teacherreview.utils.Constants
 import `in`.iot.lab.teacherreview.utils.Constants.PAGE_LIMIT
+import `in`.iot.lab.teacherreview.utils.Constants.PAGE_SIZE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
@@ -116,7 +116,7 @@ class UserRepoImpl @Inject constructor(
         val userUid = getUserUid()
         return Pager(
             config = PagingConfig(
-                pageSize = MifareUltralight.PAGE_SIZE,
+                pageSize = PAGE_SIZE,
                 prefetchDistance = Constants.PREFETCH_DISTANCE
             ),
             pagingSourceFactory = {
@@ -126,7 +126,7 @@ class UserRepoImpl @Inject constructor(
                             authToken = authToken,
                             userUid = userUid,
                             limit = PAGE_LIMIT,
-                            skip = it.key ?: 0
+                            page = it.key ?: 0
                         )
                     }
                 )

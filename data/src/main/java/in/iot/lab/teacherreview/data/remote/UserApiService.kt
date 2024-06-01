@@ -63,14 +63,14 @@ interface UserApiService {
      * @param authToken This is the token for the Authorization from the Firebase.
      * @param userUid This is the user's Uid for which the review history will be fetched.
      * @param limit This is the limit for the number of reviews to be fetched.
-     * @param skip This is the skip for the number of reviews to be skipped.
+     * @param page This is the skip for the number of reviews to be skipped.
      */
     @GET(Constants.USER_REVIEW_HISTORY_ENDPOINT)
     suspend fun getReviewHistory(
         @Header("Authorization") authToken: String,
         @Path("id") userUid: String,
         @Query("limit") limit: Int,
-        @Query("page") skip: Int
+        @Query("page") page: Int
     ): CustomResponse<List<RemoteReviewHistoryResponse>>
 
 

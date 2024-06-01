@@ -25,7 +25,7 @@ interface FacultyApiService {
         @Header("authorization") authToken: String,
         @Query("name") teacherName: String,
         @Query("limit") limit: Int,
-        @Query("page") skip: Int
+        @Query("page") page: Int
     ): CustomResponse<List<RemoteFaculty>>
 
 
@@ -33,7 +33,7 @@ interface FacultyApiService {
     suspend fun getFacultyList(
         @Header("authorization") authToken: String,
         @Query("limit") limit: Int,
-        @Query("page") skip: Int
+        @Query("page") page: Int
     ): CustomResponse<List<RemoteFaculty>>
 
 
@@ -42,7 +42,7 @@ interface FacultyApiService {
         @Header("Authorization") authToken: String,
         @Path("id") facultyId: String,
         @Query("limit") limit: Int,
-        @Query("page") skip: Int
+        @Query("page") page: Int
     ): CustomResponse<List<RemoteFacultyReview>>
 
 
