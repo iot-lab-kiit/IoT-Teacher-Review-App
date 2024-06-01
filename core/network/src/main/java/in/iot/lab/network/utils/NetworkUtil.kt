@@ -27,26 +27,62 @@ object NetworkUtil {
      * handling easier and less boilerplate code needs to be generated
      */
     suspend fun <T> getResponseState(
-        onSuccess: suspend () -> Unit = {},
-        onFailure: suspend (Exception) -> Unit = {},
+        onSuccess: suspend (ResponseState.Success<T>) -> Unit = {},
+        onFailure: suspend () -> Unit = {},
         request: suspend () -> CustomResponse<T>
     ): Flow<ResponseState<T>> {
-
         return flow {
+
             emit(ResponseState.Loading)
             try {
 
                 // Response from the Retrofit Api call
                 val response = request()
-                onSuccess()
+                val state = response.checkApiResponseStatusCode()
 
-                emit(response.checkApiResponseStatusCode())
+                when (state) {
+                    is ResponseState.Success -> onSuccess(state)
+                    is ResponseState.Loading -> Unit
+                    else -> onFailure()
+                }
+
+                emit(state)
             } catch (exception: IOException) {
+
+                onFailure()
                 emit(ResponseState.NoInternet)
             } catch (e: Exception) {
 
                 // Calling the Custom Failure Function
-                onFailure(e)
+                onFailure()
+                emit(ResponseState.Error(e))
+            }
+        }
+    }
+
+
+    /**
+     * This function is a wrapper function over the Retrofit Api calls to make the exception
+     * handling easier and less boilerplate code needs to be generated
+     */
+    suspend fun getUnitResponseState(
+        onFailure: suspend () -> Unit = {},
+        request: suspend () -> Unit
+    ): Flow<ResponseState<Unit>> {
+        return flow {
+
+            emit(ResponseState.Loading)
+            try {
+                request()
+                emit(ResponseState.Success(Unit))
+            } catch (exception: IOException) {
+
+                onFailure()
+                emit(ResponseState.NoInternet)
+            } catch (e: Exception) {
+
+                // Calling the Custom Failure Function
+                onFailure()
                 emit(ResponseState.Error(e))
             }
         }

@@ -21,4 +21,5 @@ object NetworkStatusCodes {
     const val INVALID_TOKEN = 402
     const val UNAUTHORIZED = 403
     const val INTERNAL_SERVER_ERROR = 404
+    const val INTERNET_ERROR = 405
 }

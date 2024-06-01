@@ -6,8 +6,8 @@ import com.google.firebase.auth.FirebaseAuth
 import `in`.iot.lab.network.paging.AppPagingSource
 import `in`.iot.lab.network.paging.providePager
 import `in`.iot.lab.network.state.ResponseState
-import `in`.iot.lab.network.utils.NetworkUtil.checkApiResponseStatusCode
 import `in`.iot.lab.network.utils.NetworkUtil.getResponseState
+import `in`.iot.lab.network.utils.NetworkUtil.getUnitResponseState
 import `in`.iot.lab.teacherreview.data.remote.UserApiService
 import `in`.iot.lab.teacherreview.domain.models.common.AccessTokenBody
 import `in`.iot.lab.teacherreview.domain.models.review.PostReviewBody
@@ -17,10 +17,8 @@ import `in`.iot.lab.teacherreview.domain.repository.UserRepo
 import `in`.iot.lab.teacherreview.utils.Constants.PAGE_LIMIT
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import javax.inject.Inject
 
 
@@ -43,36 +41,19 @@ class UserRepoImpl @Inject constructor(
      * @param authCredential This is the Google Auth Credential which contains the data of the user.
      */
     override suspend fun loginUser(authCredential: AuthCredential): Flow<ResponseState<Unit>> {
-        return flow {
+        return withContext(Dispatchers.IO) {
+            getResponseState(
+                onFailure = { auth.signOut() }
+            ) {
 
-            // Loading State
-            emit(ResponseState.Loading)
+                auth.signInWithCredential(authCredential).await().user
+                    ?: throw (Exception("Google Login Failed"))
 
-            try {
+                // Get the token from the user
+                val accessToken = getUserToken()
 
-                // User Data
-                val user = auth.signInWithCredential(authCredential).await().user
-                if (user == null)
-                    emit(ResponseState.Error(Exception("Google Login Failed")))
-                else {
-
-                    // Get the token from the user
-                    val accessToken = getUserToken()
-
-                    // Response of the post request from the backend
-                    val response = apiService.loginUser(AccessTokenBody(accessToken))
-
-                    // Check if the response is successful
-                    if (response.checkApiResponseStatusCode() is ResponseState.Success)
-                        emit(ResponseState.Success(Unit))
-                    else {
-                        auth.signOut()
-                        emit(response.checkApiResponseStatusCode())
-                    }
-                }
-            } catch (e: Exception) {
-                emit(ResponseState.Error(e))
-                logOutUser()
+                // Response of the post request from the backend
+                apiService.loginUser(AccessTokenBody(accessToken))
             }
         }
     }
@@ -82,16 +63,11 @@ class UserRepoImpl @Inject constructor(
      * This function logs out the user from the App.
      */
     override suspend fun logOutUser(): Flow<ResponseState<Unit>> {
-        return flow {
-            emit(ResponseState.Loading)
-            try {
+        return withContext(Dispatchers.IO) {
+            getUnitResponseState {
                 auth.signOut()
-                if (auth.currentUser == null)
-                    emit(ResponseState.Success(Unit))
-                else
-                    emit(ResponseState.Error(java.lang.Exception("Failed to log out user from Firebase")))
-            } catch (e: Exception) {
-                emit(ResponseState.Error(e))
+                if (auth.currentUser != null)
+                    throw Exception("Failed to log out user from Firebase")
             }
         }
     }
@@ -108,27 +84,16 @@ class UserRepoImpl @Inject constructor(
 
 
     override suspend fun deleteUserData(): Flow<ResponseState<Unit>> {
-        return flow {
-            emit(ResponseState.Loading)
-            try {
-
+        return withContext(Dispatchers.IO) {
+            getResponseState(
+                onSuccess = { auth.signOut() }
+            ) {
                 val token = getUserToken()
                 val userUid = getUserUid()
-                val response = apiService.deleteUserData(
+                apiService.deleteUserData(
                     authToken = token,
                     userUid = userUid
                 )
-
-                if (response.checkApiResponseStatusCode() is ResponseState.Success) {
-                    auth.signOut()
-                    emit(ResponseState.Success(Unit))
-                } else
-                    emit(response.checkApiResponseStatusCode())
-
-            } catch (exception: IOException) {
-                emit(ResponseState.NoInternet)
-            } catch (e: Exception) {
-                emit(ResponseState.Error(e))
             }
         }
     }
@@ -140,7 +105,7 @@ class UserRepoImpl @Inject constructor(
 
 
     override suspend fun getUserToken(): String {
-        return "Bearer ${auth.currentUser?.getIdToken(false)?.await()?.token}"
+        return "Bearer ${auth.currentUser?.getIdToken(false)?.await()?.token ?: "No Token Found"}"
     }
 
     override suspend fun getReviewHistory(): Flow<PagingData<RemoteReviewHistoryResponse>> {

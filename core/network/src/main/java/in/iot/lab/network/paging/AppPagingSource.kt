@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import `in`.iot.lab.network.data.CustomResponse
 import `in`.iot.lab.network.state.ResponseState
+import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNET_ERROR
 import `in`.iot.lab.network.utils.NetworkUtil.checkApiResponseStatusCode
 import java.io.IOException
 
@@ -26,9 +27,9 @@ class AppPagingSource<T : Any>(
                     nextKey = if (response.data.isEmpty()) null else page + 1
                 )
             } else
-                LoadResult.Error(Throwable(message = response.status.toString() + " " + response.message))
+                LoadResult.Error(Throwable("${response.status} - ${response.message}"))
         } catch (exception: IOException) {
-            LoadResult.Error(Throwable(message = "405"))
+            LoadResult.Error(Throwable(message = INTERNET_ERROR.toString()))
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
