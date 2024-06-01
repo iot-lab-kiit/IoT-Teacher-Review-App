@@ -49,36 +49,34 @@ private fun DefaultPreview1() {
 @Composable
 fun EmptyListAnimation(
     modifier: Modifier = Modifier,
-    message: String = "Look's like you haven't posted any review yet.",
+    message: String = "Look's like there isn't anything in the database !!",
     onAnimationComplete: (() -> Unit)? = null,
     onTryAgainClick: () -> Unit
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.no_data_animation))
     val progress by animateLottieCompositionAsState(composition)
 
-    AppScreen {
-        Column(
-            modifier = modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+    Column(
+        modifier = modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
 
-            LottieAnimation(
-                composition = composition,
-                modifier = Modifier.size(200.dp),
-                iterations = LottieConstants.IterateForever
-            )
+        LottieAnimation(
+            composition = composition,
+            modifier = Modifier.size(200.dp),
+            iterations = LottieConstants.IterateForever
+        )
 
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = message,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
+        )
 
-            PrimaryButton(onClick = onTryAgainClick) {
-                Text(text = "Try Again")
-            }
+        PrimaryButton(onClick = onTryAgainClick) {
+            Text(text = "Try Again")
         }
     }
     onAnimationComplete?.let {

@@ -56,30 +56,28 @@ fun ServerErrorAnimation(
     val progress by animateLottieCompositionAsState(composition)
 
 
-    AppScreen {
-        Column(
-            modifier = modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+    Column(
+        modifier = modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
 
-            LottieAnimation(
-                composition = composition,
-                modifier = Modifier.size(200.dp),
-                iterations = LottieConstants.IterateForever
-            )
+        LottieAnimation(
+            composition = composition,
+            modifier = Modifier.size(200.dp),
+            iterations = LottieConstants.IterateForever
+        )
 
 
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = message,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
+        )
 
-            PrimaryButton(onClick = onTryAgainClick) {
-                Text(text = "Try Again")
-            }
+        PrimaryButton(onClick = onTryAgainClick) {
+            Text(text = "Try Again")
         }
     }
     onAnimationComplete?.let {
