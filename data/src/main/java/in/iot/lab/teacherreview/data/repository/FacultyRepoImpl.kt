@@ -1,8 +1,10 @@
 package `in`.iot.lab.teacherreview.data.repository
 
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import `in`.iot.lab.network.paging.AppPagingSource
-import `in`.iot.lab.network.paging.providePager
 import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.network.utils.NetworkUtil.getFlowState
 import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
@@ -11,6 +13,7 @@ import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
 import `in`.iot.lab.teacherreview.domain.repository.FacultyRepo
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
 import `in`.iot.lab.teacherreview.utils.Constants.PAGE_LIMIT
+import `in`.iot.lab.teacherreview.utils.Constants.PREFETCH_DISTANCE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -23,53 +26,69 @@ class FacultyRepoImpl @Inject constructor(
 ) : FacultyRepo {
 
     override suspend fun getTeacherList(): Flow<PagingData<RemoteFaculty>> {
-
         val token = user.getUserToken()
-        return providePager(
-            pagingSourceFactory = AppPagingSource(
-                request = {
-                    apiService.getFacultyList(
-                        authToken = token,
-                        limit = PAGE_LIMIT,
-                        skip = it.key ?: 0
-                    )
-                }
-            )
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                prefetchDistance = PREFETCH_DISTANCE
+            ),
+            pagingSourceFactory = {
+                AppPagingSource(
+                    request = {
+                        apiService.getFacultyList(
+                            authToken = token,
+                            limit = PAGE_LIMIT,
+                            skip = it.key ?: 0
+                        )
+                    }
+                )
+            }
         ).flow
     }
 
     override suspend fun getTeacherByName(teacherName: String): Flow<PagingData<RemoteFaculty>> {
         val token = user.getUserToken()
-        return providePager(
-            pagingSourceFactory = AppPagingSource(
-                request = {
-                    apiService.getTeacherByName(
-                        authToken = token,
-                        teacherName = teacherName,
-                        limit = PAGE_LIMIT,
-                        skip = it.key ?: 0
-                    )
-                }
-            )
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                prefetchDistance = PREFETCH_DISTANCE
+            ),
+            pagingSourceFactory = {
+                AppPagingSource(
+                    request = {
+                        apiService.getTeacherByName(
+                            authToken = token,
+                            teacherName = teacherName,
+                            limit = PAGE_LIMIT,
+                            skip = it.key ?: 0
+                        )
+                    }
+                )
+            }
         ).flow
     }
 
     override suspend fun getFacultyReviewData(
         teacherId: String
     ): Flow<PagingData<RemoteFacultyReview>> {
-
         val token = user.getUserToken()
-        return providePager(
-            pagingSourceFactory = AppPagingSource(
-                request = {
-                    apiService.getFacultyReviewData(
-                        authToken = token,
-                        facultyId = teacherId,
-                        limit = PAGE_LIMIT,
-                        skip = it.key ?: 0
-                    )
-                }
-            )
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                prefetchDistance = PREFETCH_DISTANCE
+            ),
+            pagingSourceFactory = {
+                AppPagingSource(
+                    request = {
+                        apiService.getFacultyReviewData(
+                            authToken = token,
+                            facultyId = teacherId,
+                            limit = PAGE_LIMIT,
+                            skip = it.key ?: 0
+                        )
+                    }
+                )
+            }
         ).flow
     }
 

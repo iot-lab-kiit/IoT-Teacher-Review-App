@@ -1,10 +1,12 @@
 package `in`.iot.lab.teacherreview.data.repository
 
+import android.nfc.tech.MifareUltralight
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import `in`.iot.lab.network.paging.AppPagingSource
-import `in`.iot.lab.network.paging.providePager
 import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.network.utils.NetworkUtil.getFlowState
 import `in`.iot.lab.network.utils.NetworkUtil.getUnitFlowState
@@ -14,6 +16,7 @@ import `in`.iot.lab.teacherreview.domain.models.review.PostReviewBody
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
+import `in`.iot.lab.teacherreview.utils.Constants
 import `in`.iot.lab.teacherreview.utils.Constants.PAGE_LIMIT
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -111,17 +114,23 @@ class UserRepoImpl @Inject constructor(
     override suspend fun getReviewHistory(): Flow<PagingData<RemoteReviewHistoryResponse>> {
         val authToken = getUserToken()
         val userUid = getUserUid()
-        return providePager(
-            pagingSourceFactory = AppPagingSource(
-                request = {
-                    apiService.getReviewHistory(
-                        authToken = authToken,
-                        userUid = userUid,
-                        limit = PAGE_LIMIT,
-                        skip = it.key ?: 0
-                    )
-                }
-            )
+        return Pager(
+            config = PagingConfig(
+                pageSize = MifareUltralight.PAGE_SIZE,
+                prefetchDistance = Constants.PREFETCH_DISTANCE
+            ),
+            pagingSourceFactory = {
+                AppPagingSource(
+                    request = {
+                        apiService.getReviewHistory(
+                            authToken = authToken,
+                            userUid = userUid,
+                            limit = PAGE_LIMIT,
+                            skip = it.key ?: 0
+                        )
+                    }
+                )
+            }
         ).flow
     }
 
