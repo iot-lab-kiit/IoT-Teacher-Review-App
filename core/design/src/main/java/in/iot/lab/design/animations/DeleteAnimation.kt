@@ -23,7 +23,6 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import `in`.iot.lab.design.R
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.theme.CustomAppTheme
-import kotlinx.coroutines.delay
 
 
 // Preview Function
@@ -61,7 +60,6 @@ fun DeleteAnimation(
     onAnimationComplete?.let {
         LaunchedEffect(progress) {
             if (progress == 1f) {
-                delay(1000)
                 isVisible = false
                 it()
             }
@@ -76,11 +74,12 @@ fun DeleteAnimation(
 
         LottieAnimation(
             composition = composition,
-            modifier = Modifier.size(160.dp)
+            modifier = Modifier.size(160.dp),
+            speed = 1.5f
         )
 
         AnimatedVisibility(
-            visible = (progress == 1f),
+            visible = true,
             enter = fadeIn() + expandVertically()
         ) {
             Text(
