@@ -54,28 +54,32 @@ fun InternetErrorAnimation(
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.internet_error))
     val progress by animateLottieCompositionAsState(composition)
 
-    Column(
-        modifier = modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
 
-        LottieAnimation(
-            composition = composition,
-            modifier = Modifier.size(200.dp)
-        )
+    AppScreen {
+        Column(
+            modifier = modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+
+            LottieAnimation(
+                composition = composition,
+                modifier = Modifier.size(200.dp)
+            )
 
 
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = message,
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center
-        )
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = message,
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center
+            )
 
-        PrimaryButton(onClick = onTryAgainClick) {
-            Text(text = "Try Again")
+            PrimaryButton(onClick = onTryAgainClick) {
+                Text(text = "Try Again")
+            }
         }
+
     }
     onAnimationComplete?.let {
         if (progress == 1.0f) it()

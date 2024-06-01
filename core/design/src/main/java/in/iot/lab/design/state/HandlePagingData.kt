@@ -1,6 +1,10 @@
 package `in`.iot.lab.design.state
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.animations.AmongUsAnimation
@@ -26,13 +30,17 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
 
     when {
 
+        loadState.append is LoadState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
+            ) { loadingBlock() }
+        }
+
         loadState.refresh is LoadState.Loading -> {
             loadingBlock()
         }
 
-        loadState.append is LoadState.Loading -> {
-            loadingBlock()
-        }
 
         loadState.refresh is LoadState.Error -> {
 
