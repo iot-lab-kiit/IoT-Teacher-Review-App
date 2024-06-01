@@ -39,15 +39,15 @@ fun <T> UiState<T>.HandleUiState(
         }
 
         is UiState.NoDataFound -> {
-            EmptyListAnimation()
+            EmptyListAnimation(onTryAgainClick = onTryAgain)
         }
 
         is UiState.InternetError -> {
-            InternetErrorAnimation()
+            InternetErrorAnimation(onTryAgainClick = onTryAgain)
         }
 
         is UiState.ServerError -> {
-            ServerErrorAnimation()
+            ServerErrorAnimation(onTryAgainClick = onTryAgain)
         }
     }
 }

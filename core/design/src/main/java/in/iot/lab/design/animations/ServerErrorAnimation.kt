@@ -1,29 +1,30 @@
 package `in`.iot.lab.design.animations
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import `in`.iot.lab.design.R
+import `in`.iot.lab.design.components.AppScreen
+import `in`.iot.lab.design.components.PrimaryButton
 import `in`.iot.lab.design.theme.CustomAppTheme
-import kotlinx.coroutines.delay
+
 
 // Preview Function
 @Preview("Light")
@@ -35,7 +36,9 @@ import kotlinx.coroutines.delay
 @Composable
 private fun DefaultPreview4() {
     CustomAppTheme {
-        ServerErrorAnimation()
+        AppScreen {
+            ServerErrorAnimation {}
+        }
     }
 }
 
@@ -46,42 +49,38 @@ private fun DefaultPreview4() {
 fun ServerErrorAnimation(
     modifier: Modifier = Modifier,
     message: String = "Server error occurred. Please try again later.",
-    onAnimationComplete: (() -> Unit)? = null
+    onAnimationComplete: (() -> Unit)? = null,
+    onTryAgainClick: () -> Unit
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.server_error))
     val progress by animateLottieCompositionAsState(composition)
 
-    // This variable says if the dialog is Visible or not
-    var isVisible by remember { mutableStateOf(true) }
 
-    onAnimationComplete?.let {
-        LaunchedEffect(progress) {
-            if (progress == 1f) {
-                delay(1000)
-                isVisible = false
-                it()
-            }
-        }
-    }
-
-    AnimationDialog(
-        modifier = modifier,
-        isVisible = isVisible
+    Column(
+        modifier = modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+
         LottieAnimation(
             composition = composition,
-            modifier = Modifier.size(200.dp)
+            modifier = Modifier.size(200.dp),
+            iterations = LottieConstants.IterateForever
         )
 
-        AnimatedVisibility(
-            visible = (progress == 1f),
-            enter = fadeIn() + expandVertically()
-        ) {
-            Text(
-                text = message,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
+
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
+        )
+
+        PrimaryButton(onClick = onTryAgainClick) {
+            Text(text = "Try Again")
         }
+    }
+    onAnimationComplete?.let {
+        if (progress == 1.0f) it()
     }
 }

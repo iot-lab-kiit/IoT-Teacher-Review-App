@@ -42,15 +42,15 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
                 errorMessage.contains(USER_NOT_FOUND.toString())
                         || errorMessage.contains(REVIEW_NOT_FOUND.toString())
                         || errorMessage.contains(FACULTY_NOT_FOUND.toString()) -> {
-                    EmptyListAnimation()
+                    EmptyListAnimation(onTryAgainClick = this::refresh)
                 }
 
                 errorMessage.contains(INTERNAL_SERVER_ERROR.toString()) -> {
-                    ServerErrorAnimation()
+                    ServerErrorAnimation(onTryAgainClick = this::refresh)
                 }
 
                 errorMessage.contains(INTERNET_ERROR.toString()) -> {
-                    InternetErrorAnimation()
+                    InternetErrorAnimation(onTryAgainClick = this::refresh)
                 }
 
                 else -> {
