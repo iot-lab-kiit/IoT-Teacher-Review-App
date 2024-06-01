@@ -50,13 +50,10 @@ private fun DefaultPreview1() {
         AppScreen {
             ProfileSuccessScreen(
                 user = RemoteUser(
-                    id = "",
                     uid = "",
                     name = "Anirban Basak",
                     email = "21051880@kiit.ac.in",
-                    photoUrl = "",
-                    role = "User",
-                    status = false
+                    photoUrl = ""
                 )
             ) { }
         }
@@ -113,7 +110,7 @@ fun ProfileScreenControl(
 
         logOutState.HandleUiState(
             onTryAgain = { setEvent(ProfileEvents.ResetLogOutState) }
-        ){
+        ) {
             onLogOutClick()
         }
     }
