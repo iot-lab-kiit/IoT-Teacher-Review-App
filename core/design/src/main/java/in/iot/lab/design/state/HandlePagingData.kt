@@ -12,11 +12,8 @@ import `in`.iot.lab.design.animations.EmptyListAnimation
 import `in`.iot.lab.design.animations.InternetErrorAnimation
 import `in`.iot.lab.design.animations.ServerErrorAnimation
 import `in`.iot.lab.design.components.AppFailureScreen
-import `in`.iot.lab.network.utils.NetworkStatusCodes.FACULTY_NOT_FOUND
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNAL_SERVER_ERROR
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNET_ERROR
-import `in`.iot.lab.network.utils.NetworkStatusCodes.REVIEW_NOT_FOUND
-import `in`.iot.lab.network.utils.NetworkStatusCodes.USER_NOT_FOUND
 
 
 @Composable
@@ -29,6 +26,10 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
     successBlock(this)
 
     when {
+
+        itemCount == 0 && loadState.refresh !is LoadState.Loading -> {
+            EmptyListAnimation(onTryAgainClick = this::refresh)
+        }
 
         loadState.append is LoadState.Loading -> {
             Box(
@@ -47,11 +48,6 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
             val errorMessage = (loadState.refresh as LoadState.Error).error.message.toString()
 
             when {
-                errorMessage.contains(USER_NOT_FOUND.toString())
-                        || errorMessage.contains(REVIEW_NOT_FOUND.toString())
-                        || errorMessage.contains(FACULTY_NOT_FOUND.toString()) -> {
-                    EmptyListAnimation(onTryAgainClick = this::refresh)
-                }
 
                 errorMessage.contains(INTERNAL_SERVER_ERROR.toString()) -> {
                     ServerErrorAnimation(onTryAgainClick = this::refresh)

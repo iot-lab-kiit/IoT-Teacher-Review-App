@@ -26,7 +26,13 @@ class AppPagingSource<T : Any>(
                     prevKey = if (page == 0) null else page - 1,
                     nextKey = if (response.data.isEmpty()) null else page + 1
                 )
-            } else
+            } else if (response.checkApiResponseStatusCode() is ResponseState.NoDataFound)
+                LoadResult.Page(
+                    data = emptyList(),
+                    prevKey = null,
+                    nextKey = null
+                )
+            else
                 LoadResult.Error(Throwable("${response.status} - ${response.message}"))
         } catch (exception: IOException) {
             LoadResult.Error(Throwable(message = INTERNET_ERROR.toString()))
