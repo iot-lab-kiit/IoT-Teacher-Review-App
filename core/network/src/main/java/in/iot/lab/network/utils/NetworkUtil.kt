@@ -1,5 +1,7 @@
 package `in`.iot.lab.network.utils
 
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import `in`.iot.lab.network.data.CustomResponse
 import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.network.state.UiState
@@ -18,6 +20,7 @@ import `in`.iot.lab.network.utils.NetworkStatusCodes.USER_NOT_FOUND
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
+import java.util.concurrent.TimeoutException
 
 object NetworkUtil {
 
@@ -26,7 +29,7 @@ object NetworkUtil {
      * This function is a wrapper function over the Retrofit Api calls to make the exception
      * handling easier and less boilerplate code needs to be generated
      */
-    suspend fun <T> getResponseState(
+    suspend fun <T> getFlowState(
         onSuccess: suspend (ResponseState.Success<T>) -> Unit = {},
         onFailure: suspend () -> Unit = {},
         request: suspend () -> CustomResponse<T>
@@ -47,10 +50,22 @@ object NetworkUtil {
                 }
 
                 emit(state)
+            } catch (e: TimeoutException) {
+
+                onFailure()
+                emit(ResponseState.NoInternet)
             } catch (exception: IOException) {
 
                 onFailure()
                 emit(ResponseState.NoInternet)
+            } catch (e: FirebaseAuthInvalidCredentialsException) {
+
+                onFailure()
+                emit(ResponseState.InvalidToken)
+            } catch (e: FirebaseException) {
+
+                onFailure()
+                emit(ResponseState.InvalidRequest)
             } catch (e: Exception) {
 
                 // Calling the Custom Failure Function
@@ -65,7 +80,7 @@ object NetworkUtil {
      * This function is a wrapper function over the Retrofit Api calls to make the exception
      * handling easier and less boilerplate code needs to be generated
      */
-    suspend fun getUnitResponseState(
+    suspend fun getUnitFlowState(
         onFailure: suspend () -> Unit = {},
         request: suspend () -> Unit
     ): Flow<ResponseState<Unit>> {
@@ -75,10 +90,22 @@ object NetworkUtil {
             try {
                 request()
                 emit(ResponseState.Success(Unit))
+            } catch (e: TimeoutException) {
+
+                onFailure()
+                emit(ResponseState.NoInternet)
             } catch (exception: IOException) {
 
                 onFailure()
                 emit(ResponseState.NoInternet)
+            } catch (e: FirebaseAuthInvalidCredentialsException) {
+
+                onFailure()
+                emit(ResponseState.InvalidToken)
+            } catch (e: FirebaseException) {
+
+                onFailure()
+                emit(ResponseState.InvalidRequest)
             } catch (e: Exception) {
 
                 // Calling the Custom Failure Function

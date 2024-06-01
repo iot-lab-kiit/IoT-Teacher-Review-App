@@ -4,7 +4,7 @@ import androidx.paging.PagingData
 import `in`.iot.lab.network.paging.AppPagingSource
 import `in`.iot.lab.network.paging.providePager
 import `in`.iot.lab.network.state.ResponseState
-import `in`.iot.lab.network.utils.NetworkUtil.getResponseState
+import `in`.iot.lab.network.utils.NetworkUtil.getFlowState
 import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
 import `in`.iot.lab.teacherreview.data.remote.FacultyApiService
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
@@ -75,7 +75,7 @@ class FacultyRepoImpl @Inject constructor(
 
     override suspend fun getFacultyById(facultyId: String): Flow<ResponseState<RemoteFaculty>> {
         return withContext(Dispatchers.IO) {
-            getResponseState {
+            getFlowState {
                 apiService.getFacultyById(
                     authToken = user.getUserToken(),
                     facultyId = facultyId

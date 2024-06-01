@@ -6,8 +6,8 @@ import com.google.firebase.auth.FirebaseAuth
 import `in`.iot.lab.network.paging.AppPagingSource
 import `in`.iot.lab.network.paging.providePager
 import `in`.iot.lab.network.state.ResponseState
-import `in`.iot.lab.network.utils.NetworkUtil.getResponseState
-import `in`.iot.lab.network.utils.NetworkUtil.getUnitResponseState
+import `in`.iot.lab.network.utils.NetworkUtil.getFlowState
+import `in`.iot.lab.network.utils.NetworkUtil.getUnitFlowState
 import `in`.iot.lab.teacherreview.data.remote.UserApiService
 import `in`.iot.lab.teacherreview.domain.models.common.AccessTokenBody
 import `in`.iot.lab.teacherreview.domain.models.review.PostReviewBody
@@ -42,7 +42,7 @@ class UserRepoImpl @Inject constructor(
      */
     override suspend fun loginUser(authCredential: AuthCredential): Flow<ResponseState<Unit>> {
         return withContext(Dispatchers.IO) {
-            getResponseState(
+            getFlowState(
                 onFailure = { auth.signOut() }
             ) {
 
@@ -64,7 +64,7 @@ class UserRepoImpl @Inject constructor(
      */
     override suspend fun logOutUser(): Flow<ResponseState<Unit>> {
         return withContext(Dispatchers.IO) {
-            getUnitResponseState {
+            getUnitFlowState {
                 auth.signOut()
                 if (auth.currentUser != null)
                     throw Exception("Failed to log out user from Firebase")
@@ -75,7 +75,7 @@ class UserRepoImpl @Inject constructor(
 
     override suspend fun getUserData(): Flow<ResponseState<RemoteUser>> {
         return withContext(Dispatchers.IO) {
-            getResponseState {
+            getFlowState {
                 val token = getUserToken()
                 apiService.getUserData(AccessTokenBody(token))
             }
@@ -85,7 +85,7 @@ class UserRepoImpl @Inject constructor(
 
     override suspend fun deleteUserData(): Flow<ResponseState<Unit>> {
         return withContext(Dispatchers.IO) {
-            getResponseState(
+            getFlowState(
                 onSuccess = { auth.signOut() }
             ) {
                 val token = getUserToken()
@@ -127,7 +127,7 @@ class UserRepoImpl @Inject constructor(
 
     override suspend fun postUserReview(postData: PostReviewBody): Flow<ResponseState<Unit>> {
         return withContext(Dispatchers.IO) {
-            getResponseState {
+            getFlowState {
 
                 val token = getUserToken()
                 apiService.postUserReview(
@@ -140,7 +140,7 @@ class UserRepoImpl @Inject constructor(
 
     override suspend fun deleteUserReview(reviewId: String): Flow<ResponseState<Unit>> {
         return withContext(Dispatchers.IO) {
-            getResponseState {
+            getFlowState {
                 val token = getUserToken()
                 apiService.deleteUserReview(
                     authToken = token,
