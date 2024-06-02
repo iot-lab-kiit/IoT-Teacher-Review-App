@@ -9,12 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import `in`.iot.lab.design.animations.AmongUsAnimation
-import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.SearchBar
+import `in`.iot.lab.design.state.HandlePagingData
 import `in`.iot.lab.review.view.components.FacultyDataUI
 import `in`.iot.lab.review.view.events.FacultyEvent
 import `in`.iot.lab.review.view.navigation.FACULTY_DETAIL_ROUTE
@@ -34,41 +32,20 @@ fun FacultyListScreenControl(
 
     AppScreen {
 
-        FacultyListSuccessScreen(
-            faculties = facultyList,
-            onTeacherSelected = {
-                setEvent(FacultyEvent.FacultySelected(it))
-                navigator(FACULTY_DETAIL_ROUTE)
-            },
-            onClearClick = {
-                setEvent(FacultyEvent.FetchFacultyList)
-            },
-            onSearchClick = {
-                setEvent(FacultyEvent.FetchFacultyByName(it))
-            }
-        )
-
-
-        when {
-
-            // Refresh
-            facultyList.loadState.refresh is LoadState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            // Append
-            facultyList.loadState.append is LoadState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            // Refresh error
-            facultyList.loadState.refresh is LoadState.Error -> {
-                AppFailureScreen(
-                    text = (facultyList.loadState.refresh as LoadState.Error).error.message.toString(),
-                    onCancel = {},
-                    onTryAgain = facultyList::refresh
-                )
-            }
+        facultyList.HandlePagingData { pagingData ->
+            FacultyListSuccessScreen(
+                faculties = pagingData,
+                onFacultySelected = {
+                    setEvent(FacultyEvent.FacultySelected(it))
+                    navigator(FACULTY_DETAIL_ROUTE)
+                },
+                onClearClick = {
+                    setEvent(FacultyEvent.FetchFacultyList)
+                },
+                onSearchClick = {
+                    setEvent(FacultyEvent.FetchFacultyByName(it))
+                }
+            )
         }
     }
 }
@@ -77,7 +54,7 @@ fun FacultyListScreenControl(
 @Composable
 fun FacultyListSuccessScreen(
     faculties: LazyPagingItems<RemoteFaculty>,
-    onTeacherSelected: (String) -> Unit,
+    onFacultySelected: (String) -> Unit,
     onClearClick: () -> Unit,
     onSearchClick: (String) -> Unit
 ) {
@@ -100,7 +77,7 @@ fun FacultyListSuccessScreen(
         items(faculties.itemCount) {
             faculties[it]?.let { faculty ->
                 FacultyDataUI(
-                    modifier = Modifier.clickable { onTeacherSelected(faculty.id) },
+                    modifier = Modifier.clickable { onFacultySelected(faculty.id) },
                     name = faculty.name,
                     photoUrl = faculty.photoUrl ?: "",
                     experience = faculty.experience ?: 0.0,

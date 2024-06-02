@@ -6,15 +6,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import `in`.iot.lab.design.animations.AmongUsAnimation
 import `in`.iot.lab.design.animations.DeleteAnimation
-import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.ReviewDataUI
+import `in`.iot.lab.design.state.HandlePagingData
+import `in`.iot.lab.design.state.HandleUiState
+import `in`.iot.lab.history.view.component.CustomDeleteDialog
 import `in`.iot.lab.history.view.event.HistoryEvent
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
@@ -33,56 +37,24 @@ fun HistoryScreenControl(
 
     AppScreen {
 
-        // History Review Data UI
-        HistorySuccessScreen(
-            historyList = historyList,
-            onDeletePress = { setEvent(HistoryEvent.RemoveReview(it)) }
-        )
-
-        when (deleteState) {
-            is UiState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            is UiState.Success -> {
-                DeleteAnimation {
-                    setEvent(HistoryEvent.ResetRemoveState)
-                }
-            }
-
-            is UiState.Failed -> {
-                AppFailureScreen(
-                    text = deleteState.message,
-                    onCancel = {},
-                    onTryAgain = { setEvent(HistoryEvent.FetchHistory) }
-                )
-            }
-
-            else -> {
-                // Do Nothing
+        deleteState.HandleUiState(
+            onCancel = {
+                // Nothing Particular needs to be done.
+            },
+            onTryAgain = { setEvent(HistoryEvent.FetchHistory) }
+        ) {
+            DeleteAnimation {
+                setEvent(HistoryEvent.ResetRemoveState)
             }
         }
 
-        when {
+        historyList.HandlePagingData { pagingData ->
 
-            // Refresh
-            historyList.loadState.refresh is LoadState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            // Append
-            historyList.loadState.append is LoadState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            // Refresh error
-            historyList.loadState.refresh is LoadState.Error -> {
-                AppFailureScreen(
-                    text = (historyList.loadState.refresh as LoadState.Error).error.message.toString(),
-                    onCancel = {},
-                    onTryAgain = historyList::refresh
-                )
-            }
+            // History Review Data UI
+            HistorySuccessScreen(
+                historyList = pagingData,
+                onDeletePress = { setEvent(HistoryEvent.RemoveReview(it)) }
+            )
         }
     }
 }
@@ -93,6 +65,10 @@ fun HistorySuccessScreen(
     historyList: LazyPagingItems<RemoteReviewHistoryResponse>,
     onDeletePress: (String) -> Unit
 ) {
+
+    var deletePress by remember { mutableStateOf(false) }
+    var deleteId by remember { mutableStateOf("") }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -108,9 +84,21 @@ fun HistorySuccessScreen(
                     description = history.feedback,
                     photoUrl = history.createdFor.photoUrl ?: "",
                     createdAt = history.createdAt,
-                    onDeletePress = { onDeletePress(history.id) }
+                    onDeletePress = {
+                        deleteId = history.id
+                        deletePress = true
+                    }
                 )
             }
         }
     }
+
+    CustomDeleteDialog(
+        deletePress = deletePress,
+        onDismiss = { deletePress = false },
+        onConfirm = {
+            deletePress = false
+            onDeletePress(deleteId)
+        }
+    )
 }

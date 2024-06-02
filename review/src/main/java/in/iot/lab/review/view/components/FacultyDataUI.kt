@@ -132,7 +132,7 @@ fun FacultyDataUI(
                 contentScale = ContentScale.Fit
             )
 
-            Column {
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
 
                 // Name Text
                 Text(
@@ -160,7 +160,7 @@ fun FacultyDataUI(
                     Text(
                         modifier = Modifier.weight(1f),
                         text = "· $totalRating Ratings",
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }

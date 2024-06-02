@@ -17,9 +17,8 @@ import androidx.compose.ui.unit.dp
 import `in`.iot.lab.auth.view.components.AuthOnBoarding
 import `in`.iot.lab.auth.view.components.GoogleLoginButton
 import `in`.iot.lab.auth.view.events.AuthEvent
-import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScaffold
-import `in`.iot.lab.design.animations.AmongUsAnimation
+import `in`.iot.lab.design.state.HandleUiState
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 
@@ -54,31 +53,11 @@ fun AuthScreenControl(
         AuthIdleScreen(setEvent)
 
 
-        when (authApiState) {
-
-            // Loading State
-            is UiState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            // Success State
-            is UiState.Success -> {
-                onSignInSuccess()
-            }
-
-            // failed State
-            is UiState.Failed -> {
-                AppFailureScreen(
-                    text = authApiState.message,
-                    onCancel = { (context as Activity).finish() },
-                    onTryAgain = { setEvent(AuthEvent.ResetAuthApiState) }
-                )
-            }
-
-            // Idle State
-            else -> {
-                // Do Nothing
-            }
+        authApiState.HandleUiState(
+            onCancel = { (context as Activity).finish() },
+            onTryAgain = { setEvent(AuthEvent.ResetAuthApiState) }
+        ){
+            onSignInSuccess()
         }
     }
 }

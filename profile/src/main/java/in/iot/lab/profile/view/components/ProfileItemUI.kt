@@ -84,7 +84,7 @@ fun ProfileItemUI(
                 // Data to be shown
                 Text(
                     text = description,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyLarge
                 )
             }
         }

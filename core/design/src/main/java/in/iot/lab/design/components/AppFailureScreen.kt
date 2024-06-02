@@ -28,12 +28,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import `in`.iot.lab.design.R
 import `in`.iot.lab.design.theme.CustomAppTheme
@@ -168,10 +165,7 @@ private fun DialogContent(
         // Issues Heading Text
         Text(
             text = "Whoops !!",
-            style = TextStyle(
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Normal
-            ),
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
         )
@@ -181,10 +175,7 @@ private fun DialogContent(
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = text,
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
-            ),
+            style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
         )
 
@@ -202,10 +193,7 @@ private fun DialogContent(
             ) {
                 Text(
                     text = "Cancel",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
 
@@ -216,10 +204,7 @@ private fun DialogContent(
             ) {
                 Text(
                     text = "Try Again",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }

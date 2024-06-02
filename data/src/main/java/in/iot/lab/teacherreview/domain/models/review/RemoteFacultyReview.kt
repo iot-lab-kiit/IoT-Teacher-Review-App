@@ -1,28 +1,26 @@
 package `in`.iot.lab.teacherreview.domain.models.review
 
 import com.google.gson.annotations.SerializedName
-import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
 
 
 /**
- * This data class is the blueprint for the Review History Response Schema.
+ * This class is the blueprint for the Review data which will be given for the user.
  *
  * @param id This is the id provided from the Database.
- * @param createdFor This is the [RemoteFaculty] object for which the review is created.
+ * @param createdBy This is the [RemoteUser] object which created this review.
  * @param rating This is the rating given by [RemoteUser].
  * @param feedback This is the feedback given by the [RemoteUser]
- * @param createdAt This is the date and time when the review is created.
  */
-data class RemoteReviewHistoryResponse(
+data class RemoteFacultyReview(
     @SerializedName("_id")
     val id: String,
-    @SerializedName("createdFor")
-    val createdFor: RemoteFaculty,
+    @SerializedName("createdBy")
+    val createdBy: RemoteUser?,
     @SerializedName("rating")
-    val rating: Double,
+    val rating: Double?,
     @SerializedName("feedback")
-    val feedback: String,
+    val feedback: String?,
     @SerializedName("createdAt")
-    val createdAt: String
+    val createdAt: String?
 )

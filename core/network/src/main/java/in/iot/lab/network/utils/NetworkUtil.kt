@@ -1,11 +1,27 @@
 package `in`.iot.lab.network.utils
 
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import `in`.iot.lab.network.data.CustomResponse
 import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.network.state.UiState
+import `in`.iot.lab.network.utils.NetworkStatusCodes.CREATED
+import `in`.iot.lab.network.utils.NetworkStatusCodes.DELETED
+import `in`.iot.lab.network.utils.NetworkStatusCodes.FACULTY_NOT_FOUND
+import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNAL_SERVER_ERROR
+import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_REQUEST
+import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_TOKEN
+import `in`.iot.lab.network.utils.NetworkStatusCodes.REVIEW_ALREADY_POSTED
+import `in`.iot.lab.network.utils.NetworkStatusCodes.REVIEW_NOT_FOUND
+import `in`.iot.lab.network.utils.NetworkStatusCodes.SUCCESSFUL
+import `in`.iot.lab.network.utils.NetworkStatusCodes.TOKEN_REQUIRED
+import `in`.iot.lab.network.utils.NetworkStatusCodes.UNAUTHORIZED
+import `in`.iot.lab.network.utils.NetworkStatusCodes.UPDATED
+import `in`.iot.lab.network.utils.NetworkStatusCodes.USER_NOT_FOUND
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import retrofit2.Response
 import java.io.IOException
+import java.util.concurrent.TimeoutException
 
 object NetworkUtil {
 
@@ -14,33 +30,104 @@ object NetworkUtil {
      * This function is a wrapper function over the Retrofit Api calls to make the exception
      * handling easier and less boilerplate code needs to be generated
      */
-    suspend fun <T> getResponseState(
-        onSuccess: suspend () -> Unit = {},
-        onFailure: suspend (Exception) -> Unit = {},
-        request: suspend () -> Response<T>
+    suspend fun <T> getFlowState(
+        onSuccess: suspend (ResponseState.Success<T>) -> Unit = {},
+        onFailure: suspend () -> Unit = {},
+        request: suspend () -> CustomResponse<T>
     ): Flow<ResponseState<T>> {
-
         return flow {
+
             emit(ResponseState.Loading)
             try {
 
                 // Response from the Retrofit Api call
                 val response = request()
+                val state = response.checkApiResponseStatusCode()
 
-                if (response.isSuccessful) {
-                    onSuccess()
-                    emit(ResponseState.Success(response.body()!!))
-                } else
-                    emit(ResponseState.NoDataFound)
+                when (state) {
+                    is ResponseState.Success -> onSuccess(state)
+                    is ResponseState.Loading -> Unit
+                    else -> onFailure()
+                }
 
-            } catch (exception: IOException) {
+                emit(state)
+            } catch (e: TimeoutException) {
+
+                onFailure()
                 emit(ResponseState.NoInternet)
+            } catch (exception: IOException) {
+
+                onFailure()
+                emit(ResponseState.NoInternet)
+            } catch (e: FirebaseAuthInvalidCredentialsException) {
+
+                onFailure()
+                emit(ResponseState.InvalidToken)
+            } catch (e: FirebaseException) {
+
+                onFailure()
+                emit(ResponseState.InvalidRequest)
             } catch (e: Exception) {
 
                 // Calling the Custom Failure Function
-                onFailure(e)
+                onFailure()
                 emit(ResponseState.Error(e))
             }
+        }
+    }
+
+
+    /**
+     * This function is a wrapper function over the Retrofit Api calls to make the exception
+     * handling easier and less boilerplate code needs to be generated
+     */
+    suspend fun getUnitFlowState(
+        onFailure: suspend () -> Unit = {},
+        request: suspend () -> Unit
+    ): Flow<ResponseState<Unit>> {
+        return flow {
+
+            emit(ResponseState.Loading)
+            try {
+                request()
+                emit(ResponseState.Success(Unit))
+            } catch (e: TimeoutException) {
+
+                onFailure()
+                emit(ResponseState.NoInternet)
+            } catch (exception: IOException) {
+
+                onFailure()
+                emit(ResponseState.NoInternet)
+            } catch (e: FirebaseAuthInvalidCredentialsException) {
+
+                onFailure()
+                emit(ResponseState.InvalidToken)
+            } catch (e: FirebaseException) {
+
+                onFailure()
+                emit(ResponseState.InvalidRequest)
+            } catch (e: Exception) {
+
+                // Calling the Custom Failure Function
+                onFailure()
+                emit(ResponseState.Error(e))
+            }
+        }
+    }
+
+
+    fun <T> CustomResponse<T>.checkApiResponseStatusCode(): ResponseState<T> {
+        return when (status) {
+            SUCCESSFUL, CREATED, DELETED, UPDATED -> ResponseState.Success(data = data!!)
+            USER_NOT_FOUND, REVIEW_NOT_FOUND, FACULTY_NOT_FOUND -> ResponseState.NoDataFound
+            REVIEW_ALREADY_POSTED -> ResponseState.ReviewAlreadyPosted
+            INVALID_REQUEST -> ResponseState.InvalidRequest
+            TOKEN_REQUIRED -> ResponseState.TokenRequired
+            INVALID_TOKEN -> ResponseState.InvalidToken
+            UNAUTHORIZED -> ResponseState.UnAuthorized
+            INTERNAL_SERVER_ERROR -> ResponseState.ServerError
+            else -> ResponseState.UnKnownError
         }
     }
 
@@ -52,18 +139,46 @@ object NetworkUtil {
     fun <T> ResponseState<T>.toUiState(): UiState<T> {
         return when (this) {
             is ResponseState.NoInternet -> {
-                UiState.Failed("Oh no! Internet error! Try again~")
+                UiState.InternetError
             }
 
             is ResponseState.NoDataFound -> {
-                UiState.Failed("There are no records in the database! Try again later")
+                UiState.NoDataFound
             }
 
             is ResponseState.ServerError -> {
-                UiState.Failed("Oh shoot! Servers are down! Try again in a bit!")
+                UiState.ServerError
             }
 
             is ResponseState.Loading -> UiState.Loading
+
+            is ResponseState.ReviewAlreadyPosted -> {
+                UiState.Failed(
+                    "You already have a review posted for the teacher " +
+                            "and cannot post another review. If you still wish to post a review," +
+                            " delete your old review first !!"
+                )
+            }
+
+            is ResponseState.InvalidRequest -> {
+                UiState.Failed("The api request is invalid and cannot be processed.")
+            }
+
+            is ResponseState.TokenRequired -> {
+                UiState.Failed("Token missing!! Restart the app")
+            }
+
+            is ResponseState.InvalidToken -> {
+                UiState.Failed("Token invalid!! Restart the app or clear data.")
+            }
+
+            is ResponseState.UnAuthorized -> {
+                UiState.Failed("User not authorized")
+            }
+
+            is ResponseState.UnKnownError -> {
+                UiState.Failed("Unknown error occurred!")
+            }
 
             is ResponseState.Success -> {
                 UiState.Success(this.data)

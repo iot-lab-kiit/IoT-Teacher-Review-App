@@ -12,23 +12,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import `in`.iot.lab.design.animations.AmongUsAnimation
-import `in`.iot.lab.design.components.AppFailureScreen
+import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.components.AppScaffold
 import `in`.iot.lab.design.components.FAB
-import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.FacultyDataUI
 import `in`.iot.lab.design.components.ReviewDataUI
+import `in`.iot.lab.design.state.HandlePagingData
+import `in`.iot.lab.design.state.HandleUiState
+import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.isScrollingUp
 import `in`.iot.lab.review.view.events.FacultyEvent
-import `in`.iot.lab.review.view.navigation.REVIEW_POST_ROUTE
-import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReviewResponse
+import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
+import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
 
 
 @Composable
 fun ReviewDetailScreenControl(
-    faculty: UiState<RemoteFacultyReviewResponse>,
-    navigator: (String) -> Unit,
+    facultyData: UiState<RemoteFaculty>,
+    reviewList: LazyPagingItems<RemoteFacultyReview>,
+    onFabClick: () -> Unit,
+    onBackClick: () -> Unit,
     setEvent: (FacultyEvent) -> Unit
 ) {
 
@@ -41,37 +44,24 @@ fun ReviewDetailScreenControl(
     AppScaffold(
         floatingActionButton = {
             FAB(
-                onClick = { navigator(REVIEW_POST_ROUTE) },
+                onClick = onFabClick,
                 extended = lazyListState.isScrollingUp()
             )
         }
     ) {
-        when (faculty) {
 
-            is UiState.Idle -> {
+        facultyData.HandleUiState(
+            onCancel = onBackClick,
+            onTryAgain = {
                 setEvent(FacultyEvent.GetFacultyDetails)
             }
+        ) { faculty ->
 
-            is UiState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            is UiState.Success -> {
+            reviewList.HandlePagingData {
                 ReviewDetailSuccessScreen(
-                    faculty = faculty.data,
+                    faculty = faculty,
+                    reviewList = reviewList,
                     lazyListState = lazyListState
-                )
-            }
-
-            is UiState.Failed -> {
-                AppFailureScreen(
-                    text = faculty.message,
-                    onCancel = {
-
-                    },
-                    onTryAgain = {
-                        setEvent(FacultyEvent.GetFacultyDetails)
-                    }
                 )
             }
         }
@@ -81,7 +71,8 @@ fun ReviewDetailScreenControl(
 
 @Composable
 fun ReviewDetailSuccessScreen(
-    faculty: RemoteFacultyReviewResponse,
+    faculty: RemoteFaculty,
+    reviewList: LazyPagingItems<RemoteFacultyReview>,
     lazyListState: LazyListState
 ) {
 
@@ -113,9 +104,8 @@ fun ReviewDetailSuccessScreen(
         }
 
         // Review List
-        faculty.reviewList?.let { reviews ->
-            items(reviews.size) {
-                val review = reviews[it]
+        items(reviewList.itemCount) {
+            reviewList[it]?.let { review ->
                 ReviewDataUI(
                     title = review.createdBy?.name ?: "Reviewer Name",
                     rating = review.rating ?: 0.0,

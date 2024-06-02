@@ -1,12 +1,13 @@
 package `in`.iot.lab.design.animations
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,28 +56,35 @@ fun AmongUsAnimation(
     val progress2 by animateLottieCompositionAsState(composition2)
     val progress3 by animateLottieCompositionAsState(composition3)
 
-    Row(modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center) {
-        LottieAnimation(
-            composition = composition1,
-            modifier = modifier.size(160.dp)
-                .weight(1f),
-            iterations = LottieConstants.IterateForever
-        )
+    Box(
+        modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
 
-        LottieAnimation(
-            composition = composition2,
-            modifier = modifier.size(160.dp)
-                .weight(1f),
-            iterations = LottieConstants.IterateForever
-        )
+        Box(modifier = Modifier.padding(end = 120.dp)) {
+            LottieAnimation(
+                modifier = modifier.size(120.dp),
+                composition = composition1,
+                iterations = LottieConstants.IterateForever,
+                clipToCompositionBounds = false
+            )
+        }
 
-        LottieAnimation(
-            composition = composition3,
-            modifier = modifier.size(160.dp)
-                .weight(1f),
-            iterations = LottieConstants.IterateForever
-        )
+        Box {
+            LottieAnimation(
+                modifier = modifier.size(120.dp),
+                composition = composition2,
+                iterations = LottieConstants.IterateForever
+            )
+        }
+
+        Box(modifier = Modifier.padding(start = 120.dp)) {
+            LottieAnimation(
+                modifier = modifier.size(120.dp),
+                composition = composition3,
+                iterations = LottieConstants.IterateForever
+            )
+        }
     }
 
     onAnimationComplete?.let {

@@ -1,25 +1,27 @@
 package `in`.iot.lab.teacherreview.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import `in`.iot.lab.network.paging.AppPagingSource
-import `in`.iot.lab.network.paging.providePager
 import `in`.iot.lab.network.state.ResponseState
-import `in`.iot.lab.network.utils.NetworkUtil.getResponseState
+import `in`.iot.lab.network.utils.NetworkUtil.getFlowState
+import `in`.iot.lab.network.utils.NetworkUtil.getUnitFlowState
 import `in`.iot.lab.teacherreview.data.remote.UserApiService
 import `in`.iot.lab.teacherreview.domain.models.common.AccessTokenBody
 import `in`.iot.lab.teacherreview.domain.models.review.PostReviewBody
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
+import `in`.iot.lab.teacherreview.utils.Constants
 import `in`.iot.lab.teacherreview.utils.Constants.PAGE_LIMIT
+import `in`.iot.lab.teacherreview.utils.Constants.PAGE_SIZE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import javax.inject.Inject
 
 
@@ -42,36 +44,19 @@ class UserRepoImpl @Inject constructor(
      * @param authCredential This is the Google Auth Credential which contains the data of the user.
      */
     override suspend fun loginUser(authCredential: AuthCredential): Flow<ResponseState<Unit>> {
-        return flow {
+        return withContext(Dispatchers.IO) {
+            getFlowState(
+                onFailure = { auth.signOut() }
+            ) {
 
-            // Loading State
-            emit(ResponseState.Loading)
+                auth.signInWithCredential(authCredential).await().user
+                    ?: throw (Exception("Google Login Failed"))
 
-            try {
+                // Get the token from the user
+                val accessToken = getUserToken()
 
-                // User Data
-                val user = auth.signInWithCredential(authCredential).await().user
-                if (user == null)
-                    emit(ResponseState.Error(Exception("Google Login Failed")))
-                else {
-
-                    // Get the token from the user
-                    val accessToken = getUserToken()
-
-                    // Response of the post request from the backend
-                    val response = apiService.loginUser(AccessTokenBody(accessToken))
-
-                    // Check if the response is successful
-                    if (response.isSuccessful)
-                        emit(ResponseState.Success(Unit))
-                    else {
-                        auth.signOut()
-                        emit(ResponseState.ServerError)
-                    }
-                }
-            } catch (e: Exception) {
-                emit(ResponseState.Error(e))
-                logOutUser()
+                // Response of the post request from the backend
+                apiService.loginUser(AccessTokenBody(accessToken))
             }
         }
     }
@@ -81,16 +66,11 @@ class UserRepoImpl @Inject constructor(
      * This function logs out the user from the App.
      */
     override suspend fun logOutUser(): Flow<ResponseState<Unit>> {
-        return flow {
-            emit(ResponseState.Loading)
-            try {
+        return withContext(Dispatchers.IO) {
+            getUnitFlowState {
                 auth.signOut()
-                if (auth.currentUser == null)
-                    emit(ResponseState.Success(Unit))
-                else
-                    emit(ResponseState.Error(java.lang.Exception("Failed to log out user from Firebase")))
-            } catch (e: Exception) {
-                emit(ResponseState.Error(e))
+                if (auth.currentUser != null)
+                    throw Exception("Failed to log out user from Firebase")
             }
         }
     }
@@ -98,7 +78,7 @@ class UserRepoImpl @Inject constructor(
 
     override suspend fun getUserData(): Flow<ResponseState<RemoteUser>> {
         return withContext(Dispatchers.IO) {
-            getResponseState {
+            getFlowState {
                 val token = getUserToken()
                 apiService.getUserData(AccessTokenBody(token))
             }
@@ -107,27 +87,16 @@ class UserRepoImpl @Inject constructor(
 
 
     override suspend fun deleteUserData(): Flow<ResponseState<Unit>> {
-        return flow {
-            emit(ResponseState.Loading)
-            try {
-
+        return withContext(Dispatchers.IO) {
+            getFlowState(
+                onSuccess = { auth.signOut() }
+            ) {
                 val token = getUserToken()
                 val userUid = getUserUid()
-                val response = apiService.deleteUserData(
+                apiService.deleteUserData(
                     authToken = token,
                     userUid = userUid
                 )
-
-                if (response.isSuccessful) {
-                    auth.signOut()
-                    emit(ResponseState.Success(Unit))
-                } else
-                    emit(ResponseState.NoDataFound)
-
-            } catch (exception: IOException) {
-                emit(ResponseState.NoInternet)
-            } catch (e: Exception) {
-                emit(ResponseState.Error(e))
             }
         }
     }
@@ -139,29 +108,35 @@ class UserRepoImpl @Inject constructor(
 
 
     override suspend fun getUserToken(): String {
-        return "Bearer ${auth.currentUser?.getIdToken(false)?.await()?.token}"
+        return "Bearer ${auth.currentUser?.getIdToken(false)?.await()?.token ?: "No Token Found"}"
     }
 
     override suspend fun getReviewHistory(): Flow<PagingData<RemoteReviewHistoryResponse>> {
         val authToken = getUserToken()
         val userUid = getUserUid()
-        return providePager(
-            pagingSourceFactory = AppPagingSource(
-                request = {
-                    apiService.getReviewHistory(
-                        authToken = authToken,
-                        userUid = userUid,
-                        limit = PAGE_LIMIT,
-                        skip = (it.key ?: 0) * 10
-                    )
-                }
-            )
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                prefetchDistance = Constants.PREFETCH_DISTANCE
+            ),
+            pagingSourceFactory = {
+                AppPagingSource(
+                    request = {
+                        apiService.getReviewHistory(
+                            authToken = authToken,
+                            userUid = userUid,
+                            limit = PAGE_LIMIT,
+                            page = it.key ?: 0
+                        )
+                    }
+                )
+            }
         ).flow
     }
 
     override suspend fun postUserReview(postData: PostReviewBody): Flow<ResponseState<Unit>> {
         return withContext(Dispatchers.IO) {
-            getResponseState {
+            getFlowState {
 
                 val token = getUserToken()
                 apiService.postUserReview(
@@ -174,7 +149,7 @@ class UserRepoImpl @Inject constructor(
 
     override suspend fun deleteUserReview(reviewId: String): Flow<ResponseState<Unit>> {
         return withContext(Dispatchers.IO) {
-            getResponseState {
+            getFlowState {
                 val token = getUserToken()
                 apiService.deleteUserReview(
                     authToken = token,

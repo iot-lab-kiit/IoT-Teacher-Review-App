@@ -19,12 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import `in`.iot.lab.design.animations.AmongUsAnimation
-import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.PrimaryButton
 import `in`.iot.lab.design.animations.PostAnimation
 import `in`.iot.lab.design.components.TertiaryButton
+import `in`.iot.lab.design.state.HandleUiState
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.AppRatingBar
@@ -69,9 +68,9 @@ fun PostReviewScreenControl(
     var showDialog by remember { mutableStateOf(false) }
     AppScreen {
 
-        when (submitState) {
-
-            is UiState.Idle -> {
+        submitState.HandleUiState(
+            onTryAgain = { setEvent(FacultyEvent.SubmitReview(rating, feedback)) },
+            idleBlock = {
                 PostReviewIdleScreen(
                     rating = rating,
                     feedback = feedback,
@@ -82,27 +81,16 @@ fun PostReviewScreenControl(
                     },
                     onDiscardClick = goBack
                 )
-            }
-
-            is UiState.Loading -> {
-                AmongUsAnimation()
-            }
-
-            is UiState.Success -> {
-                showDialog = true
+            },
+            onCancel = {
                 setEvent(FacultyEvent.ResetSubmitState)
+                goBack()
             }
-
-            is UiState.Failed -> {
-                AppFailureScreen(
-                    text = submitState.message,
-                    onCancel = {},
-                    onTryAgain = {
-                        setEvent(FacultyEvent.SubmitReview(rating, feedback))
-                    }
-                )
-            }
+        ) {
+            showDialog = true
+            setEvent(FacultyEvent.ResetSubmitState)
         }
+
         if (showDialog) {
             PostAnimation(onAnimationComplete = goBack)
         }
