@@ -81,6 +81,10 @@ fun PostReviewScreenControl(
                     },
                     onDiscardClick = goBack
                 )
+            },
+            onCancel = {
+                setEvent(FacultyEvent.ResetSubmitState)
+                goBack()
             }
         ) {
             showDialog = true

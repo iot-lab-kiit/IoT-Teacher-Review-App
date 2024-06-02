@@ -11,6 +11,7 @@ import `in`.iot.lab.network.utils.NetworkStatusCodes.FACULTY_NOT_FOUND
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNAL_SERVER_ERROR
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_REQUEST
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_TOKEN
+import `in`.iot.lab.network.utils.NetworkStatusCodes.REVIEW_ALREADY_POSTED
 import `in`.iot.lab.network.utils.NetworkStatusCodes.REVIEW_NOT_FOUND
 import `in`.iot.lab.network.utils.NetworkStatusCodes.SUCCESSFUL
 import `in`.iot.lab.network.utils.NetworkStatusCodes.TOKEN_REQUIRED
@@ -120,6 +121,7 @@ object NetworkUtil {
         return when (status) {
             SUCCESSFUL, CREATED, DELETED, UPDATED -> ResponseState.Success(data = data!!)
             USER_NOT_FOUND, REVIEW_NOT_FOUND, FACULTY_NOT_FOUND -> ResponseState.NoDataFound
+            REVIEW_ALREADY_POSTED -> ResponseState.ReviewAlreadyPosted
             INVALID_REQUEST -> ResponseState.InvalidRequest
             TOKEN_REQUIRED -> ResponseState.TokenRequired
             INVALID_TOKEN -> ResponseState.InvalidToken
@@ -149,6 +151,14 @@ object NetworkUtil {
             }
 
             is ResponseState.Loading -> UiState.Loading
+
+            is ResponseState.ReviewAlreadyPosted -> {
+                UiState.Failed(
+                    "You already have a review posted for the teacher " +
+                            "and cannot post another review. If you still wish to post a review," +
+                            " delete your old review first !!"
+                )
+            }
 
             is ResponseState.InvalidRequest -> {
                 UiState.Failed("The api request is invalid and cannot be processed.")

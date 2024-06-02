@@ -22,7 +22,6 @@ import `in`.iot.lab.design.state.HandleUiState
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.isScrollingUp
 import `in`.iot.lab.review.view.events.FacultyEvent
-import `in`.iot.lab.review.view.navigation.REVIEW_POST_ROUTE
 import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
 
@@ -31,7 +30,8 @@ import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
 fun ReviewDetailScreenControl(
     facultyData: UiState<RemoteFaculty>,
     reviewList: LazyPagingItems<RemoteFacultyReview>,
-    navigator: (String) -> Unit,
+    onFabClick: () -> Unit,
+    onBackClick: () -> Unit,
     setEvent: (FacultyEvent) -> Unit
 ) {
 
@@ -44,13 +44,14 @@ fun ReviewDetailScreenControl(
     AppScaffold(
         floatingActionButton = {
             FAB(
-                onClick = { navigator(REVIEW_POST_ROUTE) },
+                onClick = onFabClick,
                 extended = lazyListState.isScrollingUp()
             )
         }
     ) {
 
         facultyData.HandleUiState(
+            onCancel = onBackClick,
             onTryAgain = {
                 setEvent(FacultyEvent.GetFacultyDetails)
             }

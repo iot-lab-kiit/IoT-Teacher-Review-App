@@ -53,8 +53,9 @@ fun FacultyNavGraph(
             ReviewDetailScreenControl(
                 facultyData = facultyData,
                 reviewList = reviewList,
-                setEvent = viewModel::uiListener,
-                navigator = navController::navigate
+                onFabClick = { navController.navigate(REVIEW_POST_ROUTE) },
+                onBackClick = navController::popBackStack,
+                setEvent = viewModel::uiListener
             )
         }
 

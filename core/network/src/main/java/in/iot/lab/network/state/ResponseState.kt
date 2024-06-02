@@ -19,6 +19,7 @@ sealed interface ResponseState<out T> {
     data object NoDataFound : ResponseState<Nothing>
     data object ServerError : ResponseState<Nothing>
     data object Loading : ResponseState<Nothing>
+    data object ReviewAlreadyPosted : ResponseState<Nothing>
     data object InvalidRequest : ResponseState<Nothing>
     data object TokenRequired : ResponseState<Nothing>
     data object InvalidToken : ResponseState<Nothing>

@@ -38,6 +38,9 @@ fun HistoryScreenControl(
     AppScreen {
 
         deleteState.HandleUiState(
+            onCancel = {
+                // Nothing Particular needs to be done.
+            },
             onTryAgain = { setEvent(HistoryEvent.FetchHistory) }
         ) {
             DeleteAnimation {

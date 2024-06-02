@@ -16,6 +16,7 @@ object NetworkStatusCodes {
 
 
     // Invalid request or other error codes
+    const val REVIEW_ALREADY_POSTED = 207
     const val INVALID_REQUEST = 400
     const val TOKEN_REQUIRED = 401
     const val INVALID_TOKEN = 402

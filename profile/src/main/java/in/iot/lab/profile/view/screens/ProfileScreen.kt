@@ -99,6 +99,9 @@ fun ProfileScreenControl(
     AppScreen {
 
         userApiState.HandleUiState(
+            onCancel = {
+
+            },
             onTryAgain = { setEvent(ProfileEvents.FetchUserData) }
         ) {
             ProfileSuccessScreen(
@@ -109,6 +112,9 @@ fun ProfileScreenControl(
 
 
         logOutState.HandleUiState(
+            onCancel = {
+                setEvent(ProfileEvents.FetchUserData)
+            },
             onTryAgain = { setEvent(ProfileEvents.ResetLogOutState) }
         ) {
             onLogOutClick()

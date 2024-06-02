@@ -13,7 +13,7 @@ import `in`.iot.lab.network.state.UiState
 fun <T> UiState<T>.HandleUiState(
     idleBlock: @Composable (() -> Unit)? = null,
     loadingBlock: @Composable () -> Unit = { AmongUsAnimation() },
-    onCancel: (() -> Unit)? = null,
+    onCancel: () -> Unit,
     onTryAgain: () -> Unit,
     successBlock: @Composable ((T) -> Unit)? = null
 ) {
@@ -33,7 +33,7 @@ fun <T> UiState<T>.HandleUiState(
         is UiState.Failed -> {
             AppFailureScreen(
                 text = this.message,
-                onCancel = onCancel ?: {},
+                onCancel = onCancel,
                 onTryAgain = onTryAgain
             )
         }
