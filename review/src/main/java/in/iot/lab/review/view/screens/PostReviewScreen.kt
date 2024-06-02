@@ -1,17 +1,14 @@
 package `in`.iot.lab.review.view.screens
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -19,19 +16,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.PrimaryButton
-import `in`.iot.lab.design.components.ReviewPostedAnim
+import `in`.iot.lab.design.animations.PostAnimation
 import `in`.iot.lab.design.components.TertiaryButton
+import `in`.iot.lab.design.state.HandleUiState
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.AppRatingBar
 import `in`.iot.lab.review.view.components.FeedbackTextField
 import `in`.iot.lab.review.view.events.FacultyEvent
-import kotlinx.coroutines.delay
 
 
 // Preview Function
@@ -71,9 +68,9 @@ fun PostReviewScreenControl(
     var showDialog by remember { mutableStateOf(false) }
     AppScreen {
 
-        when (submitState) {
-
-            is UiState.Idle -> {
+        submitState.HandleUiState(
+            onTryAgain = { setEvent(FacultyEvent.SubmitReview(rating, feedback)) },
+            idleBlock = {
                 PostReviewIdleScreen(
                     rating = rating,
                     feedback = feedback,
@@ -84,49 +81,20 @@ fun PostReviewScreenControl(
                     },
                     onDiscardClick = goBack
                 )
-            }
-
-            is UiState.Loading -> {
-                CircularProgressIndicator()
-            }
-
-            is UiState.Success -> {
-                showDialog = true
+            },
+            onCancel = {
                 setEvent(FacultyEvent.ResetSubmitState)
+                goBack()
             }
-
-            is UiState.Failed -> {
-                AppFailureScreen(
-                    text = submitState.message,
-                    onCancel = {},
-                    onTryAgain = {
-                        setEvent(FacultyEvent.SubmitReview(rating, feedback))
-                    }
-                )
-            }
+        ) {
+            showDialog = true
+            setEvent(FacultyEvent.ResetSubmitState)
         }
+
         if (showDialog) {
-            ReviewPostedDialog(
-                onDismiss = {
-                    showDialog = false
-                    goBack()
-                }
-            )
+            PostAnimation(onAnimationComplete = goBack)
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ReviewPostedDialog(onDismiss: () -> Unit) {
-    LaunchedEffect(Unit) {
-        delay(2000)
-        onDismiss()
-    }
-    BasicAlertDialog(onDismissRequest = onDismiss,
-        content = {
-            ReviewPostedAnim()
-        })
 }
 
 
@@ -164,9 +132,20 @@ fun PostReviewIdleScreen(
         }
 
 
+        val context = LocalContext.current
+
         // Submit Button
         PrimaryButton(
-            onClick = { onSubmitClick() },
+            onClick = {
+                if (feedback.isNotEmpty())
+                    onSubmitClick()
+                else
+                    Toast.makeText(
+                        context,
+                        "Please enter your feedback",
+                        Toast.LENGTH_SHORT
+                    ).show()
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
 

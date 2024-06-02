@@ -69,6 +69,7 @@ class ProfileViewModel @Inject constructor(
             is ProfileEvents.FetchUserData -> fetchProfileData()
             is ProfileEvents.SignOutEvent -> signOutUser()
             is ProfileEvents.DeleteAccountEvent -> deleteAccount()
+            is ProfileEvents.ResetLogOutState -> _logOutState.value = UiState.Idle
         }
     }
 }
