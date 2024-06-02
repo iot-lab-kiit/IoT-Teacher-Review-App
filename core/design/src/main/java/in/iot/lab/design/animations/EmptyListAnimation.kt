@@ -49,7 +49,7 @@ private fun DefaultPreview1() {
 @Composable
 fun EmptyListAnimation(
     modifier: Modifier = Modifier,
-    message: String = "Look's like there isn't anything in the database !!",
+    message: String = "Looks like there is nothing in the database to show !!",
     onAnimationComplete: (() -> Unit)? = null,
     onTryAgainClick: () -> Unit
 ) {
