@@ -1,40 +1,35 @@
 package `in`.iot.lab.auth.view.components
 
-
 import android.app.Activity
 import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 import `in`.iot.lab.auth.R
-import `in`.iot.lab.design.components.PrimaryButton
+import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.theme.CustomAppTheme
 
 
@@ -43,16 +38,17 @@ import `in`.iot.lab.design.theme.CustomAppTheme
 @Preview(
     name = "Dark",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
-    showBackground = true,
-    showSystemUi = true
+    showBackground = true
 )
 @Composable
 private fun DefaultPreview1() {
     CustomAppTheme {
-        GoogleLoginButton(
-            onAuthCredentialFound = {},
-            onExceptionFound = {}
-        )
+        AppScreen {
+            GoogleLoginButton(
+                onAuthCredentialFound = {},
+                onExceptionFound = {}
+            )
+        }
     }
 }
 
@@ -111,8 +107,9 @@ fun GoogleLoginButton(
         // Creating the Google Sign In Options
         val options = GoogleSignInOptions
             .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(googleClientId)
             .requestId()
+            .requestIdToken(googleClientId)
+            .requestEmail()
             .requestProfile()
             .build()
 
@@ -125,16 +122,15 @@ fun GoogleLoginButton(
     }
 
     // Sign in with google button
-    Button(
+    OutlinedButton(
         modifier = modifier,
-        shape = RoundedCornerShape(100.dp),
+        shape = CircleShape,
         contentPadding = PaddingValues(15.dp),
         onClick = signInClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Black,
-            contentColor = Color.White
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.onBackground
         ),
-        border = BorderStroke(2.dp,Color.White)
     ) {
 
         Row(
@@ -151,10 +147,8 @@ fun GoogleLoginButton(
             Text(
                 text = "Login With Google",
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center
-                )
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
             )
         }
     }

@@ -103,7 +103,7 @@ fun StarUI(
             Text(
                 modifier = Modifier.padding(start = 4.dp),
                 text = DecimalFormat("#.##").format(rating),
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelLarge
             )
     }
 }

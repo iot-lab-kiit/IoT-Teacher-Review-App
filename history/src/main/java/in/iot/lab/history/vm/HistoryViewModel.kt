@@ -4,8 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.history.view.event.HistoryEvent
+import `in`.iot.lab.network.state.UiState
+import `in`.iot.lab.network.utils.NetworkUtil.toUiState
 import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
 import `in`.iot.lab.teacherreview.domain.repository.UserRepo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,9 +39,30 @@ class HistoryViewModel @Inject constructor(
     }
 
 
+    private val _deleteReviewState: MutableStateFlow<UiState<Unit>> =
+        MutableStateFlow(UiState.Idle)
+    val deleteReviewState = _deleteReviewState.asStateFlow()
+
+
+    private fun deleteUserHistory(reviewId: String) {
+        viewModelScope.launch {
+            repo.deleteUserReview(reviewId).collect {
+                _deleteReviewState.value = it.toUiState()
+
+                if (_deleteReviewState.value is UiState.Success)
+                    _history.value = _history.value.filter { review ->
+                        review.id != reviewId
+                    }
+            }
+        }
+    }
+
+
     fun uiListener(event: HistoryEvent) {
         when (event) {
             is HistoryEvent.FetchHistory -> getHistory()
+            is HistoryEvent.RemoveReview -> deleteUserHistory(event.reviewId)
+            is HistoryEvent.ResetRemoveState -> _deleteReviewState.value = UiState.Idle
         }
     }
 }

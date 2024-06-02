@@ -19,6 +19,12 @@ sealed interface ResponseState<out T> {
     data object NoDataFound : ResponseState<Nothing>
     data object ServerError : ResponseState<Nothing>
     data object Loading : ResponseState<Nothing>
+    data object ReviewAlreadyPosted : ResponseState<Nothing>
+    data object InvalidRequest : ResponseState<Nothing>
+    data object TokenRequired : ResponseState<Nothing>
+    data object InvalidToken : ResponseState<Nothing>
+    data object UnAuthorized : ResponseState<Nothing>
+    data object UnKnownError : ResponseState<Nothing>
     data class Success<T>(val data: T) : ResponseState<T>
     data class Error(val exception: Exception) : ResponseState<Nothing>
 }

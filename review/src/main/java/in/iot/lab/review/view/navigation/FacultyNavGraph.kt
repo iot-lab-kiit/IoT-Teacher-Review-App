@@ -47,12 +47,15 @@ fun FacultyNavGraph(
         // Teacher Review Detail screen
         composable(FACULTY_DETAIL_ROUTE) {
 
-            val facultyData = viewModel.facultyDetails.collectAsState().value
+            val reviewList = viewModel.reviewList.collectAsLazyPagingItems()
+            val facultyData = viewModel.facultyData.collectAsState().value
 
             ReviewDetailScreenControl(
-                faculty = facultyData,
-                setEvent = viewModel::uiListener,
-                navigator = navController::navigate
+                facultyData = facultyData,
+                reviewList = reviewList,
+                onFabClick = { navController.navigate(REVIEW_POST_ROUTE) },
+                onBackClick = navController::popBackStack,
+                setEvent = viewModel::uiListener
             )
         }
 
