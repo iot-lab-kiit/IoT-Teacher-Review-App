@@ -10,8 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,7 +49,7 @@ private fun DefaultPreview1() {
                     "scrambled it to make a type specimen book.",
             photoUrl = "",
             createdAt = "2024-05-29T11:50:22.446Z"
-        )
+        ) {}
     }
 }
 
@@ -58,12 +62,13 @@ fun ReviewDataUI(
     rating: Double,
     description: String,
     photoUrl: String,
-    createdAt: String
+    createdAt: String,
+    onDeletePress: (() -> Unit)? = null
 ) {
 
     ElevatedCard(
         modifier = modifier,
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors()
     ) {
 
@@ -89,7 +94,7 @@ fun ReviewDataUI(
                     contentScale = ContentScale.Fit
                 )
 
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
 
                     // Name Text
                     Text(
@@ -113,8 +118,18 @@ fun ReviewDataUI(
 
                         // Creation Date Text
                         Text(
-                            text = desiredFormat,
-                            style = MaterialTheme.typography.labelMedium
+                            text = "·  $desiredFormat",
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                }
+
+                onDeletePress?.let {
+                    IconButton(onClick = it) {
+                        Icon(
+                            imageVector = Icons.Default.DeleteForever,
+                            contentDescription = "Delete Button",
+                            tint = MaterialTheme.colorScheme.tertiary
                         )
                     }
                 }

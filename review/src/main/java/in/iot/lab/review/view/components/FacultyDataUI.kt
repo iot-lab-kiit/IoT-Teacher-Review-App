@@ -55,6 +55,22 @@ private fun DefaultPreview1() {
                     avgRating = 2.1,
                     totalRating = 21
                 )
+
+                FacultyDataUI(
+                    name = "Anirban Basak",
+                    photoUrl = "",
+                    experience = 3.0,
+                    avgRating = 1.3,
+                    totalRating = 2
+                )
+
+                FacultyDataUI(
+                    name = "Anirban Basak",
+                    photoUrl = "",
+                    experience = 3.0,
+                    avgRating = 0.0,
+                    totalRating = 21
+                )
             }
         }
     }
@@ -84,15 +100,16 @@ fun FacultyDataUI(
     // Color of the Card
     val cardColor = CardDefaults.cardColors(
         containerColor = when {
-            avgRating >= 2.5 -> Color(0xFF263A2A)
-            avgRating > 0 -> Color(0xFF3A2626)
+            avgRating >= 4 -> Color(0xFF2C4431)
+            avgRating >= 2 -> Color(0xFF26444D)
+            avgRating > 0 -> Color(0xFF752E2E)
             else -> Color.Unspecified
         }
     )
 
     ElevatedCard(
         modifier = modifier,
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = cardColor,
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
@@ -115,7 +132,7 @@ fun FacultyDataUI(
                 contentScale = ContentScale.Fit
             )
 
-            Column {
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
 
                 // Name Text
                 Text(
@@ -143,7 +160,7 @@ fun FacultyDataUI(
                     Text(
                         modifier = Modifier.weight(1f),
                         text = "· $totalRating Ratings",
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
