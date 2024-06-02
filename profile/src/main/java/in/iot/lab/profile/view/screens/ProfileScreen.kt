@@ -18,6 +18,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +34,7 @@ import `in`.iot.lab.design.components.TertiaryButton
 import `in`.iot.lab.design.state.HandleUiState
 import `in`.iot.lab.design.theme.CustomAppTheme
 import `in`.iot.lab.network.state.UiState
+import `in`.iot.lab.profile.view.components.CustomDeleteDialog
 import `in`.iot.lab.profile.view.components.ProfileItemUI
 import `in`.iot.lab.profile.view.event.ProfileEvents
 import `in`.iot.lab.profile.view.util.findSemester
@@ -130,6 +135,8 @@ fun ProfileSuccessScreen(
     setEvent: (ProfileEvents) -> Unit
 ) {
 
+    var deletePress by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -200,7 +207,7 @@ fun ProfileSuccessScreen(
 
             TertiaryButton(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { setEvent(ProfileEvents.DeleteAccountEvent) }
+                onClick = { deletePress = true }
             ) {
                 Text(
                     modifier = Modifier.padding(16.dp),
@@ -210,4 +217,14 @@ fun ProfileSuccessScreen(
             }
         }
     }
+
+
+    CustomDeleteDialog(
+        deletePress = deletePress,
+        onDismiss = { deletePress = false },
+        onConfirm = {
+            deletePress = false
+            setEvent(ProfileEvents.DeleteAccountEvent)
+        }
+    )
 }
