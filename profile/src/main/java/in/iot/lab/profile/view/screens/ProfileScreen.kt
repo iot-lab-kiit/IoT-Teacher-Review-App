@@ -25,8 +25,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import `in`.iot.lab.design.R
 import `in`.iot.lab.design.components.AppNetworkImage
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.PrimaryButton
@@ -156,6 +158,7 @@ fun ProfileSuccessScreen(
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(120.dp),
+                errorImage = painterResource(id = R.drawable.person),
                 model = user.photoUrl,
                 contentDescription = "Profile Photo"
             )
