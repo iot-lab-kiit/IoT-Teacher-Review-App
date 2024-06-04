@@ -47,6 +47,7 @@ fun ReviewDetailScreenControl(
     AppScaffold(
         floatingActionButton = {
             FAB(
+                text = "Review",
                 onClick = onFabClick,
                 extended = lazyListState.isScrollingUp()
             )

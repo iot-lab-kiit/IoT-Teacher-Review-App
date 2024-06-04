@@ -63,7 +63,7 @@ fun ButtonPreview() {
                 Text(text = "Button")
             }
 
-            FAB(onClick = { }, extended = true)
+            FAB(onClick = { }, extended = true, text = "Add your review")
         }
     }
 }
@@ -159,9 +159,10 @@ fun TertiaryButton(
 fun FAB(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    text: String,
     shape: RoundedCornerShape = RoundedCornerShape(12.dp),
     elevation: FloatingActionButtonElevation = FloatingActionButtonDefaults.elevation(),
-    contentDescription: String = "ADD REVIEW BUTTON",
+    contentDescription: String? = null,
     icon: ImageVector = Icons.Outlined.RateReview,
     extended: Boolean
 ) {
@@ -186,7 +187,7 @@ fun FAB(
             AnimatedVisibility(visible = extended) {
                 Text(
                     modifier = Modifier.padding(start = 8.dp),
-                    text = "Add your review"
+                    text = text
                 )
             }
         }
