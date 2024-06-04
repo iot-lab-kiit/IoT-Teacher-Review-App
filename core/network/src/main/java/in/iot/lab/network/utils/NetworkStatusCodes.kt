@@ -23,4 +23,5 @@ object NetworkStatusCodes {
     const val UNAUTHORIZED = 403
     const val INTERNAL_SERVER_ERROR = 404
     const val INTERNET_ERROR = 405
+    const val INVALID_EMAIL = 208
 }

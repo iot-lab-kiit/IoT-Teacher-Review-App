@@ -27,4 +27,5 @@ sealed interface ResponseState<out T> {
     data object UnKnownError : ResponseState<Nothing>
     data class Success<T>(val data: T) : ResponseState<T>
     data class Error(val exception: Exception) : ResponseState<Nothing>
+    data object InvalidEmail : ResponseState<Nothing>
 }
