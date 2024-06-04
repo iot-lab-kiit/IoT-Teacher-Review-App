@@ -61,7 +61,8 @@ private fun DefaultPreview1() {
 fun SearchBar(
     modifier: Modifier = Modifier,
     onValueChange: ((String) -> Unit)? = null,
-    label: String,
+    label: String? = null,
+    placeholder: String? = null,
     leadingIcon: ImageVector = Icons.Outlined.Search,
     trailingIcon: ImageVector = Icons.Filled.Close,
     onClearClick: (() -> Unit)? = null,
@@ -79,7 +80,14 @@ fun SearchBar(
             if (onValueChange != null) onValueChange(it)
         },
         label = {
-            Text(text = label)
+            label?.let {
+                Text(text = it)
+            }
+        },
+        placeholder = {
+            placeholder?.let {
+                Text(text = it)
+            }
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions(
@@ -120,5 +128,3 @@ fun SearchBar(
         shape = CircleShape
     )
 }
-
-
