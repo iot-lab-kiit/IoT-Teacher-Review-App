@@ -68,9 +68,14 @@ fun FacultyListSuccessScreen(
 
         item {
             SearchBar(
-                label = "Search a faculty...",
+                label = "Search",
+                placeholder = "Search a faculty...",
                 onClearClick = onClearClick,
-                onSearchClicked = onSearchClick
+                onSearchClicked = onSearchClick,
+                onValueChange = {
+                    if (it.isNotEmpty() && it.length % 2 == 0)
+                        onSearchClick(it)
+                }
             )
         }
 
