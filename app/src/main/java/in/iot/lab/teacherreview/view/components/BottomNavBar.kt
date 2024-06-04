@@ -45,9 +45,7 @@ fun BottomNavBar(
 
     // This Composable makes the Bottom Navigation Bar
 
-    NavigationBar(
-        modifier = modifier
-    ) {
+    NavigationBar(modifier = modifier) {
 
         // This Variable keeps track of the Latest BackStack Entry
         val backStackEntry = navController.currentBackStackEntryAsState()
@@ -56,7 +54,8 @@ fun BottomNavBar(
         for (menuItem in bottomMenu) {
 
             // Checking if the Current Route and the Item is Same so that the item can be decorated differently
-            val selected = menuItem.route == backStackEntry.value?.destination?.route
+            val selected = (menuItem.route == backStackEntry.value?.destination?.parent?.route)
+                    || (menuItem.route == backStackEntry.value?.destination?.route)
 
             // This Composable draws each Bottom Navigation Option
             NavigationBarItem(

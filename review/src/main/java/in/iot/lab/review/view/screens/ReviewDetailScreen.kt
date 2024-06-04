@@ -1,12 +1,15 @@
 package `in`.iot.lab.review.view.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBarDefaults
+import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,10 +47,12 @@ fun ReviewDetailScreenControl(
     AppScaffold(
         floatingActionButton = {
             FAB(
+                text = "Review",
                 onClick = onFabClick,
                 extended = lazyListState.isScrollingUp()
             )
-        }
+        },
+        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(NavigationBarDefaults.windowInsets)
     ) {
 
         facultyData.HandleUiState(
@@ -96,11 +101,15 @@ fun ReviewDetailSuccessScreen(
         }
 
         // Review Text with count
-        item {
-            Text(
-                text = "· Reviews - ${faculty.totalRating ?: 0}",
-                style = MaterialTheme.typography.titleLarge
-            )
+        faculty.totalRating?.let {
+            if (it != 0) {
+                item {
+                    Text(
+                        text = "· Reviews - $it",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+            }
         }
 
         // Review List
