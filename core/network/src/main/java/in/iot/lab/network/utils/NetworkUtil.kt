@@ -9,6 +9,7 @@ import `in`.iot.lab.network.utils.NetworkStatusCodes.CREATED
 import `in`.iot.lab.network.utils.NetworkStatusCodes.DELETED
 import `in`.iot.lab.network.utils.NetworkStatusCodes.FACULTY_NOT_FOUND
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNAL_SERVER_ERROR
+import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_EMAIL
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_REQUEST
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_TOKEN
 import `in`.iot.lab.network.utils.NetworkStatusCodes.REVIEW_ALREADY_POSTED
@@ -127,6 +128,7 @@ object NetworkUtil {
             INVALID_TOKEN -> ResponseState.InvalidToken
             UNAUTHORIZED -> ResponseState.UnAuthorized
             INTERNAL_SERVER_ERROR -> ResponseState.ServerError
+            INVALID_EMAIL -> ResponseState.InvalidEmail
             else -> ResponseState.UnKnownError
         }
     }
@@ -186,6 +188,10 @@ object NetworkUtil {
 
             is ResponseState.Error -> {
                 UiState.Failed(this.exception.message.toString())
+            }
+
+            is ResponseState.InvalidEmail -> {
+                UiState.Failed("Invalid Email ID, Login with your @kiit email ID")
             }
         }
     }
