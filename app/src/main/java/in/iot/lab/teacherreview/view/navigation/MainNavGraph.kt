@@ -32,7 +32,7 @@ fun MainNavGraph(
         authNavGraph {
             navHostController.navigateToHome(
                 navOptions = navOptions {
-                    popUpTo(AUTH_ROUTE) {
+                    popUpTo(HOME_ROOT_ROUTE) {
                         inclusive = true
                     }
                 }
