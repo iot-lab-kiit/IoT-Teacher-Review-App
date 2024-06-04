@@ -5,13 +5,12 @@ import androidx.compose.ui.Alignment
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import `in`.iot.lab.design.components.AppScaffold
 import `in`.iot.lab.history.view.navigation.historyNavGraph
 import `in`.iot.lab.profile.view.navigation.profileNavGraph
 import `in`.iot.lab.review.view.navigation.FACULTY_ROOT_ROUTE
-import `in`.iot.lab.review.view.navigation.FacultyNavGraph
+import `in`.iot.lab.review.view.navigation.facultyNavGraph
 import `in`.iot.lab.teacherreview.view.components.BottomNavBar
 
 
@@ -40,12 +39,10 @@ fun HomeNavGraph(onLogOut: () -> Unit) {
 
         NavHost(
             navController,
-            startDestination = FACULTY_ROOT_ROUTE,
+            startDestination = FACULTY_ROOT_ROUTE
         ) {
 
-            composable(FACULTY_ROOT_ROUTE) {
-                FacultyNavGraph()
-            }
+            facultyNavGraph(navController = navController)
 
             historyNavGraph()
 
