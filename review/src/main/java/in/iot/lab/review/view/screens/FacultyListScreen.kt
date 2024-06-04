@@ -61,7 +61,7 @@ fun FacultyListSuccessScreen(
 
     LazyColumn(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(top = 16.dp , start = 16.dp , end = 16.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
