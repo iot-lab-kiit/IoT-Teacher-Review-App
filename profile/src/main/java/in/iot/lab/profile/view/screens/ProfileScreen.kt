@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.iot.lab.design.R
@@ -196,6 +197,13 @@ fun ProfileSuccessScreen(
 
 
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+
+            // Credit Text
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Coded with ❤️ and ☕ by IoT Lab",
+                textAlign = TextAlign.Center
+            )
 
             PrimaryButton(
                 modifier = Modifier.fillMaxWidth(),
