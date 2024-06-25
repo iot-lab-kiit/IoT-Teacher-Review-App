@@ -9,8 +9,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import `in`.iot.lab.history.view.event.HistoryEvent
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.network.utils.NetworkUtil.toUiState
-import `in`.iot.lab.teacherreview.domain.models.review.RemoteReviewHistoryResponse
-import `in`.iot.lab.teacherreview.domain.repository.UserRepo
+import `in`.iot.lab.kritique.domain.models.review.RemoteReviewHistoryResponse
+import `in`.iot.lab.kritique.domain.repository.UserRepo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

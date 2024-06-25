@@ -11,11 +11,11 @@ plugins {
 }
 
 android {
-    namespace = "in.iot.lab.teacherreview"
+    namespace = "in.iot.lab.kritique"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "in.iot.lab.teacherreview"
+        applicationId = "in.iot.lab.kritique"
         minSdk = 26
         targetSdk = 34
         versionCode = 3

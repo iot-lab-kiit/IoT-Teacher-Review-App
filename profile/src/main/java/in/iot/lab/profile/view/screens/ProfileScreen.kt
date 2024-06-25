@@ -43,7 +43,7 @@ import `in`.iot.lab.profile.view.components.CustomDeleteDialog
 import `in`.iot.lab.profile.view.components.ProfileItemUI
 import `in`.iot.lab.profile.view.event.ProfileEvents
 import `in`.iot.lab.profile.view.util.findSemester
-import `in`.iot.lab.teacherreview.domain.models.user.RemoteUser
+import `in`.iot.lab.kritique.domain.models.user.RemoteUser
 
 
 // Preview Function
