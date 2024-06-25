@@ -28,10 +28,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="in.iot.lab.teacherreview" />
-                  <option name="mobileSdkAppId" value="1:725298587648:android:796112c8f6e63b4e2d90e5" />
-                  <option name="projectId" value="iot-teacher-review" />
-                  <option name="projectNumber" value="725298587648" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

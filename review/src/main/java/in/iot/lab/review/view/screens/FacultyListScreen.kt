@@ -16,7 +16,7 @@ import `in`.iot.lab.design.state.HandlePagingData
 import `in`.iot.lab.review.view.components.FacultyDataUI
 import `in`.iot.lab.review.view.events.FacultyEvent
 import `in`.iot.lab.review.view.navigation.FACULTY_DETAIL_ROUTE
-import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
+import `in`.iot.lab.kritique.domain.models.faculty.RemoteFaculty
 
 
 @Composable

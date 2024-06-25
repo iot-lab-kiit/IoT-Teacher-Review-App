@@ -25,8 +25,8 @@ import `in`.iot.lab.design.state.HandleUiState
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.isScrollingUp
 import `in`.iot.lab.review.view.events.FacultyEvent
-import `in`.iot.lab.teacherreview.domain.models.faculty.RemoteFaculty
-import `in`.iot.lab.teacherreview.domain.models.review.RemoteFacultyReview
+import `in`.iot.lab.kritique.domain.models.faculty.RemoteFaculty
+import `in`.iot.lab.kritique.domain.models.review.RemoteFacultyReview
 
 
 @Composable
