@@ -1,5 +1,6 @@
 package `in`.iot.lab.network.di
 
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
@@ -7,6 +8,7 @@ import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import `in`.iot.lab.network.BuildConfig
 import `in`.iot.lab.network.di.NetworkModule.provideGson
@@ -44,7 +46,18 @@ object NetworkModule {
      */
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(
+        @ApplicationContext context: Context
+    ): OkHttpClient {
+
+        val versionName: String = try {
+            context.packageManager
+                .getPackageInfo(context.packageName, 0)
+                .versionName
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "Version Not Found"
+        }
 
         // Logging Interceptor
         val httpLoggingInterceptor = HttpLoggingInterceptor()
@@ -60,6 +73,7 @@ object NetworkModule {
                 val request = chain
                     .request()
                     .newBuilder()
+                    .addHeader("version", versionName)
                     .build()
                 chain.proceed(request)
             }

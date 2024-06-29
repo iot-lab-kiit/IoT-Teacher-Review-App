@@ -41,8 +41,12 @@ class AppPagingSource<T : Any>(
 
             // Checking if the server is currently under maintenance
             val errorMessage = when (e.code()) {
-                SERVER_UNDER_MAINTENANCE_EC2 -> "Server is currently under maintenance. Try again later!"
-                SERVER_UNDER_MAINTENANCE_NGROK -> "Server is currently under maintenance. Try again later!"
+                SERVER_UNDER_MAINTENANCE_EC2 -> "$SERVER_UNDER_MAINTENANCE_EC2 - Server is " +
+                        "currently under maintenance. Try again later!"
+
+                SERVER_UNDER_MAINTENANCE_NGROK -> "$SERVER_UNDER_MAINTENANCE_NGROK - Server is " +
+                        "currently under maintenance. Try again later!"
+
                 else -> e.message().toString()
             }
 

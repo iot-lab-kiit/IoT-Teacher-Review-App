@@ -29,18 +29,30 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
 
         loadState.refresh is LoadState.Error -> {
 
-            val errorMessage = (loadState.refresh as LoadState.Error).error.message.toString()
+            // Error Code
+            val code = (loadState.refresh as LoadState.Error)
+                .error
+                .message
+                .toString()
+                .substring(0, 3)
 
-            when {
+            // Error Message
+            val errorMessage = (loadState.refresh as LoadState.Error)
+                .error
+                .message
+                .toString()
+                .substring(6)
 
-                errorMessage.contains(INTERNAL_SERVER_ERROR.toString()) -> {
+            when (code) {
+
+                INTERNAL_SERVER_ERROR.toString() -> {
                     ServerErrorAnimation(
-                        message = errorMessage.substring(6),
+                        message = errorMessage,
                         onTryAgainClick = this::refresh
                     )
                 }
 
-                errorMessage.contains(INTERNET_ERROR.toString()) -> {
+                INTERNET_ERROR.toString() -> {
                     InternetErrorAnimation(onTryAgainClick = this::refresh)
                 }
 
