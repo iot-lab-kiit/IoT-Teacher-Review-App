@@ -9,11 +9,14 @@ import `in`.iot.lab.network.utils.NetworkStatusCodes.DELETED
 import `in`.iot.lab.network.utils.NetworkStatusCodes.FACULTY_NOT_FOUND
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNAL_SERVER_ERROR
 import `in`.iot.lab.network.utils.NetworkStatusCodes.REVIEW_NOT_FOUND
+import `in`.iot.lab.network.utils.NetworkStatusCodes.SERVER_UNDER_MAINTENANCE_EC2
+import `in`.iot.lab.network.utils.NetworkStatusCodes.SERVER_UNDER_MAINTENANCE_NGROK
 import `in`.iot.lab.network.utils.NetworkStatusCodes.SUCCESSFUL
 import `in`.iot.lab.network.utils.NetworkStatusCodes.UPDATED
 import `in`.iot.lab.network.utils.NetworkStatusCodes.USER_NOT_FOUND
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 import java.io.IOException
 import java.util.concurrent.TimeoutException
 
@@ -46,7 +49,17 @@ object NetworkUtil {
                 }
 
                 emit(state)
-            } catch (e : FirebaseNetworkException){
+            } catch (e: HttpException) {
+                onFailure()
+
+                // Checking if the server is currently under maintenance
+                val errorMessage = when (e.code()) {
+                    SERVER_UNDER_MAINTENANCE_EC2 -> "Server is currently under maintenance. Try again later!"
+                    SERVER_UNDER_MAINTENANCE_NGROK -> "Server is currently under maintenance. Try again later!"
+                    else -> e.message().toString()
+                }
+                emit(ResponseState.Failed(errorMessage))
+            } catch (e: FirebaseNetworkException) {
                 onFailure()
                 emit(ResponseState.NoInternet)
             } catch (e: TimeoutException) {
@@ -81,7 +94,17 @@ object NetworkUtil {
             try {
                 request()
                 emit(ResponseState.Success(Unit))
-            } catch (e : FirebaseNetworkException){
+            } catch (e: HttpException) {
+                onFailure()
+
+                // Checking if the server is currently under maintenance
+                val errorMessage = when (e.code()) {
+                    SERVER_UNDER_MAINTENANCE_EC2 -> "Server is currently under maintenance. Try again later!"
+                    SERVER_UNDER_MAINTENANCE_NGROK -> "Server is currently under maintenance. Try again later!"
+                    else -> e.message().toString()
+                }
+                emit(ResponseState.Failed(errorMessage))
+            } catch (e: FirebaseNetworkException) {
                 onFailure()
                 emit(ResponseState.NoInternet)
             } catch (e: TimeoutException) {
@@ -106,7 +129,7 @@ object NetworkUtil {
         return when (status) {
             SUCCESSFUL, CREATED, DELETED, UPDATED -> ResponseState.Success(data = data!!)
             USER_NOT_FOUND, REVIEW_NOT_FOUND, FACULTY_NOT_FOUND -> ResponseState.NoDataFound
-            INTERNAL_SERVER_ERROR -> ResponseState.InternalServerError
+            INTERNAL_SERVER_ERROR -> ResponseState.InternalServerError(message ?: "Unknown Error Occurred!!")
             else -> ResponseState.Failed(
                 errorMessage = message ?: ("Unknown Error Occurred!!" +
                         " Server haven't sent any error logs and messages")
@@ -142,7 +165,7 @@ object NetworkUtil {
 
             // Internal Server Error State
             is ResponseState.InternalServerError -> {
-                UiState.InternalServerError
+                UiState.InternalServerError(errorMessage)
             }
 
             // No Internet State

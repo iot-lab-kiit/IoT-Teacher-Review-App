@@ -34,7 +34,10 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
             when {
 
                 errorMessage.contains(INTERNAL_SERVER_ERROR.toString()) -> {
-                    ServerErrorAnimation(onTryAgainClick = this::refresh)
+                    ServerErrorAnimation(
+                        message = errorMessage.substring(6),
+                        onTryAgainClick = this::refresh
+                    )
                 }
 
                 errorMessage.contains(INTERNET_ERROR.toString()) -> {

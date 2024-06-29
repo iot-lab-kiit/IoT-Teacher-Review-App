@@ -21,7 +21,7 @@ sealed interface ResponseState<out T> {
 
     // Custom Server Required Use Case States
     data object NoDataFound : ResponseState<Nothing>
-    data object InternalServerError : ResponseState<Nothing>
+    data class InternalServerError(val errorMessage: String) : ResponseState<Nothing>
 
     // Custom App Required Use Case States
     data object NoInternet : ResponseState<Nothing>

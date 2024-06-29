@@ -23,7 +23,7 @@ sealed interface UiState<out T> {
 
     // Server Use Case States
     data object NoDataFound : UiState<Nothing>
-    data object InternalServerError : UiState<Nothing>
+    data class InternalServerError(val errorMessage: String) : UiState<Nothing>
 
     // Custom App Use Case States
     data object InternetError : UiState<Nothing>

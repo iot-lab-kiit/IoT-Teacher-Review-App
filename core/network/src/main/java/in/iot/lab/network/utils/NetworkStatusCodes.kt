@@ -3,10 +3,12 @@ package `in`.iot.lab.network.utils
 object NetworkStatusCodes {
 
     // App Error Codes
-    const val INTERNET_ERROR = 405
+    const val INTERNET_ERROR = 0
 
     // Server Error Codes
     const val INTERNAL_SERVER_ERROR = 404
+    const val SERVER_UNDER_MAINTENANCE_EC2 = 512
+    const val SERVER_UNDER_MAINTENANCE_NGROK = 502
 
     // Success codes
     const val SUCCESSFUL = 200
