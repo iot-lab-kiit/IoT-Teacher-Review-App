@@ -116,7 +116,7 @@ fun ReviewDetailSuccessScreen(
         items(reviewList.itemCount) {
             reviewList[it]?.let { review ->
                 ReviewDataUI(
-                    title = review.createdBy?.name ?: "Reviewer Name",
+                    title = review.createdBy?.anonymousName ?: "Reviewer Name",
                     rating = review.rating ?: 0.0,
                     description = review.feedback ?: "Alas! The reviewer gave no feedback ",
                     photoUrl = review.createdBy?.photoUrl ?: "",

@@ -63,6 +63,7 @@ private fun DefaultPreview1() {
                     uid = "",
                     name = "Anirban Basak",
                     email = "21051880@kiit.ac.in",
+                    anonymousName = "",
                     photoUrl = ""
                 )
             ) { }

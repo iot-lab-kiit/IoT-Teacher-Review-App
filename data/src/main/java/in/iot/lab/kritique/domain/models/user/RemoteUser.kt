@@ -17,6 +17,8 @@ data class RemoteUser(
     val uid: String,
     @SerializedName("name")
     val name: String?,
+    @SerializedName("anon_name")
+    val anonymousName: String?,
     @SerializedName("email")
     val email: String?,
     @SerializedName("photoUrl")
