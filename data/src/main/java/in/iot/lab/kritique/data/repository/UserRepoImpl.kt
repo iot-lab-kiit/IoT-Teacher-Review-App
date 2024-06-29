@@ -102,13 +102,15 @@ class UserRepoImpl @Inject constructor(
     }
 
 
-    override suspend fun getUserUid(): String {
-        return auth.currentUser?.uid ?: "Invalid Uid"
-    }
+    override suspend fun getUserUid(): String = auth.currentUser?.uid ?: "Invalid Uid"
 
 
     override suspend fun getUserToken(): String {
-        return "Bearer ${auth.currentUser?.getIdToken(false)?.await()?.token ?: "No Token Found"}"
+        return try {
+            "Bearer ${auth.currentUser?.getIdToken(false)?.await()?.token ?: "No Token Found"}"
+        } catch (e: Exception) {
+            "No Token Found"
+        }
     }
 
     override suspend fun getReviewHistory(): Flow<PagingData<RemoteReviewHistoryResponse>> {

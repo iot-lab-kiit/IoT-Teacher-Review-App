@@ -5,7 +5,10 @@ import androidx.paging.PagingState
 import `in`.iot.lab.network.data.CustomResponse
 import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNET_ERROR
+import `in`.iot.lab.network.utils.NetworkStatusCodes.SERVER_UNDER_MAINTENANCE_EC2
+import `in`.iot.lab.network.utils.NetworkStatusCodes.SERVER_UNDER_MAINTENANCE_NGROK
 import `in`.iot.lab.network.utils.NetworkUtil.checkApiResponseStatusCode
+import retrofit2.HttpException
 import java.io.IOException
 
 
@@ -34,6 +37,20 @@ class AppPagingSource<T : Any>(
                 )
             else
                 LoadResult.Error(Throwable("${response.status} - ${response.message}"))
+        } catch (e: HttpException) {
+
+            // Checking if the server is currently under maintenance
+            val errorMessage = when (e.code()) {
+                SERVER_UNDER_MAINTENANCE_EC2 -> "$SERVER_UNDER_MAINTENANCE_EC2 - Server is " +
+                        "currently under maintenance. Try again later!"
+
+                SERVER_UNDER_MAINTENANCE_NGROK -> "$SERVER_UNDER_MAINTENANCE_NGROK - Server is " +
+                        "currently under maintenance. Try again later!"
+
+                else -> e.message().toString()
+            }
+
+            LoadResult.Error(Throwable(message = errorMessage))
         } catch (exception: IOException) {
             LoadResult.Error(Throwable(message = INTERNET_ERROR.toString()))
         } catch (e: Exception) {

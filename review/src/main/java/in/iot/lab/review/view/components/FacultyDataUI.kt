@@ -61,7 +61,7 @@ private fun DefaultPreview1() {
                 FacultyDataUI(
                     name = "Anirban Basak",
                     photoUrl = "",
-                    experience = 3.0,
+                    experience = null,
                     avgRating = 1.3,
                     totalRating = 2
                 )
@@ -94,7 +94,7 @@ fun FacultyDataUI(
     modifier: Modifier = Modifier,
     name: String,
     photoUrl: String,
-    experience: Double,
+    experience: Double?,
     avgRating: Double,
     totalRating: Int
 ) {
@@ -144,10 +144,12 @@ fun FacultyDataUI(
                 )
 
                 // Experience of the Faculty
-                Text(
-                    text = "Experience · ${DecimalFormat("#.##").format(experience)} years",
-                    style = MaterialTheme.typography.labelLarge
-                )
+                experience?.let {
+                    Text(
+                        text = "Experience · ${DecimalFormat("#.##").format(it)} years",
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
 
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
