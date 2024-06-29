@@ -27,22 +27,6 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
 
     when {
 
-        itemCount == 0 && loadState.refresh !is LoadState.Loading -> {
-            EmptyListAnimation(onTryAgainClick = this::refresh)
-        }
-
-        loadState.append is LoadState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter
-            ) { loadingBlock() }
-        }
-
-        loadState.refresh is LoadState.Loading -> {
-            loadingBlock()
-        }
-
-
         loadState.refresh is LoadState.Error -> {
 
             val errorMessage = (loadState.refresh as LoadState.Error).error.message.toString()
@@ -59,12 +43,27 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
 
                 else -> {
                     AppFailureScreen(
-                        text = (loadState.refresh as LoadState.Error).error.message.toString(),
+                        text = errorMessage,
                         onCancel = onCancel ?: {},
                         onTryAgain = this::refresh
                     )
                 }
             }
+        }
+
+        itemCount == 0 && loadState.refresh !is LoadState.Loading -> {
+            EmptyListAnimation(onTryAgainClick = this::refresh)
+        }
+
+        loadState.append is LoadState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter
+            ) { loadingBlock() }
+        }
+
+        loadState.refresh is LoadState.Loading -> {
+            loadingBlock()
         }
     }
 }
