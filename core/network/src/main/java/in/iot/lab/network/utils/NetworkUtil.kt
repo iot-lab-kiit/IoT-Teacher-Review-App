@@ -1,7 +1,6 @@
 package `in`.iot.lab.network.utils
 
-import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.FirebaseNetworkException
 import `in`.iot.lab.network.data.CustomResponse
 import `in`.iot.lab.network.state.ResponseState
 import `in`.iot.lab.network.state.UiState
@@ -9,20 +8,15 @@ import `in`.iot.lab.network.utils.NetworkStatusCodes.CREATED
 import `in`.iot.lab.network.utils.NetworkStatusCodes.DELETED
 import `in`.iot.lab.network.utils.NetworkStatusCodes.FACULTY_NOT_FOUND
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNAL_SERVER_ERROR
-import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_EMAIL
-import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_REQUEST
-import `in`.iot.lab.network.utils.NetworkStatusCodes.INVALID_TOKEN
-import `in`.iot.lab.network.utils.NetworkStatusCodes.REVIEW_ALREADY_POSTED
 import `in`.iot.lab.network.utils.NetworkStatusCodes.REVIEW_NOT_FOUND
 import `in`.iot.lab.network.utils.NetworkStatusCodes.SUCCESSFUL
-import `in`.iot.lab.network.utils.NetworkStatusCodes.TOKEN_REQUIRED
-import `in`.iot.lab.network.utils.NetworkStatusCodes.UNAUTHORIZED
 import `in`.iot.lab.network.utils.NetworkStatusCodes.UPDATED
 import `in`.iot.lab.network.utils.NetworkStatusCodes.USER_NOT_FOUND
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
 import java.util.concurrent.TimeoutException
+
 
 object NetworkUtil {
 
@@ -52,6 +46,9 @@ object NetworkUtil {
                 }
 
                 emit(state)
+            } catch (e : FirebaseNetworkException){
+                onFailure()
+                emit(ResponseState.NoInternet)
             } catch (e: TimeoutException) {
 
                 onFailure()
@@ -60,19 +57,11 @@ object NetworkUtil {
 
                 onFailure()
                 emit(ResponseState.NoInternet)
-            } catch (e: FirebaseAuthInvalidCredentialsException) {
-
-                onFailure()
-                emit(ResponseState.InvalidToken)
-            } catch (e: FirebaseException) {
-
-                onFailure()
-                emit(ResponseState.InvalidRequest)
             } catch (e: Exception) {
 
                 // Calling the Custom Failure Function
                 onFailure()
-                emit(ResponseState.Error(e))
+                emit(ResponseState.Failed(e.message.toString()))
             }
         }
     }
@@ -92,6 +81,9 @@ object NetworkUtil {
             try {
                 request()
                 emit(ResponseState.Success(Unit))
+            } catch (e : FirebaseNetworkException){
+                onFailure()
+                emit(ResponseState.NoInternet)
             } catch (e: TimeoutException) {
 
                 onFailure()
@@ -100,19 +92,11 @@ object NetworkUtil {
 
                 onFailure()
                 emit(ResponseState.NoInternet)
-            } catch (e: FirebaseAuthInvalidCredentialsException) {
-
-                onFailure()
-                emit(ResponseState.InvalidToken)
-            } catch (e: FirebaseException) {
-
-                onFailure()
-                emit(ResponseState.InvalidRequest)
             } catch (e: Exception) {
 
                 // Calling the Custom Failure Function
                 onFailure()
-                emit(ResponseState.Error(e))
+                emit(ResponseState.Failed(e.message.toString()))
             }
         }
     }
@@ -122,14 +106,11 @@ object NetworkUtil {
         return when (status) {
             SUCCESSFUL, CREATED, DELETED, UPDATED -> ResponseState.Success(data = data!!)
             USER_NOT_FOUND, REVIEW_NOT_FOUND, FACULTY_NOT_FOUND -> ResponseState.NoDataFound
-            REVIEW_ALREADY_POSTED -> ResponseState.ReviewAlreadyPosted
-            INVALID_REQUEST -> ResponseState.InvalidRequest
-            TOKEN_REQUIRED -> ResponseState.TokenRequired
-            INVALID_TOKEN -> ResponseState.InvalidToken
-            UNAUTHORIZED -> ResponseState.UnAuthorized
-            INTERNAL_SERVER_ERROR -> ResponseState.ServerError
-            INVALID_EMAIL -> ResponseState.InvalidEmail
-            else -> ResponseState.UnKnownError
+            INTERNAL_SERVER_ERROR -> ResponseState.InternalServerError
+            else -> ResponseState.Failed(
+                errorMessage = message ?: ("Unknown Error Occurred!!" +
+                        " Server haven't sent any error logs and messages")
+            )
         }
     }
 
@@ -140,58 +121,33 @@ object NetworkUtil {
      */
     fun <T> ResponseState<T>.toUiState(): UiState<T> {
         return when (this) {
-            is ResponseState.NoInternet -> {
-                UiState.InternetError
+
+            // Loading State
+            is ResponseState.Loading -> UiState.Loading
+
+            // Success State
+            is ResponseState.Success -> {
+                UiState.Success(data)
             }
 
+            // Error State
+            is ResponseState.Failed -> {
+                UiState.Failed(errorMessage)
+            }
+
+            // No Data from DB state
             is ResponseState.NoDataFound -> {
                 UiState.NoDataFound
             }
 
-            is ResponseState.ServerError -> {
-                UiState.ServerError
+            // Internal Server Error State
+            is ResponseState.InternalServerError -> {
+                UiState.InternalServerError
             }
 
-            is ResponseState.Loading -> UiState.Loading
-
-            is ResponseState.ReviewAlreadyPosted -> {
-                UiState.Failed(
-                    "You already have a review posted for the teacher " +
-                            "and cannot post another review. If you still wish to post a review," +
-                            " delete your old review first !!"
-                )
-            }
-
-            is ResponseState.InvalidRequest -> {
-                UiState.Failed("The api request is invalid and cannot be processed.")
-            }
-
-            is ResponseState.TokenRequired -> {
-                UiState.Failed("Token missing!! Restart the app")
-            }
-
-            is ResponseState.InvalidToken -> {
-                UiState.Failed("Token invalid!! Restart the app or clear data.")
-            }
-
-            is ResponseState.UnAuthorized -> {
-                UiState.Failed("User not authorized")
-            }
-
-            is ResponseState.UnKnownError -> {
-                UiState.Failed("Unknown error occurred!")
-            }
-
-            is ResponseState.Success -> {
-                UiState.Success(this.data)
-            }
-
-            is ResponseState.Error -> {
-                UiState.Failed(this.exception.message.toString())
-            }
-
-            is ResponseState.InvalidEmail -> {
-                UiState.Failed("Invalid Email ID, Login with your @kiit email ID")
+            // No Internet State
+            is ResponseState.NoInternet -> {
+                UiState.InternetError
             }
         }
     }

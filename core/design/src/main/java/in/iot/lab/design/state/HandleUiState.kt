@@ -46,7 +46,7 @@ fun <T> UiState<T>.HandleUiState(
             InternetErrorAnimation(onTryAgainClick = onTryAgain)
         }
 
-        is UiState.ServerError -> {
+        is UiState.InternalServerError -> {
             ServerErrorAnimation(onTryAgainClick = onTryAgain)
         }
     }
