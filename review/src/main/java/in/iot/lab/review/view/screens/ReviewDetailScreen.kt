@@ -94,7 +94,7 @@ fun ReviewDetailSuccessScreen(
             FacultyDataUI(
                 name = faculty.name,
                 photoUrl = faculty.photoUrl ?: "",
-                experience = faculty.experience ?: 0.0,
+                experience = faculty.experience,
                 avgRating = faculty.avgRating ?: 0.0,
                 totalRating = faculty.totalRating ?: 0
             )
