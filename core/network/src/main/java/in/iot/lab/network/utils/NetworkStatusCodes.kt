@@ -2,8 +2,14 @@ package `in`.iot.lab.network.utils
 
 object NetworkStatusCodes {
 
+    /**
+     * Make sure all the codes follow the following rules :-
+     * 1. They should have 3 - digits.
+     */
+
+
     // App Error Codes
-    const val INTERNET_ERROR = 0
+    const val INTERNET_ERROR = 100
 
     // Server Error Codes
     const val INTERNAL_SERVER_ERROR = 404
