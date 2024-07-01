@@ -20,6 +20,8 @@ import `in`.iot.lab.kritique.utils.Constants.PAGE_LIMIT
 import `in`.iot.lab.kritique.utils.Constants.PAGE_SIZE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -81,6 +83,28 @@ class UserRepoImpl @Inject constructor(
             getFlowState {
                 val token = getUserToken()
                 apiService.getUserData(AccessTokenBody(token))
+            }.map { responseState ->
+
+                // Firebase User Data
+                val currentUser = auth.currentUser
+                    ?: throw Throwable("Failed to find user from firebase!!")
+
+                // If the Api call from the backend is a success then only we follow these steps
+                if (responseState is ResponseState.Success)
+
+                // Add the user's name and email in the response since they should be fetched from firebase
+                    responseState.copy(
+                        data = responseState.data.copy(
+                            name = currentUser.displayName,
+                            email = currentUser.email
+                        )
+                    )
+                else
+                    responseState
+            }.catch { exception ->
+
+                // Exception Handling
+                emit(ResponseState.Failed(exception.message.toString()))
             }
         }
     }

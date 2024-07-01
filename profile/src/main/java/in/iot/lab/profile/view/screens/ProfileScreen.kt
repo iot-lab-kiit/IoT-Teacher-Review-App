@@ -5,8 +5,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -155,7 +157,6 @@ fun ProfileSuccessScreen(
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -169,12 +170,21 @@ fun ProfileSuccessScreen(
                 contentDescription = "Profile Photo"
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
 
             // User Name
             Text(
                 text = user.name ?: "Name Not Found",
                 style = MaterialTheme.typography.titleLarge
             )
+
+            // Anonymous Name
+            Text(
+                text = user.anonymousName ?: "Anonymous Name Not Found",
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             val rollNumber = if (user.email != null && user.email!!.contains("kiit.ac.in"))
                 user.email!!.substringBefore("@")
@@ -187,17 +197,23 @@ fun ProfileSuccessScreen(
                 description = user.email ?: "Not Found"
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             ProfileItemUI(
                 title = "Roll Number",
                 leadingIcon = Icons.Default.Numbers,
                 description = rollNumber ?: "Not Found"
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
             ProfileItemUI(
                 title = "Semester",
                 description = findSemester(rollNumber) ?: "Not Found",
                 leadingIcon = Icons.Default.School
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
 
