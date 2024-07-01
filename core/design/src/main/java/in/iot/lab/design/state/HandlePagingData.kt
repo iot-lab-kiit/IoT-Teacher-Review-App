@@ -29,19 +29,10 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
 
         loadState.refresh is LoadState.Error -> {
 
-            // Error Code
-            val code = (loadState.refresh as LoadState.Error)
-                .error
-                .message
-                .toString()
-                .substring(0, 3)
+            // Error Code and message
+            val code = (loadState.refresh as LoadState.Error).getCode()
+            val errorMessage = (loadState.refresh as LoadState.Error).getMessage()
 
-            // Error Message
-            val errorMessage = (loadState.refresh as LoadState.Error)
-                .error
-                .message
-                .toString()
-                .substring(6)
 
             when (code) {
 
@@ -80,5 +71,35 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
         loadState.refresh is LoadState.Loading -> {
             loadingBlock()
         }
+    }
+}
+
+
+/**
+ * This function fetches the error code from the Throwable.
+ */
+fun LoadState.Error.getCode(): String {
+    return try {
+        error
+            .message
+            .toString()
+            .substring(0, 3)
+    } catch (e: Exception) {
+        "No Code"
+    }
+}
+
+
+/**
+ * This function This function fetches the error message from the Throwable.
+ */
+fun LoadState.Error.getMessage(): String {
+    return try {
+        error
+            .message
+            .toString()
+            .substring(6)
+    } catch (e: Exception) {
+        "Unknown Error"
     }
 }
