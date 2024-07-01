@@ -94,7 +94,7 @@ fun ReviewDetailSuccessScreen(
         // User Profile Data
         item {
             FacultyDataUI(
-                name = faculty.name,
+                name = faculty.name ?: "Faculty Name",
                 photoUrl = faculty.photoUrl ?: "",
                 experience = faculty.experience,
                 avgRating = faculty.avgRating ?: 0.0,

@@ -92,7 +92,7 @@ fun FacultyListSuccessScreen(
                         modifier = Modifier
                             .clip(RoundedCornerShape(16.dp))
                             .clickable { onFacultySelected(faculty.id) },
-                        name = faculty.name,
+                        name = faculty.name ?: "Faculty Name",
                         photoUrl = faculty.photoUrl ?: "",
                         experience = faculty.experience,
                         avgRating = faculty.avgRating ?: 0.0,

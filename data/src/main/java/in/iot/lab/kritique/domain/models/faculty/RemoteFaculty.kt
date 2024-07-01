@@ -17,7 +17,7 @@ data class RemoteFaculty(
     @SerializedName("_id")
     val id: String,
     @SerializedName("name")
-    val name: String,
+    val name: String?,
     @SerializedName("experience")
     val experience: Double?,
     @SerializedName("photoUrl")

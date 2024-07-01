@@ -81,7 +81,7 @@ fun HistorySuccessScreen(
 
             historyList[it]?.let { history ->
                 ReviewDataUI(
-                    title = history.createdFor.name,
+                    title = history.createdFor.name ?: "Faculty Name",
                     rating = history.rating,
                     description = history.feedback,
                     photoUrl = history.createdFor.photoUrl ?: "",
