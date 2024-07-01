@@ -18,9 +18,9 @@ import `in`.iot.lab.review.view.screens.FacultyListScreenControl
 import `in`.iot.lab.review.vm.FacultyViewModel
 
 
-const val FACULTY_ROOT_ROUTE = "review-root-route"
-internal const val FACULTY_LIST_ROUTE = "teacher-list-route"
-internal const val FACULTY_DETAIL_ROUTE = "teacher-detail-route"
+const val FACULTY_ROOT_ROUTE = "faculty-root-route"
+internal const val FACULTY_LIST_ROUTE = "faculty-list-route"
+internal const val FACULTY_DETAIL_ROUTE = "faculty-detail-route"
 internal const val REVIEW_POST_ROUTE = "review-post-route"
 
 
