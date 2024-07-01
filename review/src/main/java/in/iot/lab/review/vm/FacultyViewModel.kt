@@ -81,9 +81,11 @@ class FacultyViewModel @Inject constructor(
 
     private fun getFacultyReview() {
         viewModelScope.launch {
-            facultyRepo.getFacultyReviewData(selectedFacultyId).collect {
-                _reviewList.value = it
-            }
+            facultyRepo.getFacultyReviewData(selectedFacultyId)
+                .cachedIn(viewModelScope)
+                .collect {
+                    _reviewList.value = it
+                }
         }
     }
 

@@ -1,7 +1,9 @@
 package `in`.iot.lab.history.view.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -90,6 +92,11 @@ fun HistorySuccessScreen(
                     }
                 )
             }
+        }
+
+        // Spacer in the end
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 
