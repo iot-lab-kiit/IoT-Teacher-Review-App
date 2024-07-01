@@ -29,6 +29,9 @@ class FacultyViewModel @Inject constructor(
         MutableStateFlow(PagingData.empty())
     val facultyList = _facultyList.asStateFlow()
 
+    init {
+        getFacultyList()
+    }
 
     private fun getFacultyList() {
         viewModelScope.launch {

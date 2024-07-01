@@ -1,15 +1,20 @@
 package `in`.iot.lab.review.view.screens
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.components.AppScreen
@@ -28,9 +33,9 @@ fun FacultyListScreenControl(
     navigator: (String) -> Unit
 ) {
 
-    LaunchedEffect(Unit) {
-        setEvent(FacultyEvent.FetchFacultyList)
-    }
+    val context = LocalContext.current as Activity
+    BackHandler { context.finish() }
+
 
     AppScreen {
 
@@ -61,38 +66,44 @@ fun FacultyListSuccessScreen(
     onSearchClick: (String) -> Unit
 ) {
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .padding(top = 16.dp, start = 16.dp, end = 16.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        item {
-            SearchBar(
-                label = "Search",
-                placeholder = "Search a faculty...",
-                onClearClick = onClearClick,
-                onSearchClicked = onSearchClick,
-                onValueChange = {
-                    if (it.isNotEmpty() && it.length % 2 == 0)
-                        onSearchClick(it)
-                }
-            )
-        }
+        SearchBar(
+            label = "Search",
+            placeholder = "Search a faculty...",
+            onClearClick = onClearClick,
+            onSearchClicked = onSearchClick,
+            onValueChange = {
+                if (it.isNotEmpty() && it.length % 2 == 0)
+                    onSearchClick(it)
+            }
+        )
 
-        items(faculties.itemCount) {
-            faculties[it]?.let { faculty ->
-                FacultyDataUI(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable { onFacultySelected(faculty.id) },
-                    name = faculty.name,
-                    photoUrl = faculty.photoUrl ?: "",
-                    experience = faculty.experience,
-                    avgRating = faculty.avgRating ?: 0.0,
-                    totalRating = faculty.totalRating ?: 0
-                )
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+
+            items(faculties.itemCount) {
+                faculties[it]?.let { faculty ->
+                    FacultyDataUI(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .clickable { onFacultySelected(faculty.id) },
+                        name = faculty.name,
+                        photoUrl = faculty.photoUrl ?: "",
+                        experience = faculty.experience,
+                        avgRating = faculty.avgRating ?: 0.0,
+                        totalRating = faculty.totalRating ?: 0
+                    )
+                }
+            }
+
+            // Spacer in the end
+            item {
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
     }
