@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.components.AppScreen
@@ -82,7 +84,9 @@ fun FacultyListSuccessScreen(
         items(faculties.itemCount) {
             faculties[it]?.let { faculty ->
                 FacultyDataUI(
-                    modifier = Modifier.clickable { onFacultySelected(faculty.id) },
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable { onFacultySelected(faculty.id) },
                     name = faculty.name,
                     photoUrl = faculty.photoUrl ?: "",
                     experience = faculty.experience,
