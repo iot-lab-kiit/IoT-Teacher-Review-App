@@ -32,7 +32,7 @@ fun <T> UiState<T>.HandleUiState(
 
         is UiState.Failed -> {
             AppFailureScreen(
-                text = this.message,
+                text = message,
                 onCancel = onCancel,
                 onTryAgain = onTryAgain
             )
@@ -46,8 +46,11 @@ fun <T> UiState<T>.HandleUiState(
             InternetErrorAnimation(onTryAgainClick = onTryAgain)
         }
 
-        is UiState.ServerError -> {
-            ServerErrorAnimation(onTryAgainClick = onTryAgain)
+        is UiState.InternalServerError -> {
+            ServerErrorAnimation(
+                message = errorMessage,
+                onTryAgainClick = onTryAgain
+            )
         }
     }
 }

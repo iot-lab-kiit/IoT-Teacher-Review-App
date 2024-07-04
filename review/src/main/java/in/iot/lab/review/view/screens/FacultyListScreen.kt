@@ -61,7 +61,7 @@ fun FacultyListSuccessScreen(
 
     LazyColumn(
         modifier = Modifier
-            .padding(top = 16.dp , start = 16.dp , end = 16.dp)
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -85,9 +85,9 @@ fun FacultyListSuccessScreen(
                     modifier = Modifier.clickable { onFacultySelected(faculty.id) },
                     name = faculty.name,
                     photoUrl = faculty.photoUrl ?: "",
-                    experience = faculty.experience ?: 0.0,
+                    experience = faculty.experience,
                     avgRating = faculty.avgRating ?: 0.0,
-                    totalRating = faculty.totalRating ?: 0,
+                    totalRating = faculty.totalRating ?: 0
                 )
             }
         }

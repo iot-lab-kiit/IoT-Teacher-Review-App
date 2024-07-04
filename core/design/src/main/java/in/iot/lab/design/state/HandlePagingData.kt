@@ -27,6 +27,45 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
 
     when {
 
+        loadState.refresh is LoadState.Error -> {
+
+            // Error Code
+            val code = (loadState.refresh as LoadState.Error)
+                .error
+                .message
+                .toString()
+                .substring(0, 3)
+
+            // Error Message
+            val errorMessage = (loadState.refresh as LoadState.Error)
+                .error
+                .message
+                .toString()
+                .substring(6)
+
+            when (code) {
+
+                INTERNAL_SERVER_ERROR.toString() -> {
+                    ServerErrorAnimation(
+                        message = errorMessage,
+                        onTryAgainClick = this::refresh
+                    )
+                }
+
+                INTERNET_ERROR.toString() -> {
+                    InternetErrorAnimation(onTryAgainClick = this::refresh)
+                }
+
+                else -> {
+                    AppFailureScreen(
+                        text = errorMessage,
+                        onCancel = onCancel ?: {},
+                        onTryAgain = this::refresh
+                    )
+                }
+            }
+        }
+
         itemCount == 0 && loadState.refresh !is LoadState.Loading -> {
             EmptyListAnimation(onTryAgainClick = this::refresh)
         }
@@ -40,31 +79,6 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
 
         loadState.refresh is LoadState.Loading -> {
             loadingBlock()
-        }
-
-
-        loadState.refresh is LoadState.Error -> {
-
-            val errorMessage = (loadState.refresh as LoadState.Error).error.message.toString()
-
-            when {
-
-                errorMessage.contains(INTERNAL_SERVER_ERROR.toString()) -> {
-                    ServerErrorAnimation(onTryAgainClick = this::refresh)
-                }
-
-                errorMessage.contains(INTERNET_ERROR.toString()) -> {
-                    InternetErrorAnimation(onTryAgainClick = this::refresh)
-                }
-
-                else -> {
-                    AppFailureScreen(
-                        text = (loadState.refresh as LoadState.Error).error.message.toString(),
-                        onCancel = onCancel ?: {},
-                        onTryAgain = this::refresh
-                    )
-                }
-            }
         }
     }
 }

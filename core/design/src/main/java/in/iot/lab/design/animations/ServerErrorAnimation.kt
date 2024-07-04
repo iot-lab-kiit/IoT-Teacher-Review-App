@@ -48,7 +48,7 @@ private fun DefaultPreview4() {
 @Composable
 fun ServerErrorAnimation(
     modifier: Modifier = Modifier,
-    message: String = "Server error occurred. Please try again later.",
+    message: String = "Internal server error occurred. Please try again later.",
     onAnimationComplete: (() -> Unit)? = null,
     onTryAgainClick: () -> Unit
 ) {
