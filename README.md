@@ -15,19 +15,13 @@ of teaching and other parameters. The user can leave reviews and also see them.
 
 ## ScreenShots
 
-![screenshot 01](https://github.com/basakjeet08/IoT-Teacher-Review-App/assets/24616267/9414d80e-fd9b-4613-a95a-898995b6f356)
-
-
-![screenshot 02](https://github.com/basakjeet08/IoT-Teacher-Review-App/assets/24616267/c24746eb-f893-42bc-bbb1-f99f00d268ee)
-
-
-![screenshot 03](https://github.com/basakjeet08/IoT-Teacher-Review-App/assets/24616267/e043a2cc-1348-4017-9101-22201c3535d4)
-
-
-![screenshot 04](https://github.com/basakjeet08/IoT-Teacher-Review-App/assets/24616267/25c67c62-a518-4801-aa89-0fa6bf823c91)
-
-
-![screenshot 05](https://github.com/basakjeet08/IoT-Teacher-Review-App/assets/24616267/d4ed5c6a-ce31-4a46-9cf3-2b54e179aafc)
+![screenshot 01](https://i.postimg.cc/yxs8qjzy/phone-1.png)
+![screenshot 02](https://i.postimg.cc/6pRgRXZT/phone-2.png)
+![screenshot 03](https://i.postimg.cc/zBfxdZyC/phone-3.png)
+![screenshot 04](https://i.postimg.cc/2yrhHncP/phone-4.png)
+![screenshot 05](https://i.postimg.cc/DZ9nFgkM/phone-5.png)
+![screenshot 06](https://i.postimg.cc/Z5FwTNHr/phone-6.png)
+![screenshot 07](https://i.postimg.cc/V6TR7Wsc/phone-7.png)
 
 
 ## Tech Stack
@@ -38,4 +32,6 @@ of teaching and other parameters. The user can leave reviews and also see them.
 ## Authors
 
 - [@basakjeet](https://github.com/basakjeet08)
-
+- [@AbhranilNXT](https://github.com/AbhranilNXT)
+- [@kumarwhocodes](https://github.com/kumarwhocodes)
+- [@Maniii97](https://github.com/Maniii97)
