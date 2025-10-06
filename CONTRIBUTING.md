@@ -16,7 +16,7 @@ Follow these steps to contribute effectively:
 ### 2. Clone your fork locally
 ```bash
 git clone https://github.com/<your-username>/IoT-Teacher-Review-App.git
-cd IoT-Teacher-Review-App.git
+cd IoT-Teacher-Review-App
 ```
 Replace **your-username** with your GitHub username.
 
