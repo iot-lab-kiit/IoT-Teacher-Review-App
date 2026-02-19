@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +30,7 @@ import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.AppRatingBar
 import `in`.iot.lab.review.view.components.FeedbackTextField
 import `in`.iot.lab.review.view.events.FacultyEvent
+import `in`.iot.lab.review.vm.FacultyViewModel
 
 
 // Preview Function
@@ -45,6 +47,7 @@ private fun DefaultPreview1() {
             PostReviewIdleScreen(
                 rating = 1.0,
                 feedback = "",
+                isEditing = false,
                 onRatingChange = { },
                 onFeedbackChange = { },
                 onSubmitClick = { },
@@ -59,11 +62,20 @@ private fun DefaultPreview1() {
 fun PostReviewScreenControl(
     submitState: UiState<Unit>,
     goBack: () -> Unit,
-    setEvent: (FacultyEvent) -> Unit
+    setEvent: (FacultyEvent) -> Unit,
+    viewModel: FacultyViewModel
 ) {
 
+    val editingReview by viewModel.editingReview.collectAsState()
     var rating by remember { mutableDoubleStateOf(1.0) }
     var feedback by remember { mutableStateOf("") }
+
+    androidx.compose.runtime.LaunchedEffect(editingReview) {
+        rating = editingReview?.rating ?: 1.0
+        feedback = editingReview?.feedback ?: ""
+    }
+
+
 
     var showDialog by remember { mutableStateOf(false) }
     AppScreen {
@@ -74,15 +86,20 @@ fun PostReviewScreenControl(
                 PostReviewIdleScreen(
                     rating = rating,
                     feedback = feedback,
+                    isEditing = editingReview != null,
                     onRatingChange = { rating = it },
                     onFeedbackChange = { feedback = it },
                     onSubmitClick = {
                         setEvent(FacultyEvent.SubmitReview(rating, feedback))
                     },
-                    onDiscardClick = goBack
+                    onDiscardClick = {
+                        viewModel.clearEditingReview()
+                        goBack()
+                    }
                 )
             },
             onCancel = {
+                viewModel.clearEditingReview()
                 setEvent(FacultyEvent.ResetSubmitState)
                 goBack()
             }
@@ -102,6 +119,7 @@ fun PostReviewScreenControl(
 fun PostReviewIdleScreen(
     rating: Double,
     feedback: String,
+    isEditing: Boolean,
     onRatingChange: (Double) -> Unit,
     onFeedbackChange: (String) -> Unit,
     onSubmitClick: () -> Unit,
@@ -115,10 +133,12 @@ fun PostReviewIdleScreen(
     ) {
 
         Text(
-            text = "Submit Your Feedback",
+            text = if (isEditing)
+                "Edit Your Feedback"
+            else
+                "Submit Your Feedback",
             style = MaterialTheme.typography.titleLarge
         )
-
 
         // App Rating Bar
         AppRatingBar(rating = rating.toFloat()) {
@@ -151,7 +171,10 @@ fun PostReviewIdleScreen(
 
             Text(
                 modifier = Modifier.padding(16.dp),
-                text = "Submit Review",
+                text = if (isEditing)
+                    "Update Review"
+                else
+                    "Submit Review",
                 style = MaterialTheme.typography.titleMedium,
             )
         }
@@ -164,7 +187,7 @@ fun PostReviewIdleScreen(
 
             Text(
                 modifier = Modifier.padding(16.dp),
-                text = "Discard Review",
+                text = if (isEditing) "Cancel" else "Discard Review",
                 style = MaterialTheme.typography.titleMedium,
             )
         }

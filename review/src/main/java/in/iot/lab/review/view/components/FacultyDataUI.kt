@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import `in`.iot.lab.design.R
 import `in`.iot.lab.design.components.AppNetworkImage
 import `in`.iot.lab.design.components.AppScreen
+import `in`.iot.lab.design.components.LetterAvatar
 import `in`.iot.lab.design.components.StarUI
 import `in`.iot.lab.design.theme.CustomAppTheme
 import java.text.DecimalFormat
@@ -125,15 +126,24 @@ fun FacultyDataUI(
         ) {
 
             // Profile Pic Image
-            AppNetworkImage(
-                model = photoUrl,
-                contentDescription = null,
-                errorImage = painterResource(id = R.drawable.person),
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(56.dp),
-                contentScale = ContentScale.Fit
-            )
+            if (photoUrl.isNotBlank()) {
+
+                AppNetworkImage(
+                    model = photoUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(56.dp),
+                    contentScale = ContentScale.Crop
+                )
+
+            } else {
+
+                LetterAvatar(
+                    name = name,
+                    modifier = Modifier.size(56.dp)
+                )
+            }
 
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
 

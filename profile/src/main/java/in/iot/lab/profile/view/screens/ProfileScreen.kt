@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import `in`.iot.lab.design.R
 import `in`.iot.lab.design.components.AppNetworkImage
 import `in`.iot.lab.design.components.AppScreen
+import `in`.iot.lab.design.components.LetterAvatar
 import `in`.iot.lab.design.components.PrimaryButton
 import `in`.iot.lab.design.components.TertiaryButton
 import `in`.iot.lab.design.state.HandleUiState
@@ -160,15 +161,10 @@ fun ProfileSuccessScreen(
         ) {
 
             // User Profile Picture
-            AppNetworkImage(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(120.dp),
-                errorImage = painterResource(id = R.drawable.person),
-                model = user.photoUrl,
-                contentDescription = "Profile Photo"
+            LetterAvatar(
+                name = user.name,
+                size=120.dp
             )
-
 
             // User Name
             Text(

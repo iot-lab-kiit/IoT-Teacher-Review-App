@@ -120,6 +120,8 @@ fun ReviewDetailSuccessScreen(
                     rating = review.rating ?: 0.0,
                     description = review.feedback ?: "Alas! The reviewer gave no feedback ",
                     photoUrl = review.createdBy?.photoUrl ?: "",
+                    showFacultyPhoto = false,
+                    showMenu = false, //menu button wont be shown
                     createdAt = review.createdAt ?: ""
                 )
             }

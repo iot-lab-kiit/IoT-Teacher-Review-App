@@ -28,7 +28,8 @@ import `in`.iot.lab.kritique.domain.models.review.RemoteReviewHistoryResponse
 fun HistoryScreenControl(
     historyList: LazyPagingItems<RemoteReviewHistoryResponse>,
     deleteState: UiState<Unit>,
-    setEvent: (HistoryEvent) -> Unit
+    setEvent: (HistoryEvent) -> Unit,
+    onEditReview: (RemoteReviewHistoryResponse) -> Unit
 ) {
 
     LaunchedEffect(Unit) {
@@ -53,7 +54,10 @@ fun HistoryScreenControl(
             // History Review Data UI
             HistorySuccessScreen(
                 historyList = pagingData,
-                onDeletePress = { setEvent(HistoryEvent.RemoveReview(it)) }
+                onDeletePress = { setEvent(HistoryEvent.RemoveReview(it)) },
+                onEditPress = { review ->
+                    onEditReview(review)
+                }
             )
         }
     }
@@ -63,7 +67,8 @@ fun HistoryScreenControl(
 @Composable
 fun HistorySuccessScreen(
     historyList: LazyPagingItems<RemoteReviewHistoryResponse>,
-    onDeletePress: (String) -> Unit
+    onDeletePress: (String) -> Unit,
+    onEditPress: (RemoteReviewHistoryResponse) -> Unit
 ) {
 
     var deletePress by remember { mutableStateOf(false) }
@@ -84,6 +89,10 @@ fun HistorySuccessScreen(
                     description = history.feedback,
                     photoUrl = history.createdFor.photoUrl ?: "",
                     createdAt = history.createdAt,
+                    showFacultyPhoto = true,
+                    onEditPress = {
+                        onEditPress(history)
+                    },
                     onDeletePress = {
                         deleteId = history.id
                         deletePress = true
