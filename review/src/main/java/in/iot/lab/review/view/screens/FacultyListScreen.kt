@@ -2,6 +2,8 @@ package `in`.iot.lab.review.view.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,13 +12,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import `in`.iot.lab.design.animations.FacultySkeletonCard
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.SearchBar
 import `in`.iot.lab.design.state.HandlePagingData
+import `in`.iot.lab.kritique.domain.models.faculty.RemoteFaculty
 import `in`.iot.lab.review.view.components.FacultyDataUI
 import `in`.iot.lab.review.view.events.FacultyEvent
 import `in`.iot.lab.review.view.navigation.FACULTY_DETAIL_ROUTE
-import `in`.iot.lab.kritique.domain.models.faculty.RemoteFaculty
 
 
 @Composable
@@ -31,8 +34,11 @@ fun FacultyListScreenControl(
     }
 
     AppScreen {
-
-        facultyList.HandlePagingData { pagingData ->
+        facultyList.HandlePagingData(
+            loadingBlock = {
+                FacultyLoadingScreen()
+            }
+        ) { pagingData ->
             FacultyListSuccessScreen(
                 faculties = pagingData,
                 onFacultySelected = {
@@ -52,6 +58,36 @@ fun FacultyListScreenControl(
 
 
 @Composable
+private fun FacultyLoadingScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+    ) {
+        // Search bar always on top
+        SearchBar(
+            label = "Search",
+            placeholder = "Search a faculty...",
+            onClearClick = { },
+            onSearchClicked = { },
+            onValueChange = { }
+        )
+
+        // Skeleton below search bar
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)
+        ) {
+            items(8) {
+                FacultySkeletonCard()
+            }
+        }
+    }
+}
+
+
+@Composable
 fun FacultyListSuccessScreen(
     faculties: LazyPagingItems<RemoteFaculty>,
     onFacultySelected: (String) -> Unit,
@@ -61,11 +97,13 @@ fun FacultyListSuccessScreen(
 
     LazyColumn(
         modifier = Modifier
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .fillMaxSize()
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(bottom = 100.dp)
     ) {
 
+        // Search Bar always on top
         item {
             SearchBar(
                 label = "Search",
@@ -73,12 +111,16 @@ fun FacultyListSuccessScreen(
                 onClearClick = onClearClick,
                 onSearchClicked = onSearchClick,
                 onValueChange = {
-                    if (it.isNotEmpty() && it.length % 2 == 0)
+                    if (it.length >= 3) {
                         onSearchClick(it)
+                    } else if (it.isEmpty()) {
+                        onClearClick()
+                    }
                 }
             )
         }
 
+        // Faculty List
         items(faculties.itemCount) {
             faculties[it]?.let { faculty ->
                 FacultyDataUI(
