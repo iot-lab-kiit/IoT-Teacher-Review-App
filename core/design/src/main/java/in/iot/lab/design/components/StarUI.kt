@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.iot.lab.design.theme.CustomAppTheme
@@ -54,6 +55,7 @@ private fun DefaultPreview1() {
 fun StarUI(
     modifier: Modifier = Modifier,
     rating: Double,
+    starSize: Int = 16,
     showText: Boolean = false
 ) {
 
@@ -69,30 +71,30 @@ fun StarUI(
                 // Full Stars
                 (rating - i) >= 1 -> {
                     Icon(
-                        modifier = Modifier.size(16.dp),
+                        modifier = Modifier.size(starSize.dp),
                         imageVector = Icons.Filled.Star,
                         contentDescription = "star",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = Color(0xFFFFB400)
                     )
                 }
 
                 // Half Stars
                 (rating - i) >= 0.5 -> {
                     Icon(
-                        modifier = Modifier.size(16.dp),
+                        modifier = Modifier.size(starSize.dp),
                         imageVector = Icons.AutoMirrored.Filled.StarHalf,
                         contentDescription = "star",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = Color(0xFFFFB400)
                     )
                 }
 
                 // Empty Stars / Outlined Stars
                 else -> {
                     Icon(
-                        modifier = Modifier.size(16.dp),
+                        modifier = Modifier.size(starSize.dp),
                         imageVector = Icons.Outlined.StarOutline,
                         contentDescription = "star",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = Color(0xFFFFB400)
                     )
                 }
             }

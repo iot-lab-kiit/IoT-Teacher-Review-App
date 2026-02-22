@@ -1,5 +1,6 @@
 package `in`.iot.lab.review.view.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,15 +19,21 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import `in`.iot.lab.design.components.AppScaffold
 import `in`.iot.lab.design.components.FAB
-import `in`.iot.lab.review.view.components.FacultyDataUI
 import `in`.iot.lab.design.components.ReviewDataUI
 import `in`.iot.lab.design.state.HandlePagingData
 import `in`.iot.lab.design.state.HandleUiState
-import `in`.iot.lab.network.state.UiState
-import `in`.iot.lab.review.view.components.isScrollingUp
-import `in`.iot.lab.review.view.events.FacultyEvent
 import `in`.iot.lab.kritique.domain.models.faculty.RemoteFaculty
 import `in`.iot.lab.kritique.domain.models.review.RemoteFacultyReview
+import `in`.iot.lab.network.state.UiState
+import `in`.iot.lab.review.view.components.FacultyReviewDataUI
+import `in`.iot.lab.review.view.components.isScrollingUp
+import `in`.iot.lab.review.view.events.FacultyEvent
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import `in`.iot.lab.design.theme.CustomAppTheme
+import kotlinx.coroutines.flow.flowOf
 
 
 @Composable
@@ -91,12 +98,14 @@ fun ReviewDetailSuccessScreen(
 
         // User Profile Data
         item {
-            FacultyDataUI(
+            FacultyReviewDataUI(
                 name = faculty.name,
                 photoUrl = faculty.photoUrl ?: "",
                 experience = faculty.experience,
                 avgRating = faculty.avgRating ?: 0.0,
-                totalRating = faculty.totalRating ?: 0
+                totalRating = faculty.totalRating ?: 0,
+                isBookmarked = false,
+                onBookmarkClick = {/*TODO*/}
             )
         }
 
