@@ -1,6 +1,7 @@
 package `in`.iot.lab.review.view.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -12,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.paging.compose.collectAsLazyPagingItems
+import `in`.iot.lab.kritique.domain.models.review.RemoteReviewHistoryResponse
 import `in`.iot.lab.review.view.screens.PostReviewScreenControl
 import `in`.iot.lab.review.view.screens.ReviewDetailScreenControl
 import `in`.iot.lab.review.view.screens.FacultyListScreenControl
@@ -21,7 +23,7 @@ import `in`.iot.lab.review.vm.FacultyViewModel
 const val FACULTY_ROOT_ROUTE = "review-root-route"
 internal const val FACULTY_LIST_ROUTE = "teacher-list-route"
 internal const val FACULTY_DETAIL_ROUTE = "teacher-detail-route"
-internal const val REVIEW_POST_ROUTE = "review-post-route"
+const val REVIEW_POST_ROUTE = "review-post-route"
 
 
 fun NavGraphBuilder.facultyNavGraph(
@@ -68,11 +70,27 @@ fun NavGraphBuilder.facultyNavGraph(
 
             val viewModel = it.getViewModel<FacultyViewModel>(navController)
             val submitState = viewModel.reviewSubmitState.collectAsState().value
+            val editingReview =
+                navController.previousBackStackEntry
+                    ?.savedStateHandle
+                    ?.get<RemoteReviewHistoryResponse>("editing_review")
+
+            LaunchedEffect(editingReview) {
+                editingReview?.let {
+                    viewModel.startEditingReview(it)
+
+                    // clear after reading
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.remove<RemoteReviewHistoryResponse>("editing_review")
+                }
+            }
 
             PostReviewScreenControl(
                 submitState = submitState,
                 setEvent = viewModel::uiListener,
-                goBack = navController::popBackStack
+                goBack = navController::popBackStack,
+                viewModel = viewModel
             )
         }
     }

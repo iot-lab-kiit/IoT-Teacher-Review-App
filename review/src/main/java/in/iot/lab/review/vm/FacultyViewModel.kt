@@ -11,10 +11,14 @@ import `in`.iot.lab.review.view.events.FacultyEvent
 import `in`.iot.lab.kritique.domain.models.faculty.RemoteFaculty
 import `in`.iot.lab.kritique.domain.models.review.PostReviewBody
 import `in`.iot.lab.kritique.domain.models.review.RemoteFacultyReview
+import `in`.iot.lab.kritique.domain.models.review.RemoteReviewHistoryResponse
 import `in`.iot.lab.kritique.domain.repository.FacultyRepo
 import `in`.iot.lab.kritique.domain.repository.UserRepo
+import `in`.iot.lab.network.state.ResponseState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -76,35 +80,95 @@ class FacultyViewModel @Inject constructor(
     val reviewList = _reviewList.asStateFlow()
 
 
+//    private fun getFacultyReview() {
+//        viewModelScope.launch {
+//            facultyRepo.getFacultyReviewData(selectedFacultyId).collect {
+//                _reviewList.value = it
+//            }
+//        }
+//    }
+
     private fun getFacultyReview() {
         viewModelScope.launch {
-            facultyRepo.getFacultyReviewData(selectedFacultyId).collect {
-                _reviewList.value = it
-            }
+            facultyRepo.getFacultyReviewData(selectedFacultyId)
+                .cachedIn(viewModelScope)
+                .collectLatest {
+                    _reviewList.value = it
+                }
         }
     }
-
 
     private val _reviewSubmitState: MutableStateFlow<UiState<Unit>> =
         MutableStateFlow(UiState.Idle)
     val reviewSubmitState = _reviewSubmitState.asStateFlow()
 
 
+    private val _editingReview =
+        MutableStateFlow<RemoteReviewHistoryResponse?>(null)
+    val editingReview: StateFlow<RemoteReviewHistoryResponse?> =
+        _editingReview.asStateFlow()
+    fun startEditingReview(review: RemoteReviewHistoryResponse) {
+        _editingReview.value = review
+        selectedFacultyId = review.createdFor.id
+    }
+    fun clearEditingReview() {
+        _editingReview.value = null
+    }
     private fun submitReview(rating: Double, feedback: String) {
         viewModelScope.launch {
 
-            val postBody = PostReviewBody(
-                createdBy = userRepo.getUserUid(),
-                createdFor = selectedFacultyId,
-                rating = rating,
-                feedback = feedback
-            )
+            val editing = _editingReview.value
 
-            userRepo.postUserReview(postBody).collect {
-                _reviewSubmitState.value = it.toUiState()
+            if (editing != null) {
+
+                // STEP 1: Delete old review
+                userRepo.deleteUserReview(editing.id).collect { deleteState ->
+
+                    if (deleteState is ResponseState.Success) {
+
+                        // STEP 2: Post updated review
+                        userRepo.postUserReview(
+                            PostReviewBody(
+                                createdBy = userRepo.getUserUid(),
+                                createdFor = selectedFacultyId,
+                                rating = rating,
+                                feedback = feedback
+                            )
+                        ).collect { postState ->
+
+                            _reviewSubmitState.value = postState.toUiState()
+
+                            if (postState is ResponseState.Success) {
+                                clearEditingReview()
+                                // Refresh faculty review list
+                                getFacultyReview()
+                                // Refresh faculty data (avg rating etc)
+                                getFacultyData()
+                            }
+                        }
+
+                    } else {
+                        _reviewSubmitState.value = deleteState.toUiState()
+                    }
+                }
+
+            } else {
+
+                // NORMAL CREATE
+                userRepo.postUserReview(
+                    PostReviewBody(
+                        createdBy = userRepo.getUserUid(),
+                        createdFor = selectedFacultyId,
+                        rating = rating,
+                        feedback = feedback
+                    )
+                ).collect {
+                    _reviewSubmitState.value = it.toUiState()
+                }
             }
         }
     }
+
 
     fun uiListener(event: FacultyEvent) {
         when (event) {

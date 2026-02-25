@@ -13,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +34,7 @@ import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.AppRatingBar
 import `in`.iot.lab.review.view.components.FeedbackTextField
 import `in`.iot.lab.review.view.events.FacultyEvent
+import `in`.iot.lab.review.vm.FacultyViewModel
 
 
 // Preview Function
@@ -67,7 +69,8 @@ private fun DefaultPreview1() {
 fun PostReviewScreenControl(
     submitState: UiState<Unit>,
     goBack: () -> Unit,
-    setEvent: (FacultyEvent) -> Unit
+    setEvent: (FacultyEvent) -> Unit,
+    viewModel: FacultyViewModel
 ) {
 
     var ratingT by remember { mutableDoubleStateOf(1.0) }
@@ -95,10 +98,14 @@ fun PostReviewScreenControl(
                     onSubmitClick = {
                         setEvent(FacultyEvent.SubmitReview(averageRating, feedback))
                     },
-                    onDiscardClick = goBack
+                    onDiscardClick = {
+                        viewModel.clearEditingReview()
+                        goBack()
+                    }
                 )
             },
             onCancel = {
+                viewModel.clearEditingReview()
                 setEvent(FacultyEvent.ResetSubmitState)
                 goBack()
             }
@@ -135,7 +142,10 @@ fun PostReviewIdleScreen(
     ) {
 
         Text(
-            text = "Submit Your Feedback",
+            text = if (isEditing)
+                "Edit Your Feedback"
+            else
+                "Submit Your Feedback",
             style = MaterialTheme.typography.titleLarge
         )
 
@@ -198,7 +208,10 @@ fun PostReviewIdleScreen(
 
             Text(
                 modifier = Modifier.padding(16.dp),
-                text = "Submit Review",
+                text = if (isEditing)
+                    "Update Review"
+                else
+                    "Submit Review",
                 style = MaterialTheme.typography.titleMedium,
             )
         }
@@ -211,7 +224,7 @@ fun PostReviewIdleScreen(
 
             Text(
                 modifier = Modifier.padding(16.dp),
-                text = "Discard Review",
+                text = if (isEditing) "Cancel" else "Discard Review",
                 style = MaterialTheme.typography.titleMedium,
             )
         }

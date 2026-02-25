@@ -14,6 +14,8 @@ import `in`.iot.lab.design.animations.ServerErrorAnimation
 import `in`.iot.lab.design.components.AppFailureScreen
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNAL_SERVER_ERROR
 import `in`.iot.lab.network.utils.NetworkStatusCodes.INTERNET_ERROR
+import `in`.iot.lab.network.utils.NetworkStatusCodes.SERVER_UNDER_MAINTENANCE_EC2
+import `in`.iot.lab.network.utils.NetworkStatusCodes.SERVER_UNDER_MAINTENANCE_NGROK
 
 
 @Composable
@@ -29,31 +31,42 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
 
         loadState.refresh is LoadState.Error -> {
 
-            // Error Code
-            val code = (loadState.refresh as LoadState.Error)
-                .error
-                .message
-                .toString()
-                .substring(0, 3)
+            val error = (loadState.refresh as LoadState.Error).error
+            val message = error.message ?: ""
 
-            // Error Message
-            val errorMessage = (loadState.refresh as LoadState.Error)
-                .error
-                .message
-                .toString()
-                .substring(6)
+            // Safely extract error code as Int
+            val code = try {
+                message.trim().split(" ").firstOrNull()?.toIntOrNull()
+                    ?: message.trim().toIntOrNull()
+                    ?: -1
+            } catch (e: Exception) {
+                -1
+            }
+
+            // Safely extract error message (everything after code)
+            val errorMessage = try {
+                val spaceIndex = message.indexOf(" ")
+                if (spaceIndex != -1) message.substring(spaceIndex + 1)
+                else message
+            } catch (e: Exception) {
+                message
+            }
 
             when (code) {
 
-                INTERNAL_SERVER_ERROR.toString() -> {
-                    ServerErrorAnimation(
-                        message = errorMessage,
+                INTERNET_ERROR -> {
+                    InternetErrorAnimation(
                         onTryAgainClick = this::refresh
                     )
                 }
 
-                INTERNET_ERROR.toString() -> {
-                    InternetErrorAnimation(onTryAgainClick = this::refresh)
+                INTERNAL_SERVER_ERROR,
+                SERVER_UNDER_MAINTENANCE_EC2,
+                SERVER_UNDER_MAINTENANCE_NGROK -> {
+                    ServerErrorAnimation(
+                        message = errorMessage,
+                        onTryAgainClick = this::refresh
+                    )
                 }
 
                 else -> {
@@ -68,13 +81,6 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
 
         itemCount == 0 && loadState.refresh !is LoadState.Loading -> {
             EmptyListAnimation(onTryAgainClick = this::refresh)
-        }
-
-        loadState.append is LoadState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter
-            ) { loadingBlock() }
         }
 
         loadState.refresh is LoadState.Loading -> {
