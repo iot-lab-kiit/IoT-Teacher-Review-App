@@ -12,6 +12,8 @@ import `in`.iot.lab.profile.view.navigation.profileNavGraph
 import `in`.iot.lab.review.view.navigation.FACULTY_ROOT_ROUTE
 import `in`.iot.lab.review.view.navigation.facultyNavGraph
 import `in`.iot.lab.kritique.view.components.BottomNavBar
+import `in`.iot.lab.review.view.navigation.REVIEW_POST_ROUTE
+
 
 
 const val HOME_ROOT_ROUTE = "home-root-route"
@@ -44,7 +46,16 @@ fun HomeNavGraph(onLogOut: () -> Unit) {
 
             facultyNavGraph(navController = navController)
 
-            historyNavGraph()
+            historyNavGraph(
+                onEditReview = { review ->
+
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("editing_review", review)
+
+                    navController.navigate(REVIEW_POST_ROUTE)
+                }
+            )
 
             profileNavGraph(onSignOutClick = onLogOut)
         }

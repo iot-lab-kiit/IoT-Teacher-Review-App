@@ -3,6 +3,7 @@ package `in`.iot.lab.kritique.domain.models.review
 import com.google.gson.annotations.SerializedName
 import `in`.iot.lab.kritique.domain.models.faculty.RemoteFaculty
 import `in`.iot.lab.kritique.domain.models.user.RemoteUser
+import java.io.Serializable
 
 
 /**
@@ -25,4 +26,4 @@ data class RemoteReviewHistoryResponse(
     val feedback: String,
     @SerializedName("createdAt")
     val createdAt: String
-)
+): Serializable

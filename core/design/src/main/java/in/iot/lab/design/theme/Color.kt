@@ -6,13 +6,13 @@ import androidx.compose.ui.graphics.Color
 // Primary Colors
 val primaryColor = Color(0xFF7979FE)
 val onPrimaryColor = Color(0xFFFFFFFF)
-val primaryContainerColor = Color(0xFFC2C2DF)
+val primaryContainerColor = Color(0xFF935BA1)
 val onPrimaryContainerColor = Color(0xFF5353EB)
 
 // Secondary Colors
 val secondaryColor = Color(0xFF3AAAFE)
 val onSecondaryColor = Color(0xFFFFFFFF)
-val secondaryContainerColor = Color(0xFF92C8F0)
+val secondaryContainerColor = Color(0xFF7F92EA)
 val onSecondaryContainerColor = Color(0xFF117FD1)
 
 // Tertiary Colors
