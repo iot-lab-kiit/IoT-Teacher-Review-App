@@ -1,11 +1,15 @@
 package `in`.iot.lab.review.view.screens
 
+import android.R
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,10 +49,13 @@ private fun DefaultPreview1() {
     CustomAppTheme {
         AppScreen {
             PostReviewIdleScreen(
-                rating = 1.0,
+                ratingT = 1.0,
+                ratingB = 1.0,
+                ratingM = 1.0,
                 feedback = "",
-                isEditing = false,
-                onRatingChange = { },
+                onTeachingRatingChange = { },
+                onBehaviourRatingChange = { },
+                onMarksRatingChange = { },
                 onFeedbackChange = { },
                 onSubmitClick = { },
                 onDiscardClick = {}
@@ -66,31 +73,30 @@ fun PostReviewScreenControl(
     viewModel: FacultyViewModel
 ) {
 
-    val editingReview by viewModel.editingReview.collectAsState()
-    var rating by remember { mutableDoubleStateOf(1.0) }
+    var ratingT by remember { mutableDoubleStateOf(1.0) }
+    var ratingB by remember { mutableDoubleStateOf(1.0) }
+    var ratingM by remember { mutableDoubleStateOf(1.0) }
     var feedback by remember { mutableStateOf("") }
 
-    androidx.compose.runtime.LaunchedEffect(editingReview) {
-        rating = editingReview?.rating ?: 1.0
-        feedback = editingReview?.feedback ?: ""
-    }
-
-
+    val averageRating = (ratingT+ratingB+ratingM)/3
 
     var showDialog by remember { mutableStateOf(false) }
     AppScreen {
 
         submitState.HandleUiState(
-            onTryAgain = { setEvent(FacultyEvent.SubmitReview(rating, feedback)) },
+            onTryAgain = { setEvent(FacultyEvent.SubmitReview(averageRating, feedback)) },
             idleBlock = {
                 PostReviewIdleScreen(
-                    rating = rating,
+                    ratingT = ratingT,
+                    ratingB = ratingB,
+                    ratingM = ratingM,
                     feedback = feedback,
-                    isEditing = editingReview != null,
-                    onRatingChange = { rating = it },
+                    onTeachingRatingChange = { ratingT = it },
+                    onBehaviourRatingChange = { ratingB = it },
+                    onMarksRatingChange = { ratingM = it },
                     onFeedbackChange = { feedback = it },
                     onSubmitClick = {
-                        setEvent(FacultyEvent.SubmitReview(rating, feedback))
+                        setEvent(FacultyEvent.SubmitReview(averageRating, feedback))
                     },
                     onDiscardClick = {
                         viewModel.clearEditingReview()
@@ -117,10 +123,13 @@ fun PostReviewScreenControl(
 
 @Composable
 fun PostReviewIdleScreen(
-    rating: Double,
+    ratingT: Double,
+    ratingB: Double,
+    ratingM: Double,
     feedback: String,
-    isEditing: Boolean,
-    onRatingChange: (Double) -> Unit,
+    onTeachingRatingChange: (Double) -> Unit,
+    onBehaviourRatingChange: (Double) -> Unit,
+    onMarksRatingChange: (Double) -> Unit,
     onFeedbackChange: (String) -> Unit,
     onSubmitClick: () -> Unit,
     onDiscardClick: () -> Unit
@@ -140,15 +149,43 @@ fun PostReviewIdleScreen(
             style = MaterialTheme.typography.titleLarge
         )
 
-        // App Rating Bar
-        AppRatingBar(rating = rating.toFloat()) {
-            onRatingChange(it.toDouble())
-        }
-
-
-        // Feedback TextField
-        FeedbackTextField(input = feedback) {
-            onFeedbackChange(it)
+        Card(
+            modifier = Modifier.fillMaxWidth() ,
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    text = "Teaching",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                // App Rating Bar
+                AppRatingBar(rating = ratingT.toFloat()) {
+                    onTeachingRatingChange(it.toDouble())
+                }
+                Text(
+                    text = "Behaviour",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                AppRatingBar(rating = ratingB.toFloat()) {
+                    onBehaviourRatingChange(it.toDouble())
+                }
+                Text(
+                    text = "Marks",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                AppRatingBar(rating = ratingM.toFloat()) {
+                    onMarksRatingChange(it.toDouble())
+                }
+                // Feedback TextField
+                FeedbackTextField(
+                    input = feedback,
+                ) {
+                    onFeedbackChange(it)
+                }
+            }
         }
 
 
