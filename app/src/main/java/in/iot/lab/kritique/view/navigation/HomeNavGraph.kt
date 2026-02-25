@@ -32,10 +32,7 @@ fun HomeNavGraph(onLogOut: () -> Unit) {
     AppScaffold(
         contentAlignment = Alignment.TopStart,
         bottomBar = {
-            BottomNavBar(
-                navController = navController,
-                bottomMenu = BottomNavOptions.bottomNavOptions
-            )
+            CustomBottomNavigation(navController = navController)
         }
     ) {
 
@@ -56,6 +53,13 @@ fun HomeNavGraph(onLogOut: () -> Unit) {
                     navController.navigate(REVIEW_POST_ROUTE)
                 }
             )
+
+            bookmarkNavGraph(onExploreClick = {
+                navController.navigate(FACULTY_ROOT_ROUTE) {
+                    popUpTo(navController.graph.startDestinationId)
+                    launchSingleTop = true
+                }
+            })
 
             profileNavGraph(onSignOutClick = onLogOut)
         }

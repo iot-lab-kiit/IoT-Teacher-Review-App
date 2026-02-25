@@ -1,9 +1,13 @@
 package `in`.iot.lab.review.view.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -55,19 +59,25 @@ fun ReviewDetailScreenControl(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(NavigationBarDefaults.windowInsets)
     ) {
 
-        facultyData.HandleUiState(
-            onCancel = onBackClick,
-            onTryAgain = {
-                setEvent(FacultyEvent.GetFacultyDetails)
-            }
-        ) { faculty ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+            facultyData.HandleUiState(
+                onCancel = onBackClick,
+                onTryAgain = {
+                    setEvent(FacultyEvent.GetFacultyDetails)
+                }
+            ) { faculty ->
 
-            reviewList.HandlePagingData {
-                ReviewDetailSuccessScreen(
-                    faculty = faculty,
-                    reviewList = reviewList,
-                    lazyListState = lazyListState
-                )
+                reviewList.HandlePagingData {
+                    ReviewDetailSuccessScreen(
+                        faculty = faculty,
+                        reviewList = reviewList,
+                        lazyListState = lazyListState
+                    )
+                }
             }
         }
     }
@@ -83,10 +93,12 @@ fun ReviewDetailSuccessScreen(
 
     LazyColumn(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .statusBarsPadding()
+            .padding(horizontal = 16.dp),
         state = lazyListState,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp) // Top padding and space for bottom nav
     ) {
 
         // User Profile Data
