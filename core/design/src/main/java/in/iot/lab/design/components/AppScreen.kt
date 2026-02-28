@@ -16,13 +16,18 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import `in`.iot.lab.design.theme.CustomAppTheme
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Brush
+import `in`.iot.lab.design.theme.GradientTop
+import `in`.iot.lab.design.theme.GradientMiddle
+import `in`.iot.lab.design.theme.GradientBottom
 
 
 @Composable
 fun AppScreen(
     modifier: Modifier = Modifier,
     shape: Shape = RectangleShape,
-    color: Color = MaterialTheme.colorScheme.surface,
+    color: Color = Color.Transparent,
     contentColor: Color = contentColorFor(color),
     tonalElevation: Dp = 0.dp,
     shadowElevation: Dp = 0.dp,
@@ -42,10 +47,40 @@ fun AppScreen(
             border = border
         ) {
             Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = contentAlignment,
-                content = content
-            )
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colorStops = arrayOf(
+                                0.0f to GradientTop,
+                                0.30f to GradientMiddle,
+                                1.0f to GradientBottom
+                            )
+                        )
+                    )
+            ) {
+
+                // subtle top glow layer
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(
+                            Brush.radialGradient(
+                                colors = listOf(
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.035f),
+                                    Color.Transparent
+                                ),
+                                radius = 750f
+                            )
+                        )
+                )
+
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = contentAlignment,
+                    content = content
+                )
+            }
         }
     }
 }

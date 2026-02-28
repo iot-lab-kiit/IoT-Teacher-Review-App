@@ -1,14 +1,20 @@
 package `in`.iot.lab.review.view.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -28,6 +35,9 @@ import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.LetterAvatar
 import `in`.iot.lab.design.components.StarUI
 import `in`.iot.lab.design.theme.CustomAppTheme
+import `in`.iot.lab.design.theme.RatingHigh
+import `in`.iot.lab.design.theme.RatingLow
+import `in`.iot.lab.design.theme.RatingMedium
 import java.text.DecimalFormat
 
 
@@ -100,85 +110,119 @@ fun FacultyDataUI(
     totalRating: Int
 ) {
 
-    // Color of the Card
-    val cardColor = CardDefaults.cardColors(
-        containerColor = when {
-            avgRating >= 4 -> Color(0xFF2C4431)
-            avgRating >= 2 -> Color(0xFF26444D)
-            avgRating > 0 -> Color(0xFF752E2E)
-            else -> Color.Unspecified
-        }
-    )
-
-    ElevatedCard(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        colors = cardColor,
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+    Card(
+        modifier = modifier
+            .padding(horizontal = 6.dp),
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        border = BorderStroke(
+            1.dp,
+            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+        )
     ) {
 
-        Row(
+        Box(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
+                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.85f)
+                        )
+                    )
+                )
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .fillMaxWidth()
         ) {
 
-            // Profile Pic Image
-            if (photoUrl.isNotBlank()) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
 
-                AppNetworkImage(
-                    model = photoUrl,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(56.dp),
-                    contentScale = ContentScale.Crop
-                )
-
-            } else {
-
-                LetterAvatar(
-                    name = name,
-                    modifier = Modifier.size(56.dp)
-                )
-            }
-
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-
-                // Name Text
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                // Experience of the Faculty
-                experience?.let {
-                    Text(
-                        text = "Experience · ${DecimalFormat("#.##").format(it)} years",
-                        style = MaterialTheme.typography.labelLarge
+                // Avatar
+                if (photoUrl.isNotBlank()) {
+                    AppNetworkImage(
+                        model = photoUrl,
+                        contentDescription = null,
+                        errorImage = painterResource(id = R.drawable.person),
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .size(56.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    LetterAvatar(
+                        name = name,
+                        modifier = Modifier.size(56.dp)
                     )
                 }
 
+                Spacer(modifier = Modifier.width(16.dp))
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
 
-                    // This function shows the Star UI
-                    StarUI(
-                        modifier = Modifier.weight(1f),
-                        rating = avgRating,
-                        showText = true
-                    )
-
-                    // Description Text
                     Text(
-                        modifier = Modifier.weight(1f),
-                        text = "· $totalRating Ratings",
-                        style = MaterialTheme.typography.bodyMedium
+                        text = name,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
+
+                    experience?.let {
+                        Text(
+                            text = "Experience · ${DecimalFormat("#.##").format(it)} years",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        RatingBadge(avgRating)
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            text = "· $totalRating Ratings",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun RatingBadge(rating: Double) {
+
+    val badgeColor = when {
+        rating >= 4 -> RatingHigh
+        rating >= 2 -> RatingMedium
+        rating > 0 -> RatingLow
+        else -> MaterialTheme.colorScheme.surfaceVariant
+    }
+
+    val textColor = Color.White
+
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(50))
+            .background(badgeColor.copy(alpha = 0.9f))
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = "★ ${DecimalFormat("#.##").format(rating)}",
+            style = MaterialTheme.typography.labelMedium,
+            color = textColor
+        )
     }
 }

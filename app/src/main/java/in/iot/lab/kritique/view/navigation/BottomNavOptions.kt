@@ -135,7 +135,7 @@ fun CustomBottomNavigation(
                 Brush.verticalGradient(
                     colors = listOf(
                         Color.Transparent,
-                        MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
+                        MaterialTheme.colorScheme.surface
                     )
                 )
             )
@@ -146,7 +146,7 @@ fun CustomBottomNavigation(
                 .fillMaxWidth()
                 .height(64.dp)
                 .clip(RoundedCornerShape(32.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.95f))
                 .padding(horizontal = 8.dp, vertical = 8.dp)
         ) {
             Row(
