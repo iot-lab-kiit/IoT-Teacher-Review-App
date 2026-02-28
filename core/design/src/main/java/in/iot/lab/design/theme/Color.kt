@@ -2,39 +2,46 @@ package `in`.iot.lab.design.theme
 
 import androidx.compose.ui.graphics.Color
 
-
-// Primary Colors
-val primaryColor = Color(0xFF7979FE)
+// 🔵 Primary (Blue)
+val primaryColor = Color(0xFF3A86FF)
 val onPrimaryColor = Color(0xFFFFFFFF)
-val primaryContainerColor = Color(0xFF935BA1)
-val onPrimaryContainerColor = Color(0xFF5353EB)
+val primaryContainerColor = Color(0xFF2F5EA8)
+val onPrimaryContainerColor = Color(0xFFFFFFFF)
 
-// Secondary Colors
-val secondaryColor = Color(0xFF3AAAFE)
+// 🔹 Secondary (Blue-Grey)
+val secondaryColor = Color(0xFF5C6F91)
 val onSecondaryColor = Color(0xFFFFFFFF)
-val secondaryContainerColor = Color(0xFF7F92EA)
-val onSecondaryContainerColor = Color(0xFF117FD1)
+val secondaryContainerColor = Color(0xFF3E4A61)
+val onSecondaryContainerColor = Color(0xFFFFFFFF)
 
-// Tertiary Colors
-val tertiaryColor = Color(0xFFFC3B75)
-val onTertiaryColor = Color(0xFFFFFFFF)
-val tertiaryContainerColor = Color(0xFFEBAEC0)
-val onTertiaryContainerColor = Color(0xFFEE0D51)
+// 🌫 Smoky Grey Background
+val backgroundColor = Color(0xFF1E2228)
+val onBackgroundColor = Color(0xFFE4E6EB)
 
-// background Colors
-val backgroundColor = Color(0xFF1C1F22)
-val onBackgroundColor = Color(0xFFD5D4D4)
+// 🌫 Surface (Cards)
+val surfaceColor = Color(0xFF252A31)
+val onSurfaceColor = Color(0xFFE4E6EB)
 
-// Surface Colors
-val surfaceColor = Color(0xFF1C1F22)
-val onSurfaceColor = Color(0xFFD5D4D4)
+// Slight variant for search bars / nav
+val surfaceVariantColor = Color(0xFF2E343D)
 
-// Surface Variants
-val surfaceVariantColor = Color(0xFF282B2E)
-
-// Error Colors
-val errorColor = Color(0xFFEE0621)
+// 🔴 Error
+val errorColor = Color(0xFFFF4D4F)
 val onErrorColor = Color(0xFFFFFFFF)
-val errorContainerColor = Color(0xFFFC3B75)
+val errorContainerColor = Color(0xFFB3261E)
+val onErrorContainerColor = Color(0xFFFFFFFF)
 
-val onErrorContainerColor = Color(0xFFFAFAFA)
+// 🔹 Tertiary (Accent Blue Variant)
+val tertiaryColor = Color(0xFF4F8CC9)
+val onTertiaryColor = Color(0xFFFFFFFF)
+val tertiaryContainerColor = Color(0xFF2C3E50)
+val onTertiaryContainerColor = Color(0xFFFFFFFF)
+
+// Background Gradient Colors (Blue Dark Theme)
+val GradientTop = Color(0xFF0D1B2A)      // deep navy
+val GradientMiddle = Color(0xFF1B2C44)   // slightly brighter
+val GradientBottom = Color(0xFF111827)   // smooth dark base
+
+val RatingHigh = Color(0xFF2E7D32)
+val RatingMedium = Color(0xFFC9A227)
+val RatingLow = Color(0xFFB00020)

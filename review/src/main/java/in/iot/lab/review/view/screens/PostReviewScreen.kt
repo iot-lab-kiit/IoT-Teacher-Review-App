@@ -4,10 +4,17 @@ import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -154,8 +161,13 @@ fun PostReviewIdleScreen(
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier.padding(horizontal = 32.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
+            .padding(top = 40.dp)
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -164,31 +176,72 @@ fun PostReviewIdleScreen(
                 "Edit Your Feedback"
             else
                 "Submit Your Feedback",
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp)
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+                modifier = Modifier
+                    .padding(horizontal = 20.dp, vertical = 18.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
 
-                Text("Teaching", style = MaterialTheme.typography.titleMedium)
-                AppRatingBar(rating = ratingT.toFloat()) {
-                    onTeachingRatingChange(it.toDouble())
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Teaching",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    AppRatingBar(rating = ratingT.toFloat()) {
+                        onTeachingRatingChange(it.toDouble())
+                    }
                 }
 
-                Text("Behaviour", style = MaterialTheme.typography.titleMedium)
-                AppRatingBar(rating = ratingB.toFloat()) {
-                    onBehaviourRatingChange(it.toDouble())
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Behaviour",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    AppRatingBar(rating = ratingT.toFloat()) {
+                        onTeachingRatingChange(it.toDouble())
+                    }
                 }
 
-                Text("Marks", style = MaterialTheme.typography.titleMedium)
-                AppRatingBar(rating = ratingM.toFloat()) {
-                    onMarksRatingChange(it.toDouble())
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Marks",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    AppRatingBar(rating = ratingT.toFloat()) {
+                        onTeachingRatingChange(it.toDouble())
+                    }
                 }
 
                 FeedbackTextField(
@@ -234,5 +287,6 @@ fun PostReviewIdleScreen(
                 style = MaterialTheme.typography.titleMedium,
             )
         }
+        Spacer(modifier = Modifier.height(60.dp))
     }
 }

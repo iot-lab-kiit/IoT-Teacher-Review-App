@@ -36,6 +36,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.theme.CustomAppTheme
 import kotlinx.coroutines.flow.flowOf
 
@@ -55,22 +56,23 @@ fun ReviewDetailScreenControl(
 
     val lazyListState = rememberLazyListState()
 
-    AppScaffold(
-        floatingActionButton = {
-            FAB(
-                text = "Review",
-                onClick = onFabClick,
-                extended = lazyListState.isScrollingUp()
-            )
-        },
-        contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(NavigationBarDefaults.windowInsets)
-    ) {
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
+    AppScreen {
+        AppScaffold(
+            floatingActionButton = {
+                Box(
+                    modifier = Modifier.padding(bottom = 75.dp) // adjust if needed
+                ) {
+                    FAB(
+                        text = "Review",
+                        onClick = onFabClick,
+                        extended = lazyListState.isScrollingUp()
+                    )
+                }
+            },
+            contentWindowInsets = ScaffoldDefaults.contentWindowInsets
+                .exclude(NavigationBarDefaults.windowInsets)
         ) {
+
             facultyData.HandleUiState(
                 onCancel = onBackClick,
                 onTryAgain = {
@@ -126,8 +128,9 @@ fun ReviewDetailSuccessScreen(
             if (it != 0) {
                 item {
                     Text(
-                        text = "· Reviews - $it",
-                        style = MaterialTheme.typography.titleLarge
+                        text = "Reviews ($it)",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
