@@ -175,7 +175,7 @@ fun FacultyDataUI(
 
                     experience?.let {
                         Text(
-                            text = "Experience · ${DecimalFormat("#.##").format(it)} years",
+                            text = " ${DecimalFormat("#.##").format(it)} years Experience",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

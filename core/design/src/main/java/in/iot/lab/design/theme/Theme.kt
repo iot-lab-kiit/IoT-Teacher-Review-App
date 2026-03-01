@@ -23,6 +23,7 @@ private val DarkColorScheme = darkColorScheme(
     surface = surfaceColor,
     onSurface = onSurfaceColor,
     surfaceVariant = surfaceVariantColor,
+    onSurfaceVariant = onSurfaceVariantColor,
     error = errorColor,
     onError = onErrorColor,
     errorContainer = errorContainerColor,
@@ -31,7 +32,6 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun CustomAppTheme(content: @Composable () -> Unit) {
-
     MaterialTheme(
         colorScheme = DarkColorScheme,
         shapes = Shapes,

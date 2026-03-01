@@ -2,6 +2,7 @@ package `in`.iot.lab.profile.view.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -14,12 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.iot.lab.design.theme.*
 
-// This is the Preview function of the Screen
 @Preview("Light")
 @Preview(
     name = "Dark",
@@ -37,15 +39,6 @@ private fun DefaultPreviewLoading() {
     }
 }
 
-
-/**
- * This function draws each Profile Screen UI Cards
- *
- * @param modifier Default to pass modifications from the Parent Class
- * @param title This is the heading of the type of Data
- * @param leadingIcon This is the leading Icon of the Card
- * @param description This is the data of the Card
- */
 @Composable
 fun ProfileItemUI(
     modifier: Modifier = Modifier,
@@ -55,51 +48,76 @@ fun ProfileItemUI(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
 
-        // Heading Title to be written
+        // Label
         Text(
             text = title,
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f)
         )
 
-        // Main Card which contains the data
+        // Glass Card
         Card(
             modifier = modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(18.dp),
+            shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
+                containerColor = Color.Transparent
             ),
             border = BorderStroke(
-                1.dp,
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+                width = 1.dp,
+                brush = Brush.horizontalGradient(
+                    colors = listOf(
+                        GlassBorder.copy(alpha = 0.8f),
+                        GlassBorder.copy(alpha = 0.3f)
+                    )
+                )
             ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
-
-            // Contains the Leading Icon and Data
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                GlassSurface.copy(alpha = 0.9f),
+                                surfaceVariantColor.copy(alpha = 0.7f)
+                            )
+                        )
+                    )
             ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
 
-                // Leading Icon
-                Icon(
-                    imageVector = leadingIcon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(22.dp)
-                )
+                    // Icon with subtle blue tinted background
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .background(
+                                color = primaryColor.copy(alpha = 0.15f),
+                                shape = RoundedCornerShape(10.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = leadingIcon,
+                            contentDescription = null,
+                            tint = primaryColor,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
 
-                // Data to be shown
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
         }
     }

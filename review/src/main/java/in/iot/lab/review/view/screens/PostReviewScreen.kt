@@ -2,33 +2,45 @@ package `in`.iot.lab.review.view.screens
 
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import `in`.iot.lab.design.animations.PostAnimation
 import `in`.iot.lab.design.components.AppScreen
 import `in`.iot.lab.design.components.PrimaryButton
 import `in`.iot.lab.design.components.TertiaryButton
 import `in`.iot.lab.design.state.HandleUiState
 import `in`.iot.lab.design.theme.CustomAppTheme
+import `in`.iot.lab.design.theme.GlassBorder
+import `in`.iot.lab.design.theme.GlassSurface
+import `in`.iot.lab.design.theme.primaryColor
+import `in`.iot.lab.design.theme.surfaceVariantColor
 import `in`.iot.lab.network.state.UiState
 import `in`.iot.lab.review.view.components.AppRatingBar
 import `in`.iot.lab.review.view.components.FeedbackTextField
@@ -104,7 +116,6 @@ fun PostReviewScreenControl(
                 setEvent(FacultyEvent.SubmitReview(averageRating, feedback))
             },
             idleBlock = {
-
                 PostReviewIdleScreen(
                     ratingT = ratingT,
                     ratingB = ratingB,
@@ -165,94 +176,94 @@ fun PostReviewIdleScreen(
             .fillMaxSize()
             .statusBarsPadding()
             .verticalScroll(rememberScrollState())
-            .padding(top = 40.dp)
-            .padding(horizontal = 24.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
+            .padding(top = 32.dp)
+            .padding(horizontal = 20.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(
-            text = if (isEditing)
-                "Edit Your Feedback"
-            else
-                "Submit Your Feedback",
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        // ── Page Title ──
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+            Text(
+                text = if (isEditing) "Edit Your Feedback" else "Submit Your Feedback",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = "Rate your experience with this faculty",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        // ── Rating Glass Card ──
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(22.dp))
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            GlassSurface.copy(alpha = 0.97f),
+                            surfaceVariantColor.copy(alpha = 0.90f)
+                        )
+                    )
+                )
+        ) {
+            // Top blue glow border
+            HorizontalDivider(
+                modifier = Modifier.align(Alignment.TopCenter),
+                thickness = 1.dp,
+                color = primaryColor.copy(alpha = 0.35f)
+            )
+
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 20.dp, vertical = 18.dp)
+                    .padding(horizontal = 20.dp, vertical = 20.dp)
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(14.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
 
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Teaching",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
-                    )
+                // Teaching
+                RatingRowItem(
+                    label = "Teaching",
+                    rating = ratingT.toFloat(),
+                    onRatingChange = { onTeachingRatingChange(it.toDouble()) }
+                )
 
-                    Spacer(modifier = Modifier.height(4.dp))
+                RatingDivider()
 
-                    AppRatingBar(rating = ratingT.toFloat()) {
-                        onTeachingRatingChange(it.toDouble())
-                    }
-                }
+                // Behaviour
+                RatingRowItem(
+                    label = "Behaviour",
+                    rating = ratingB.toFloat(),
+                    onRatingChange = { onBehaviourRatingChange(it.toDouble()) }
+                )
 
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Behaviour",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
-                    )
+                RatingDivider()
 
-                    Spacer(modifier = Modifier.height(4.dp))
+                // Marks
+                RatingRowItem(
+                    label = "Marks",
+                    rating = ratingM.toFloat(),
+                    onRatingChange = { onMarksRatingChange(it.toDouble()) }
+                )
 
-                    AppRatingBar(rating = ratingT.toFloat()) {
-                        onTeachingRatingChange(it.toDouble())
-                    }
-                }
+                Spacer(modifier = Modifier.height(8.dp))
 
-                Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Marks",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f)
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    AppRatingBar(rating = ratingT.toFloat()) {
-                        onTeachingRatingChange(it.toDouble())
-                    }
-                }
-
+                // Feedback text field
                 FeedbackTextField(
-                    input = feedback
-                ) {
-                    onFeedbackChange(it)
-                }
+                    input = feedback,
+                    onInputChanged = onFeedbackChange
+                )
             }
         }
 
-        // Submit Button
+        // ── Submit Button ──
         PrimaryButton(
             onClick = {
                 if (feedback.isNotEmpty())
@@ -264,29 +275,71 @@ fun PostReviewIdleScreen(
                         Toast.LENGTH_SHORT
                     ).show()
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp)
         ) {
             Text(
-                modifier = Modifier.padding(16.dp),
-                text = if (isEditing)
-                    "Update Review"
-                else
-                    "Submit Review",
+                text = if (isEditing) "Update Review" else "Submit Review",
                 style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
             )
         }
 
-        // Discard / Cancel Button
+        // ── Discard / Cancel Button ──
         TertiaryButton(
             onClick = onDiscardClick,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp)
         ) {
             Text(
-                modifier = Modifier.padding(16.dp),
                 text = if (isEditing) "Cancel" else "Discard Review",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium
             )
         }
+
         Spacer(modifier = Modifier.height(60.dp))
     }
+}
+
+
+// ── Rating Row: label left, stars right ──
+@Composable
+private fun RatingRowItem(
+    label: String,
+    rating: Float,
+    onRatingChange: (Float) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        AppRatingBar(
+            rating = rating,
+            itemSize = 32.dp,
+            space = 6.dp,
+            onRatingChange = onRatingChange
+        )
+    }
+}
+
+
+// ── Subtle divider between rating rows ──
+@Composable
+private fun RatingDivider() {
+    HorizontalDivider(
+        color = GlassBorder.copy(alpha = 0.35f),
+        thickness = 1.dp
+    )
 }
