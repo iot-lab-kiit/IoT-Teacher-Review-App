@@ -1,8 +1,8 @@
 package `in`.iot.lab.design.components
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -19,36 +19,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import `in`.iot.lab.design.theme.*
 import java.text.SimpleDateFormat
 import java.util.TimeZone
-
-
-@Preview("Light")
-@Preview(
-    name = "Dark",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    showBackground = true
-)
-@Composable
-private fun DefaultPreview1() {
-    CustomAppTheme {
-        ReviewDataUI(
-            title = "Anirban Basak",
-            rating = 4.8,
-            description = "Lorem Ipsum is simply dummy text of the printing and typesetting " +
-                    "industry. Lorem Ipsum has been the industry's standard dummy text.",
-            photoUrl = "",
-            createdAt = "2024-05-29T11:50:22.446Z",
-            onEditPress = {},
-            onDeletePress = {}
-        )
-    }
-}
-
 
 @SuppressLint("SimpleDateFormat")
 @Composable
@@ -66,7 +41,6 @@ fun ReviewDataUI(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    // Glass card container
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -74,39 +48,34 @@ fun ReviewDataUI(
             .background(
                 brush = Brush.linearGradient(
                     colors = listOf(
-                        GlassSurface.copy(alpha = 0.95f),
-                        surfaceVariantColor.copy(alpha = 0.85f)
+                        GlassSurface.copy(alpha = 0.97f),
+                        surfaceVariantColor.copy(alpha = 0.88f)
                     )
                 )
             )
+            .border(
+                width = 1.dp,
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        GlassBorder.copy(alpha = 0.6f),
+                        secondaryColor.copy(alpha = 0.10f)
+                    )
+                ),
+                shape = RoundedCornerShape(18.dp)
+            )
     ) {
-        // Subtle left accent bar
+        // Frosted shimmer
+        Box(modifier = Modifier.matchParentSize().background(GlassOverlay))
+
+        // Left accent bar — blue → purple
         Box(
             modifier = Modifier
                 .width(3.dp)
                 .fillMaxHeight()
                 .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            primaryColor,
-                            primaryColor.copy(alpha = 0.0f)
-                        )
-                    )
+                    Brush.verticalGradient(listOf(primaryColor, secondaryColor.copy(alpha = 0f)))
                 )
         )
-
-        // Subtle border
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(Color.Transparent)
-        ) {
-            HorizontalDivider(
-                modifier = Modifier.align(Alignment.TopCenter),
-                thickness = 1.dp,
-                color = GlassBorder.copy(alpha = 0.5f)
-            )
-        }
 
         Column(
             modifier = Modifier
@@ -114,126 +83,79 @@ fun ReviewDataUI(
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-
-                // Avatar
                 if (showFacultyPhoto && photoUrl.isNotBlank()) {
                     AppNetworkImage(
                         model = photoUrl,
                         contentDescription = null,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .size(44.dp),
+                        modifier = Modifier.clip(CircleShape).size(44.dp),
                         contentScale = ContentScale.Crop
                     )
                 } else {
-                    LetterAvatar(
-                        name = title,
-                        modifier = Modifier.size(44.dp)
-                    )
+                    LetterAvatar(name = title, modifier = Modifier.size(44.dp))
                 }
 
                 Column(modifier = Modifier.weight(1f)) {
-
                     Text(
                         text = title,
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         StarUI(rating = rating)
-
-                        // Date
-                        val formatReceived = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:SS.sss'Z'")
-                        formatReceived.timeZone = TimeZone.getTimeZone("GMT+5.30")
-                        val date = formatReceived.parse(createdAt) ?: "No Date"
-                        val desiredFormat = SimpleDateFormat("dd-MM-yyyy").format(date)
-
+                        val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:SS.sss'Z'")
+                        fmt.timeZone = TimeZone.getTimeZone("GMT+5.30")
+                        val date = fmt.parse(createdAt) ?: "No Date"
                         Text(
-                            text = "· $desiredFormat",
+                            text = "· ${SimpleDateFormat("dd-MM-yyyy").format(date)}",
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
 
-                // Menu
                 if (showMenu && (onEditPress != null || onDeletePress != null)) {
                     Box {
                         IconButton(onClick = { expanded = !expanded }) {
-                            Icon(
-                                imageVector = Icons.Default.MoreVert,
-                                contentDescription = "Menu",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                            Icon(Icons.Default.MoreVert, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
-
                         if (expanded) {
-                            Popup(
-                                alignment = Alignment.TopEnd,
-                                onDismissRequest = { expanded = false }
-                            ) {
-                                Surface(
-                                    shape = RoundedCornerShape(14.dp),
-                                    color = surfaceVariantColor,
-                                    border = CardDefaults.outlinedCardBorder().copy(
-                                        width = 1.dp
-                                    ),
-                                    tonalElevation = 8.dp,
-                                    shadowElevation = 12.dp
+                            Popup(alignment = Alignment.TopEnd, onDismissRequest = { expanded = false }) {
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(14.dp))
+                                        .background(surfaceVariantColor)
+                                        .border(1.dp, GlassBorder.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
                                 ) {
                                     Column {
                                         onEditPress?.let {
                                             Row(
                                                 modifier = Modifier
-                                                    .clickable {
-                                                        expanded = false
-                                                        it()
-                                                    }
+                                                    .clickable { expanded = false; it() }
                                                     .padding(horizontal = 16.dp, vertical = 12.dp),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Icon(
-                                                    Icons.Default.Edit,
-                                                    null,
-                                                    tint = primaryColor
-                                                )
+                                                Icon(Icons.Default.Edit, null, tint = primaryColor)
                                                 Spacer(Modifier.width(12.dp))
-                                                Text(
-                                                    "Edit Review",
-                                                    color = MaterialTheme.colorScheme.onSurface
-                                                )
+                                                Text("Edit Review", color = MaterialTheme.colorScheme.onSurface)
                                             }
                                         }
-
                                         onDeletePress?.let {
                                             Row(
                                                 modifier = Modifier
-                                                    .clickable {
-                                                        expanded = false
-                                                        it()
-                                                    }
+                                                    .clickable { expanded = false; it() }
                                                     .padding(horizontal = 16.dp, vertical = 12.dp),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Icon(
-                                                    Icons.Default.DeleteForever,
-                                                    null,
-                                                    tint = errorColor
-                                                )
+                                                Icon(Icons.Default.DeleteForever, null, tint = errorColor)
                                                 Spacer(Modifier.width(12.dp))
-                                                Text(
-                                                    "Delete Review",
-                                                    color = errorColor
-                                                )
+                                                Text("Delete Review", color = errorColor)
                                             }
                                         }
                                     }
@@ -244,7 +166,6 @@ fun ReviewDataUI(
                 }
             }
 
-            // Description
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodyMedium,

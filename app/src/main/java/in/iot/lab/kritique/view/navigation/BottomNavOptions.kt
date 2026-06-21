@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
+import dev.chrisbanes.haze.HazeState
 import `in`.iot.lab.history.view.navigation.HISTORY_ROUTE
 import `in`.iot.lab.profile.view.navigation.PROFILE_ROUTE
 import `in`.iot.lab.review.view.navigation.FACULTY_ROOT_ROUTE
@@ -123,7 +124,8 @@ sealed class BottomNavOptions(
 @Composable
 fun CustomBottomNavigation(
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    hazeState: HazeState
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

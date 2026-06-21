@@ -2,52 +2,47 @@ package `in`.iot.lab.design.theme
 
 import androidx.compose.ui.graphics.Color
 
-// 🔵 Primary (Vivid Blue - matches reference)
-val primaryColor = Color(0xFF1A6BFF)
-val onPrimaryColor = Color(0xFFFFFFFF)
-val primaryContainerColor = Color(0xFF0D3A8E)
-val onPrimaryContainerColor = Color(0xFFD6E4FF)
+val backgroundColor       = Color(0xFF000000)    // pure black
+val surfaceColor          = Color(0xFF0A0A0F)    // near-black, barely blue-tinted
+val surfaceVariantColor   = Color(0xFF12121A)    // slightly lifted card bg
+val onBackgroundColor     = Color(0xFFE8EAFF)    // cool white-blue for headings
+val onSurfaceColor        = Color(0xFFDDE1FF)    // soft blue-white for body text
+val onSurfaceVariantColor = Color(0xFF7B82A8)    // muted blue-grey for labels
 
-// 🔹 Secondary (Blue-Grey)
-val secondaryColor = Color(0xFF4A6FA5)
-val onSecondaryColor = Color(0xFFFFFFFF)
-val secondaryContainerColor = Color(0xFF1E3A5F)
-val onSecondaryContainerColor = Color(0xFFCCDDFF)
+val primaryColor              = Color(0xFF4D8EFF)
+val onPrimaryColor            = Color(0xFFFFFFFF)
+val primaryContainerColor     = Color(0xFF0D2454)
+val onPrimaryContainerColor   = Color(0xFFB8D0FF)
 
-// 🌑 Deep Navy Background (matches reference exactly)
-val backgroundColor = Color(0xFF080D1A)
-val onBackgroundColor = Color(0xFFE8EEFF)
+val secondaryColor            = Color(0xFF9B72FF)
+val onSecondaryColor          = Color(0xFFFFFFFF)
+val secondaryContainerColor   = Color(0xFF1E1040)
+val onSecondaryContainerColor = Color(0xFFD4BBFF)
 
-// 🪟 Surface (Glass Cards)
-val surfaceColor = Color(0xFF0F1629)
-val onSurfaceColor = Color(0xFFE8EEFF)
+val tertiaryColor             = Color(0xFF6B7FCC)
+val onTertiaryColor           = Color(0xFFFFFFFF)
+val tertiaryContainerColor    = Color(0xFF151C3A)
+val onTertiaryContainerColor  = Color(0xFFCDD5FF)
 
-// Glass card surface — slightly lighter with blue tint
-val surfaceVariantColor = Color(0xFF151E35)
-val onSurfaceVariantColor = Color(0xFFB0BEDD)
+val errorColor                = Color(0xFFFF5370)
+val onErrorColor              = Color(0xFFFFFFFF)
+val errorContainerColor       = Color(0xFF4A0010)
+val onErrorContainerColor     = Color(0xFFFFB3BC)
 
-// 🔴 Error
-val errorColor = Color(0xFFFF4D4F)
-val onErrorColor = Color(0xFFFFFFFF)
-val errorContainerColor = Color(0xFF8B0000)
-val onErrorContainerColor = Color(0xFFFFDAD6)
+val GlassSurface      = Color(0xFF0E0E18)        // near-black blue-tinted card bg
+val GlassOverlay      = Color(0x0AFFFFFF)        // 4% white frosted layer
+val GlassBorder       = Color(0xFF2A3166)        // blue-purple subtle border
+val GlassBorderSubtle = Color(0xFF1A1F3C)        // barely-visible inner divider
 
-// 🔹 Tertiary (Indigo accent)
-val tertiaryColor = Color(0xFF6C8FE8)
-val onTertiaryColor = Color(0xFFFFFFFF)
-val tertiaryContainerColor = Color(0xFF1A2F6B)
-val onTertiaryContainerColor = Color(0xFFD6E4FF)
+// Ambient glow behind cards
+val GlowBlue          = Color(0xFF4D8EFF)
+val GlowPurple        = Color(0xFF9B72FF)
 
-// Background Gradient Colors (Deep Navy Blue)
-val GradientTop    = Color(0xFF060B18)   // deepest navy
-val GradientMiddle = Color(0xFF0D1829)   // rich navy
-val GradientBottom = Color(0xFF0A1020)   // smooth dark base
 
-// Card glass border tint
-val GlassBorder = Color(0xFF1E3A6E)      // subtle blue border for cards
-val GlassSurface = Color(0xFF0D1829)     // dark glass card bg
+val GradientTop    = Color(0xFF000000)
+val GradientMiddle = Color(0xFF06060E)
+val GradientBottom = Color(0xFF000000)
 
-// Rating colors
-val RatingHigh   = Color(0xFF00C853)     // vivid green
-val RatingMedium = Color(0xFFFFC107)     // amber
-val RatingLow    = Color(0xFFFF1744)     // vivid red
+val RatingHigh   = Color(0xFF00E5A0)             // mint green
+val RatingMedium = Color(0xFFFFB830)             // warm amber
+val RatingLow    = Color(0xFFFF5370)             // soft red

@@ -1,20 +1,18 @@
 package `in`.iot.lab.profile.view.components
 
-import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -22,14 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import `in`.iot.lab.design.theme.*
 
-@Preview("Light")
-@Preview(
-    name = "Dark",
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
-    showBackground = true
-)
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
-private fun DefaultPreviewLoading() {
+private fun Preview() {
     CustomAppTheme {
         ProfileItemUI(
             title = "Email Id",
@@ -50,74 +43,75 @@ fun ProfileItemUI(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-
         // Label
         Text(
             text = title,
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.85f)
+            color = secondaryColor.copy(alpha = 0.85f)   // purple accent label
         )
 
-        // Glass Card
-        Card(
-            modifier = modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.Transparent
-            ),
-            border = BorderStroke(
-                width = 1.dp,
-                brush = Brush.horizontalGradient(
-                    colors = listOf(
-                        GlassBorder.copy(alpha = 0.8f),
-                        GlassBorder.copy(alpha = 0.3f)
+        // Frosted glass card
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            GlassSurface.copy(alpha = 0.95f),
+                            surfaceVariantColor.copy(alpha = 0.80f)
+                        )
                     )
                 )
-            ),
-            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                .border(
+                    width = 1.dp,
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            GlassBorder.copy(alpha = 0.7f),
+                            secondaryColor.copy(alpha = 0.15f)
+                        )
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                )
         ) {
+            // Frosted white shimmer overlay
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                GlassSurface.copy(alpha = 0.9f),
-                                surfaceVariantColor.copy(alpha = 0.7f)
-                            )
-                        )
-                    )
+                    .matchParentSize()
+                    .background(GlassOverlay)
+            )
+
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                // Icon pill — blue tint
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(primaryColor.copy(alpha = 0.12f))
+                        .border(
+                            width = 1.dp,
+                            color = primaryColor.copy(alpha = 0.2f),
+                            shape = RoundedCornerShape(10.dp)
+                        ),
+                    contentAlignment = Alignment.Center
                 ) {
-
-                    // Icon with subtle blue tinted background
-                    Box(
-                        modifier = Modifier
-                            .size(36.dp)
-                            .background(
-                                color = primaryColor.copy(alpha = 0.15f),
-                                shape = RoundedCornerShape(10.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = leadingIcon,
-                            contentDescription = null,
-                            tint = primaryColor,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
-
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface
+                    Icon(
+                        imageVector = leadingIcon,
+                        contentDescription = null,
+                        tint = primaryColor,
+                        modifier = Modifier.size(18.dp)
                     )
                 }
+
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
     }

@@ -23,16 +23,16 @@ import androidx.compose.ui.unit.sp
 import `in`.iot.lab.design.theme.CustomAppTheme
 import kotlin.math.abs
 
-// Navy-blue tinted avatar gradient pairs: (outer, inner)
+// Blue-purple-grey gradient pairs (inner → outer)
 private val AvatarGradients = listOf(
-    Pair(Color(0xFF1A3A6B), Color(0xFF2A5298)),
-    Pair(Color(0xFF0D2E5A), Color(0xFF1A6BFF)),
-    Pair(Color(0xFF1B2A4A), Color(0xFF3B5BDB)),
-    Pair(Color(0xFF0F2340), Color(0xFF1971C2)),
-    Pair(Color(0xFF162032), Color(0xFF228BE6)),
-    Pair(Color(0xFF1A2C4E), Color(0xFF4263EB)),
-    Pair(Color(0xFF0C1F3F), Color(0xFF1864AB)),
-    Pair(Color(0xFF172135), Color(0xFF2B4ACB)),
+    Pair(Color(0xFF4D8EFF), Color(0xFF0D2454)),   // vivid blue
+    Pair(Color(0xFF9B72FF), Color(0xFF1E1040)),   // soft purple
+    Pair(Color(0xFF6B7FCC), Color(0xFF151C3A)),   // blue-grey
+    Pair(Color(0xFF3A6FE8), Color(0xFF0A1A3E)),   // royal blue
+    Pair(Color(0xFF7C5CE8), Color(0xFF18103A)),   // violet
+    Pair(Color(0xFF5B8DEF), Color(0xFF0C1E45)),   // cornflower
+    Pair(Color(0xFF8B6FFF), Color(0xFF1A1035)),   // lavender
+    Pair(Color(0xFF4A7FD4), Color(0xFF0E1C38)),   // steel blue
 )
 
 @Composable
@@ -59,10 +59,8 @@ fun LetterAvatar(
         Brush.radialGradient(listOf(backgroundColor, backgroundColor))
     } else {
         val hash = name?.trim()?.lowercase()?.hashCode() ?: 0
-        val (outer, inner) = AvatarGradients[abs(hash) % AvatarGradients.size]
-        Brush.radialGradient(
-            colors = listOf(inner, outer),
-        )
+        val (inner, outer) = AvatarGradients[abs(hash) % AvatarGradients.size]
+        Brush.radialGradient(colors = listOf(inner, outer))
     }
 
     Box(
@@ -83,7 +81,7 @@ fun LetterAvatar(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
 private fun LetterAvatarPreview() {
     CustomAppTheme {
@@ -93,7 +91,7 @@ private fun LetterAvatarPreview() {
         ) {
             LetterAvatar(name = "Anirban Basak", size = 120.dp)
             LetterAvatar(name = "IoT Lab",       size = 48.dp)
-            LetterAvatar(name = "X",             size = 32.dp)
+            LetterAvatar(name = "Harsh Singh",   size = 48.dp)
             LetterAvatar(name = "",              size = 48.dp)
         }
     }
