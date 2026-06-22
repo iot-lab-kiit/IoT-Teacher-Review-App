@@ -4,10 +4,12 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,13 +17,13 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeSource
 import `in`.iot.lab.design.theme.CustomAppTheme
-import androidx.compose.foundation.background
-import androidx.compose.ui.graphics.Brush
-import `in`.iot.lab.design.theme.GradientTop
-import `in`.iot.lab.design.theme.GradientMiddle
-import `in`.iot.lab.design.theme.GradientBottom
 
+// ── CompositionLocal so any child can access the screen's HazeState ──
+// without prop-drilling through every composable layer
+val LocalHazeState = compositionLocalOf<HazeState?> { null }
 
 @Composable
 fun AppScreen(
@@ -35,6 +37,8 @@ fun AppScreen(
     contentAlignment: Alignment = Alignment.Center,
     content: @Composable BoxScope.() -> Unit
 ) {
+    // Single HazeState created HERE — shared with all descendants via CompositionLocal
+    val hazeState = remember { HazeState() }
 
     CustomAppTheme {
         Surface(
@@ -46,40 +50,22 @@ fun AppScreen(
             shadowElevation = shadowElevation,
             border = border
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colorStops = arrayOf(
-                                0.0f to GradientTop,
-                                0.30f to GradientMiddle,
-                                1.0f to GradientBottom
-                            )
-                        )
-                    )
-            ) {
-
-                // subtle top glow layer
+            CompositionLocalProvider(LocalHazeState provides hazeState) {
                 Box(
                     modifier = Modifier
-                        .matchParentSize()
-                        .background(
-                            Brush.radialGradient(
-                                colors = listOf(
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.035f),
-                                    Color.Transparent
-                                ),
-                                radius = 750f
-                            )
-                        )
-                )
+                        .fillMaxSize()
+                        // hazeSource on the background — this is what cards blur against
+                        .hazeSource(hazeState)
+                ) {
+                    // Animated cyberpunk background with drifting light orbs
+                    CyberpunkBackground()
 
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = contentAlignment,
-                    content = content
-                )
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = contentAlignment,
+                        content = content
+                    )
+                }
             }
         }
     }

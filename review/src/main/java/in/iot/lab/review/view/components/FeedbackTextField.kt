@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,42 +15,44 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-
+import `in`.iot.lab.design.theme.*
 
 private const val CHARACTER_LIMIT = 500
 
 @Composable
-fun FeedbackTextField(
-    input: String,
-    onInputChanged: (String) -> Unit
-) {
-
+fun FeedbackTextField(input: String, onInputChanged: (String) -> Unit) {
     val focusManager = LocalFocusManager.current
+
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = input,
-        onValueChange = {
-            if (it.length <= CHARACTER_LIMIT) onInputChanged(it)
-        },
+        onValueChange = { if (it.length <= CHARACTER_LIMIT) onInputChanged(it) },
         placeholder = {
-            Text(text = "Describe your experience")
+            Text(
+                text = "Describe your experience",
+                color = onSurfaceVariantColor.copy(alpha = 0.5f)
+            )
         },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = { focusManager.clearFocus() }
-        ),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
         minLines = 4,
         maxLines = 4,
         shape = RoundedCornerShape(16.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor   = primaryColor.copy(alpha = 0.7f),
+            unfocusedBorderColor = GlassBorder.copy(alpha = 0.5f),
+            focusedContainerColor   = surfaceVariantColor.copy(alpha = 0.4f),
+            unfocusedContainerColor = surfaceVariantColor.copy(alpha = 0.2f),
+            focusedTextColor     = onSurfaceColor,
+            unfocusedTextColor   = onSurfaceColor,
+            cursorColor          = secondaryColor       // purple cursor
+        ),
         supportingText = {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                Text(text = "${input.length}/$CHARACTER_LIMIT")
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                Text(
+                    text = "${input.length}/$CHARACTER_LIMIT",
+                    color = onSurfaceVariantColor.copy(alpha = 0.55f)
+                )
             }
         }
     )

@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kotlinCompose)
 }
 
 android {
     namespace = "in.iot.lab.design"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -33,9 +34,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
     }
 }
 
@@ -75,6 +73,10 @@ dependencies {
     // Paging 3
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
+
+    //haze
+    implementation("dev.chrisbanes.haze:haze:1.5.1")
+    implementation("dev.chrisbanes.haze:haze-materials:1.5.1")
 
     // Network Dependency
     implementation(project(":core:network"))
