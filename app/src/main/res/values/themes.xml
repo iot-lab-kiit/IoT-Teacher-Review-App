@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.IoTTeacherReview" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.IoTTeacherReview" parent="android:Theme.Material.NoActionBar">
+        <!-- Dark window background so the status bar never appears white, even on
+             Android 15+ where statusBarColor is ignored and the bar is transparent
+             (it then shows this background instead of a light default). -->
+        <item name="android:windowBackground">@color/black</item>
         <item name="android:statusBarColor">@color/black</item>
+        <item name="android:navigationBarColor">@color/black</item>
+        <!-- Light (white) status-bar icons for the dark bar. -->
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>
