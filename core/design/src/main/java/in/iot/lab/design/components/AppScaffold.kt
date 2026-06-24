@@ -8,9 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import `in`.iot.lab.design.theme.CustomAppTheme
 
-// AppScaffold is intentionally simple — it does NOT own a HazeState.
-// HazeState lives in AppScreen (via LocalHazeState) and flows down
-// to any card that needs it via LocalHazeState.current
 @Composable
 fun AppScaffold(
     modifier: Modifier = Modifier,
@@ -35,8 +32,7 @@ fun AppScaffold(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .statusBarsPadding()
-                    .padding(top = it.calculateTopPadding()),
+                    .navigationBarsPadding(),
                 contentAlignment = contentAlignment,
                 content = body
             )

@@ -25,9 +25,7 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
     successBlock: @Composable (LazyPagingItems<T>) -> Unit
 ) {
 
-    successBlock(this)
-
-    when {
+      when {
 
         loadState.refresh is LoadState.Error -> {
 
@@ -79,12 +77,16 @@ fun <T : Any> LazyPagingItems<T>.HandlePagingData(
             }
         }
 
-        itemCount == 0 && loadState.refresh !is LoadState.Loading -> {
+        loadState.refresh is LoadState.Loading -> {
+            loadingBlock()
+        }
+
+        itemCount == 0 -> {
             EmptyListAnimation(onTryAgainClick = this::refresh)
         }
 
-        loadState.refresh is LoadState.Loading -> {
-            loadingBlock()
+        else -> {
+            successBlock(this)
         }
     }
 }

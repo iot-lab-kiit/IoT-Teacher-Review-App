@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -43,12 +44,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import dev.chrisbanes.haze.HazeState
 import `in`.iot.lab.history.view.navigation.HISTORY_ROUTE
 import `in`.iot.lab.profile.view.navigation.PROFILE_ROUTE
 import `in`.iot.lab.review.view.navigation.FACULTY_ROOT_ROUTE
 
+private fun NavController.navigateToBottomTab(route: String) {
+    navigate(route) {
+        popUpTo(graph.findStartDestination().id) { saveState = true }
+        launchSingleTop = true
+        restoreState = true
+    }
+}
+
+private fun NavController.navigateToFacultyHome() {
+    navigate(FACULTY_ROOT_ROUTE) {
+        popUpTo(FACULTY_ROOT_ROUTE) {
+            inclusive = true
+            saveState = true
+        }
+        launchSingleTop = true
+    }
+}
 
 sealed class BottomNavOptions(
     val route: String,
@@ -63,12 +82,7 @@ sealed class BottomNavOptions(
         labelOfIcon = "Home",
         unselectedIcon = Icons.Outlined.Home,
         selectedIcon = Icons.Filled.Home,
-        onOptionClicked = {
-            it.navigate(FACULTY_ROOT_ROUTE) {
-                popUpTo(it.graph.startDestinationId)
-                launchSingleTop = true
-            }
-        }
+        onOptionClicked = { it.navigateToFacultyHome() }
     )
 
     data object HistoryOption : BottomNavOptions(
@@ -76,12 +90,7 @@ sealed class BottomNavOptions(
         labelOfIcon = "History",
         unselectedIcon = Icons.Outlined.History,
         selectedIcon = Icons.Filled.History,
-        onOptionClicked = {
-            it.navigate(HISTORY_ROUTE) {
-                popUpTo(it.graph.startDestinationId)
-                launchSingleTop = true
-            }
-        }
+        onOptionClicked = { it.navigateToBottomTab(HISTORY_ROUTE) }
     )
 
     data object BookmarkOption : BottomNavOptions(
@@ -89,12 +98,7 @@ sealed class BottomNavOptions(
         labelOfIcon = "Bookmark",
         unselectedIcon = Icons.Outlined.BookmarkBorder,
         selectedIcon = Icons.Filled.Bookmark,
-        onOptionClicked = {
-            it.navigate(BOOKMARK_ROUTE) {
-                popUpTo(it.graph.startDestinationId)
-                launchSingleTop = true
-            }
-        }
+        onOptionClicked = { it.navigateToBottomTab(BOOKMARK_ROUTE) }
     )
 
     data object ProfileOption : BottomNavOptions(
@@ -102,12 +106,7 @@ sealed class BottomNavOptions(
         labelOfIcon = "Profile",
         unselectedIcon = Icons.Outlined.Person,
         selectedIcon = Icons.Filled.Person,
-        onOptionClicked = {
-            it.navigate(PROFILE_ROUTE) {
-                popUpTo(it.graph.startDestinationId)
-                launchSingleTop = true
-            }
-        }
+        onOptionClicked = { it.navigateToBottomTab(PROFILE_ROUTE) }
     )
 
 
@@ -141,6 +140,7 @@ fun CustomBottomNavigation(
                     )
                 )
             )
+            .navigationBarsPadding()
             .padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 12.dp)
     ) {
         Box(
