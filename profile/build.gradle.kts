@@ -5,14 +5,15 @@ plugins {
     // Hilt Dependency Plugin
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.androidHilt)
+    alias(libs.plugins.kotlinCompose)
 }
 
 android {
     namespace = "in.iot.lab.profile"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -37,9 +38,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
     }
 }
 
@@ -77,6 +75,11 @@ dependencies {
     implementation(libs.com.google.dagger)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation)
+
+    //haze
+    implementation("dev.chrisbanes.haze:haze:1.5.1")
+    implementation("dev.chrisbanes.haze:haze-materials:1.5.1")
+
 
     // Dependency for Design Module
     implementation(project(":core:design"))

@@ -8,11 +8,12 @@ plugins {
 
     // Google Services Plugin
     alias(libs.plugins.googleServices)
+    alias(libs.plugins.kotlinCompose)
 }
 
 android {
     namespace = "in.iot.lab.kritique"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "in.iot.lab.kritique"
@@ -50,9 +51,7 @@ android {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
-    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -86,10 +85,16 @@ dependencies {
     implementation(libs.androidx.navigation)
     // -----------------------------------------------------------------------
 
+    // Google Play In-App Update
+    implementation(libs.app.update.ktx)
+
     // Hilt Dependencies
     implementation(libs.com.google.dagger)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation)
+
+    implementation("dev.chrisbanes.haze:haze:1.5.1")
+    implementation("dev.chrisbanes.haze:haze-materials:1.5.1")
 
     // Dependency of the design module
     implementation(project(":core:design"))
@@ -108,4 +113,6 @@ dependencies {
 
     // Dependency of the profile module
     implementation(project(":profile"))
+
+
 }

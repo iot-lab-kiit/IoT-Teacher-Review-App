@@ -1,24 +1,16 @@
 package `in`.iot.lab.design.components
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import `in`.iot.lab.design.theme.CustomAppTheme
 
-
-/**
- * This function is used to Give the Default Background Colors and Alignment
- *
- * @param modifier (Optional) Modifier can be passed from the parent function to this
- * @param body This is the Composable that should be inside this
- */
+// AppScaffold is intentionally simple — it does NOT own a HazeState.
+// HazeState lives in AppScreen (via LocalHazeState) and flows down
+// to any card that needs it via LocalHazeState.current
 @Composable
 fun AppScaffold(
     modifier: Modifier = Modifier,
@@ -27,10 +19,9 @@ fun AppScaffold(
     bottomBar: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
-    contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
+    contentWindowInsets: WindowInsets = WindowInsets(0, 0, 0, 0),
     body: @Composable BoxScope.() -> Unit
 ) {
-
     CustomAppTheme {
         Scaffold(
             modifier = modifier,
@@ -38,12 +29,14 @@ fun AppScaffold(
             bottomBar = bottomBar,
             floatingActionButton = floatingActionButton,
             snackbarHost = snackbarHost,
-            contentWindowInsets = contentWindowInsets
+            contentWindowInsets = contentWindowInsets,
+            containerColor = Color.Transparent
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it),
+                    .statusBarsPadding()
+                    .padding(top = it.calculateTopPadding()),
                 contentAlignment = contentAlignment,
                 content = body
             )

@@ -5,14 +5,16 @@ plugins {
     // Hilt Dependency Plugin
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.androidHilt)
+
+    alias(libs.plugins.kotlinCompose)
 }
 
 android {
     namespace = "in.iot.lab.data"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -40,9 +42,6 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
     }
 }
 
@@ -85,6 +84,11 @@ dependencies {
     // Paging 3
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
+
+    //haze
+    implementation("dev.chrisbanes.haze:haze:1.5.1")
+    implementation("dev.chrisbanes.haze:haze-materials:1.5.1")
+
 
     // Network Module Dependency
     implementation(project(":core:network"))

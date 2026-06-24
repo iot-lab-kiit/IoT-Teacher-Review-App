@@ -1,6 +1,7 @@
 package `in`.iot.lab.kritique.domain.models.faculty
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 
 /**
@@ -26,4 +27,4 @@ data class RemoteFaculty(
     val avgRating: Double?,
     @SerializedName("totalRatings")
     val totalRating: Int?
-)
+): Serializable

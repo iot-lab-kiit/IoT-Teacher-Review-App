@@ -3,14 +3,19 @@ package `in`.iot.lab.profile.view.screens
 import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -34,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import `in`.iot.lab.design.R
 import `in`.iot.lab.design.components.AppNetworkImage
 import `in`.iot.lab.design.components.AppScreen
+import `in`.iot.lab.design.components.LetterAvatar
 import `in`.iot.lab.design.components.PrimaryButton
 import `in`.iot.lab.design.components.TertiaryButton
 import `in`.iot.lab.design.state.HandleUiState
@@ -145,8 +151,9 @@ fun ProfileSuccessScreen(
 
     Column(
         modifier = Modifier
-            .padding(16.dp)
-            .fillMaxSize(),
+            .padding(horizontal = 20.dp, vertical = 12.dp)
+            .fillMaxSize()
+            .padding(bottom = 90.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
@@ -160,21 +167,25 @@ fun ProfileSuccessScreen(
         ) {
 
             // User Profile Picture
-            AppNetworkImage(
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier
-                    .clip(CircleShape)
-                    .size(120.dp),
-                errorImage = painterResource(id = R.drawable.person),
-                model = user.photoUrl,
-                contentDescription = "Profile Photo"
-            )
+                    .fillMaxWidth()
+                    .padding(vertical = 24.dp)
+            ) {
 
+                LetterAvatar(
+                    name = user.name,
+                    size = 110.dp,
+                )
 
-            // User Name
-            Text(
-                text = user.name ?: "Name Not Found",
-                style = MaterialTheme.typography.titleLarge
-            )
+                Text(
+                    text = user.name ?: "Name Not Found",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
 
             val rollNumber = if (user.email != null && user.email!!.contains("kiit.ac.in"))
                 user.email!!.substringBefore("@")
@@ -203,15 +214,9 @@ fun ProfileSuccessScreen(
 
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
-            // Credit Text
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Coded with ❤️ and ☕ by IoT Lab",
-                textAlign = TextAlign.Center
-            )
 
             PrimaryButton(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(54.dp),
                 onClick = { setEvent(ProfileEvents.SignOutEvent) }
             ) {
                 Text(
@@ -231,6 +236,22 @@ fun ProfileSuccessScreen(
                     style = MaterialTheme.typography.titleMedium
                 )
             }
+
+//            // Credit Text
+//            Text(
+//                modifier = Modifier.fillMaxWidth(),
+//                text = "Coded with ❤️ and ☕ by IoT Lab",
+//                textAlign = TextAlign.Center
+//            )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                text = "Coded with ❤️ and ☕ by IoT Lab",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                textAlign = TextAlign.Center
+            )
         }
     }
 
