@@ -3,6 +3,7 @@ package `in`.iot.lab.review.view.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -29,80 +30,66 @@ fun FacultyListScreenControl(
     }
 
     AppScreen {
-        facultyList.HandlePagingData(
-            loadingBlock = { FacultyLoadingScreen() }
-        ) { pagingData ->
-            FacultyListSuccessScreen(
-                faculties = pagingData,
-                onFacultySelected = {
-                    setEvent(FacultyEvent.FacultySelected(it))
-                    navigator(FACULTY_DETAIL_ROUTE)
-                },
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+        ) {
+            SearchBar(
+                label = "Search",
+                placeholder = "Search a faculty...",
                 onClearClick = { setEvent(FacultyEvent.FetchFacultyList) },
-                onSearchClick = { setEvent(FacultyEvent.FetchFacultyByName(it)) }
+                onSearchClicked = { setEvent(FacultyEvent.FetchFacultyByName(it)) },
+                onValueChange = {
+                    if (it.length >= 3) setEvent(FacultyEvent.FetchFacultyByName(it))
+                    else if (it.isEmpty()) setEvent(FacultyEvent.FetchFacultyList)
+                }
             )
+
+            // Only this area swaps between skeleton and the loaded list.
+            Box(modifier = Modifier.weight(1f).fillMaxWidth()) {
+                facultyList.HandlePagingData(
+                    loadingBlock = { FacultySkeletonList() }
+                ) { pagingData ->
+                    FacultyList(
+                        faculties = pagingData,
+                        onFacultySelected = {
+                            setEvent(FacultyEvent.FacultySelected(it))
+                            navigator(FACULTY_DETAIL_ROUTE)
+                        }
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
-private fun FacultyLoadingScreen() {
-    // Single scrolling LazyColumn with the search bar as the first item —
-    // mirrors FacultyListSuccessScreen so the skeleton lines up exactly with
-    // the loaded content and never overflows/overlaps the search bar or nav bar.
+private fun FacultySkeletonList() {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(bottom = 100.dp)
+        contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)
     ) {
-        item {
-            SearchBar(
-                label = "Search",
-                placeholder = "Search a faculty...",
-                onClearClick = { },
-                onSearchClicked = { },
-                onValueChange = { }
-            )
-        }
         items(8) { FacultySkeletonCard() }
     }
 }
 
 @Composable
-fun FacultyListSuccessScreen(
+private fun FacultyList(
     faculties: LazyPagingItems<RemoteFaculty>,
-    onFacultySelected: (String) -> Unit,
-    onClearClick: () -> Unit,
-    onSearchClick: (String) -> Unit
+    onFacultySelected: (String) -> Unit
 ) {
-    // ✅ Get the single HazeState from AppScreen — same instance for ALL cards
+    // Single HazeState from AppScreen — same instance for ALL cards.
     val hazeState = LocalHazeState.current
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(bottom = 100.dp)
+        contentPadding = PaddingValues(top = 16.dp, bottom = 100.dp)
     ) {
-        item {
-            SearchBar(
-                label = "Search",
-                placeholder = "Search a faculty...",
-                onClearClick = onClearClick,
-                onSearchClicked = onSearchClick,
-                onValueChange = {
-                    if (it.length >= 3) onSearchClick(it)
-                    else if (it.isEmpty()) onClearClick()
-                }
-            )
-        }
-
         items(faculties.itemCount) {
             faculties[it]?.let { faculty ->
-                // ✅ hazeState passed in — same object that has hazeSource on AppScreen bg
                 hazeState?.let { state ->
                     FacultyDataUI(
                         modifier = Modifier.clickable { onFacultySelected(faculty.id) },

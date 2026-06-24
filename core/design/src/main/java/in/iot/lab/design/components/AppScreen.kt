@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
@@ -21,8 +22,6 @@ import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 import `in`.iot.lab.design.theme.CustomAppTheme
 
-// ── CompositionLocal so any child can access the screen's HazeState ──
-// without prop-drilling through every composable layer
 val LocalHazeState = compositionLocalOf<HazeState?> { null }
 
 @Composable
@@ -57,11 +56,12 @@ fun AppScreen(
                         // hazeSource on the background — this is what cards blur against
                         .hazeSource(hazeState)
                 ) {
-                    // Animated cyberpunk background with drifting light orbs
-                    CyberpunkBackground()
+                   CyberpunkBackground()
 
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
+                   Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .statusBarsPadding(),
                         contentAlignment = contentAlignment,
                         content = content
                     )
